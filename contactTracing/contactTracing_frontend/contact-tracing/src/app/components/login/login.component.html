@@ -1,0 +1,27 @@
+<div class="surface-card p-2 shadow-2 border-round w-full lg:w-12">
+  <div class="flex align-items-center justify-content-center mb-6">
+    <p-card header="Contact Tracer" subheader="CT" [style]="{width: '360px'}" styleClass="shadow-2" class="m-4">
+      <ul>
+        <li>Personen erfassen</li>
+        <li>Krankheitsstatus erfassen</li>
+        <li>Quarantäne eintragen</li>
+        <li>Krankheitsstatus bearbeiten</li>
+        <li>Cluster anlegen</li>
+        <li>Testtermine zuweisen</li>
+      </ul>
+      <ng-template pTemplate="footer">
+        <p-button label="Login" (click)="selectRole('CT')" icon="pi pi-check"></p-button>
+      </ng-template>
+    </p-card>
+
+    <p-card header="BH MitarbeiterIn" subheader="BH" [style]="{width: '360px'}" styleClass="shadow-2" class="m-4">
+      <ul>
+        <li>Dashboard</li>
+        <li>Medikamenten Termine einsehen</li>
+      </ul>
+      <ng-template pTemplate="footer">
+        <p-button label="Login" (click)="selectRole('BH')" icon="pi pi-check"></p-button>
+      </ng-template>
+    </p-card>
+  </div>
+</div>
