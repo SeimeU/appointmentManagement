@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ContactTracingApplication {
+public class AppointmentManagementApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ContactTracingApplication.class, args);
+		SpringApplication.run(AppointmentManagementApplication.class, args);
 	}
 
 }
