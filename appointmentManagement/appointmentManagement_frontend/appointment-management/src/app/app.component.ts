@@ -1,14 +1,14 @@
-import {Component, HostListener} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title = 'Appointment management';
-  public getScreenWidth: any;
-  public getScreenHeight: any;
+export class AppComponent implements OnInit{
+  title: string = 'Appointment management';
+  public getScreenWidth: number = 0;
+  public getScreenHeight: number = 0;
 
   ngOnInit() {
     this.getScreenWidth = window.innerWidth;
@@ -19,5 +19,9 @@ export class AppComponent {
   onWindowResize() {
     this.getScreenWidth = window.innerWidth;
     this.getScreenHeight = window.innerHeight;
+  }
+
+  onClick() {
+    console.log('Test');
   }
 }

@@ -1,0 +1,50 @@
+<div class="mat-elevation-z8">
+  <mat-form-field>
+    <mat-label>Filter</mat-label>
+    <input matInput (keyup)="applyFilter($event)" placeholder="Z.b. Pfizer" #input>
+  </mat-form-field>
+
+
+  <table mat-table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+      <td mat-cell *matCellDef="let appointment">{{appointment.id}}</td>
+    </ng-container>
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Datum</th>
+      <td mat-cell *matCellDef="let appointment">{{appointment.date}}</td>
+    </ng-container>
+    <ng-container matColumnDef="location">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Standort</th>
+      <td mat-cell *matCellDef="let appointment">{{appointment.location}}</td>
+    </ng-container>
+    <ng-container matColumnDef="line">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Linie</th>
+      <td mat-cell *matCellDef="let appointment">{{appointment.line}}</td>
+    </ng-container>
+    <ng-container matColumnDef="duration">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Dauer</th>
+      <td mat-cell *matCellDef="let appointment">{{appointment.duration}}</td>
+    </ng-container>
+    <ng-container matColumnDef="booked">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Gebucht</th>
+      <td mat-cell *matCellDef="let appointment">{{appointment.booked}}</td>
+    </ng-container>
+    <ng-container matColumnDef="substance">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Wirkstoff</th>
+      <td mat-cell *matCellDef="let appointment">{{appointment.substance}}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayColumns; sticky: true"></tr>
+    <tr mat-row (click)="onRowClick(row)" *matRowDef="let row; columns: displayColumns;"></tr>
+
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="4">No data matching the filter " {{input.value}}</td>
+    </tr>
+  </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 25]" aria-label="Select page of users"></mat-paginator>
+</div>
+
+
+
+

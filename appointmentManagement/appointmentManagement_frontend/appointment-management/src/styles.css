@@ -13,13 +13,18 @@ body {
 }
 
 .container {
-  max-width: 500px;
-  margin: 30px auto;
+  max-width: 1500px;
+  margin: 5px auto;
   overflow: auto;
   min-height: 300px;
-  border: 1px solid steelblue;
   padding: 30px;
   border-radius: 5px;
+}
+.spacer {
+  flex: 1 1 auto;
+}
+.margin {
+  margin: 5px auto;
 }
 .btn {
   display: inline-block;

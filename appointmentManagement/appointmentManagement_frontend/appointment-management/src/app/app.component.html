@@ -1,6 +1,13 @@
 <mat-toolbar color="primary">
   <span>{{title}}</span>
+  <span class="spacer"></span>
+  <button mat-fab color="warn" matTooltip="Termin/Terminserie hinzufügen" aria-label="Button with plus icon" (click)="onClick()">
+    <mat-icon>add</mat-icon>
+  </button>
 </mat-toolbar>
 
-<app-calendar></app-calendar>
-
+<div class="container">
+  <app-calendar></app-calendar>
+  <p class="margin"></p>
+  <app-appointment-table></app-appointment-table>
+</div>
