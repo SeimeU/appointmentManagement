@@ -1,1 +1,8 @@
-<p>appointment-editor works!</p>
+<h1 mat-dialog-title>Termineditor</h1>
+<div mat-dialog-content>
+  <p>Test</p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onAbortClick()">Abbrechen</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Speichern</button>
+</div>

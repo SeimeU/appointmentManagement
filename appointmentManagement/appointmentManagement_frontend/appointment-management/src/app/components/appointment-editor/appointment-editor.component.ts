@@ -1,4 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {Appointment} from "../../Appointment";
 
 @Component({
   selector: 'app-appointment-editor',
@@ -6,9 +8,13 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./appointment-editor.component.css']
 })
 export class AppointmentEditorComponent implements OnInit{
-  constructor() {
+  constructor(public dialogRef: MatDialogRef<AppointmentEditorComponent>, @Inject(MAT_DIALOG_DATA) public data: Appointment) {
   }
 
   ngOnInit(): void {
+  }
+
+  onAbortClick() {
+    this.dialogRef.close();
   }
 }

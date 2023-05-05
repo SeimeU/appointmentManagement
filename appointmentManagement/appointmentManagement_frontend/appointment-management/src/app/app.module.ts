@@ -17,6 +17,8 @@ import { AppointmentEditorComponent } from './components/appointment-editor/appo
 import {MatSortModule} from "@angular/material/sort";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatInputModule} from "@angular/material/input";
+import {HttpClientModule} from "@angular/common/http";
+import {MatDialogModule} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import {MatInputModule} from "@angular/material/input";
     MatTooltipModule,
     MatSortModule,
     MatPaginatorModule,
-    MatInputModule
+    MatInputModule,
+    HttpClientModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]
