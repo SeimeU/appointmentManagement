@@ -1,0 +1,22 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.test {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+#delete {
+  margin: 10px;
+}
+
+.dialog-actions {
+  display:flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 10px;
+}

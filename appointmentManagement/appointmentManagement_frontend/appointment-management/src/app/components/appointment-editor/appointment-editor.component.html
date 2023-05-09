@@ -1,8 +1,86 @@
+<div class="test">
 <h1 mat-dialog-title>Termineditor</h1>
-<div mat-dialog-content>
-  <p>Test</p>
+<button mat-raised-button onclick="onDeleteClick();" color="warn" id="delete">Löschen</button>
 </div>
-<div mat-dialog-actions>
+<table>
+  <tr>
+    <th></th>
+    <th>
+      <div mat-dialog-content>
+        <h1>Wiederholen</h1>
+      </div>
+    </th>
+  </tr>
+  <tr>
+    <th>
+      <div mat-dialog-content class="editor">
+        <mat-form-field appearance="fill">
+          <mat-label>Standort</mat-label>
+          <mat-select name="standort">
+            <mat-option value="1">Test 1</mat-option>
+            <mat-option value="2">Test 2</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Linie</mat-label>
+          <mat-select name="linie">
+            <mat-option value="1">Test 1</mat-option>
+            <mat-option value="2">Test 2</mat-option>
+          </mat-select>
+
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput type="datetime-local" placeholder="Datum">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Dauer</mat-label>
+          <mat-select name="dauer">
+            <mat-option value="5">5min</mat-option>
+            <mat-option value="10">10min</mat-option>
+            <mat-option value="15">15min</mat-option>
+            <mat-option value="20">20min</mat-option>
+            <mat-option value="25">25min</mat-option>
+            <mat-option value="30">30min</mat-option>
+            <mat-option value="35">35min</mat-option>
+            <mat-option value="40">40min</mat-option>
+            <mat-option value="45">45min</mat-option>
+            <mat-option value="50">50min</mat-option>
+            <mat-option value="55">55min</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Wirkstoff</mat-label>
+          <mat-select name="wirkstoff">
+            <mat-option value="1">Test 1</mat-option>
+            <mat-option value="2">Test 2</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-checkbox [aria-label]="isBooked">Termin gebucht</mat-checkbox>
+
+      </div>
+    </th>
+    <th>
+      <mat-form-field appearance="fill">
+        <mat-label>Zeitraum</mat-label>
+        <mat-select onchange="changeSelect();"  id="zeitraum" name="zeitraum">
+          <mat-option value="daily">täglich</mat-option>
+          <mat-option value="weekly">wöchentlich</mat-option>
+          <mat-option value="monthly">monatlich</mat-option>
+          <mat-option value="yearly">jährlich</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div id="wiederholen"></div>
+    </th> <!-- Bei Wiederholen reinschreiben -->
+  </tr>
+</table>
+
+
+<div mat-dialog-actions class="dialog-actions">
   <button mat-button (click)="onAbortClick()">Abbrechen</button>
   <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Speichern</button>
 </div>
