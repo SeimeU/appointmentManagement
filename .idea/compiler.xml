@@ -2,6 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
@@ -10,5 +11,10 @@
         <module name="appointment_Management.main" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="contact_tracing" target="17" />
+      <module name="contact_tracing.main" target="17" />
+      <module name="contact_tracing.test" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>

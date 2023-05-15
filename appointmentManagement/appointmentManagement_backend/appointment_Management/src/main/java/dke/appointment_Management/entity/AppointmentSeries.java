@@ -11,7 +11,7 @@ public class AppointmentSeries {
     //region Fields
     @Id
     @GeneratedValue
-    private int id;
+    private long id;
 
     @Temporal(TemporalType.DATE)
     private Date startDate;
@@ -27,7 +27,9 @@ public class AppointmentSeries {
     private String substance;
 
     @OneToMany
-    @ElementCollection
+    //@ElementCollection
+    //@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
+    //@JoinTable(name = "appointmentSeries_appointments", joinColumns = @JoinColumn(name = "AppointmentSeries_id"), inverseJoinColumns = @JoinColumn(name = "Appointment_id"))
     private List<Appointment> appointments;
     //endregion
 
@@ -53,7 +55,7 @@ public class AppointmentSeries {
 
     //region Getter/Setter
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -124,6 +126,7 @@ public class AppointmentSeries {
     public void setSubstance(String substance) {
         this.substance = substance;
     }
+
 
     public List<Appointment> getAppointments() {
         return appointments;

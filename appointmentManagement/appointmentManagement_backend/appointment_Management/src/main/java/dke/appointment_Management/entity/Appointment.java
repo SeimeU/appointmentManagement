@@ -10,7 +10,7 @@ public class Appointment {
     //region Fields
     @Id
     @GeneratedValue
-    private int id;
+    private long id;
 
     @Temporal(TemporalType.DATE)
     private Date date;
@@ -40,7 +40,7 @@ public class Appointment {
 
     //region Getter/Setter
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

@@ -67,10 +67,10 @@ public class AppointmentService {
     }
 
     public List<Appointment> getAppointmentsByLocation(String[] locations) {
-        return repository.findAllByLocations(locations);
+        return repository.findAllByLocation(locations);
     }
 
     public List<Appointment> getFreeAppointmentsByLocation(String[] locations) {
-        return repository.findFreeByLocations(locations);
+        return repository.findFreeByLocation(locations);
     }
  }

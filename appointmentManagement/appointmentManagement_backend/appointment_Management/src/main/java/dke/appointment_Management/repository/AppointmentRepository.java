@@ -10,7 +10,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
 
     List<Appointment> findAllByDate(Date date);
 
-    List<Appointment> findAllByLocations(String[] locations);
+    List<Appointment> findAllByLocation(String[] location);
 
-    List<Appointment> findFreeByLocations(String[] locations);
+    List<Appointment> findFreeByLocation(String[] location);
 }
