@@ -15,12 +15,9 @@ export class AppointmentEditorComponent implements OnInit{
   ngOnInit(): void {
   }
 
-  onAbortClick() {
-    this.dialogRef.close();
-  }
-
   onDeleteClick() {
     console.log('Gelöscht');
+    this.dialogRef.close(null);
   }
 
   changeSelect() {
@@ -32,7 +29,7 @@ export class AppointmentEditorComponent implements OnInit{
     }
 
   }
-  }
+}
 
 
 

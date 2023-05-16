@@ -1,6 +1,6 @@
 export interface Appointment{
   id: number;
-  date: string;
+  date: Date;
   duration: string;
   location: string;
   line: number;

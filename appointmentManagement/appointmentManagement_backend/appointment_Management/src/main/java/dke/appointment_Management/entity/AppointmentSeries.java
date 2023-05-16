@@ -3,7 +3,6 @@ package dke.appointment_Management.entity;
 import jakarta.persistence.*;
 
 import java.sql.Date;
-import java.time.Duration;
 import java.util.List;
 
 @Entity
@@ -21,7 +20,7 @@ public class AppointmentSeries {
 
     private String period_interval;
     private String number;
-    private Duration duration;
+    private String duration;
     private String location;
     private int line;
     private String substance;
@@ -39,7 +38,7 @@ public class AppointmentSeries {
     }
 
     public AppointmentSeries(
-            Date startDate, Date endDate, String interval, String number, Duration duration, String location,
+            Date startDate, Date endDate, String interval, String number, String duration, String location,
             int line, String substance, List<Appointment> appointments
     ) {
         this.startDate = startDate;
@@ -96,11 +95,11 @@ public class AppointmentSeries {
         this.number = number;
     }
 
-    public Duration getDuration() {
+    public String getDuration() {
         return duration;
     }
 
-    public void setDuration(Duration duration) {
+    public void setDuration(String duration) {
         this.duration = duration;
     }
 

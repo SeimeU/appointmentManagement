@@ -2,8 +2,7 @@ package dke.appointment_Management.entity;
 
 import jakarta.persistence.*;
 
-import java.sql.Date;
-import java.time.Duration;
+import java.time.LocalDateTime;
 
 @Entity
 public class Appointment {
@@ -12,9 +11,10 @@ public class Appointment {
     @GeneratedValue
     private long id;
 
-    @Temporal(TemporalType.DATE)
-    private Date date;
-    private Duration duration;
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime date;
+
+    private String duration;
     private String location;
     private int line;
     private boolean booked;
@@ -26,7 +26,7 @@ public class Appointment {
     }
 
     public Appointment(
-            Date date, Duration duration,
+            LocalDateTime date, String duration,
             String location, int line, boolean booked, String substance
     ) {
         this.date = date;
@@ -48,19 +48,19 @@ public class Appointment {
         this.id = id;
     }
 
-    public Date getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 
-    public Duration getDuration() {
+    public String getDuration() {
         return duration;
     }
 
-    public void setDuration(Duration duration) {
+    public void setDuration(String duration) {
         this.duration = duration;
     }
 

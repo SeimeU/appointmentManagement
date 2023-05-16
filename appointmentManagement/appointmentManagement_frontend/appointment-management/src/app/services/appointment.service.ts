@@ -19,13 +19,11 @@ export class AppointmentService {
   constructor(private http:HttpClient) { }
 
   getAppointments(): Observable<Appointment[]> {
-    //const appointments = of(APPOINTMENTS);
-    //return appointments;
-    return this.http.get<Appointment[]>(this.apiUrl + 'appointments');
+    return this.http.get<Appointment[]>(this.apiUrl + 'all-appointments');
   }
 
   getAppointmentSeries(): Observable<AppointmentSeries[]> {
-    return this.http.get<AppointmentSeries[]>(this.apiUrl + 'appointmentSeries');
+    return this.http.get<AppointmentSeries[]>(this.apiUrl + 'appointment-series');
   }
 
   deleteAppointment(appointment: Appointment): void {
@@ -34,7 +32,7 @@ export class AppointmentService {
   }
 
   deleteAppointmentSeries(appointmentSeries: AppointmentSeries): void {
-    const url = this.apiUrl + 'appointmentSeries/' + appointmentSeries.id;
+    const url = this.apiUrl + 'appointment-series/' + appointmentSeries.id;
     this.http.delete<void>(url);
   }
 
@@ -43,7 +41,7 @@ export class AppointmentService {
   }
 
   createAppointmentSeries(appointmentSeries: AppointmentSeries): Observable<AppointmentSeries> {
-    return this.http.post<AppointmentSeries>(this.apiUrl + 'appointmentSeries', appointmentSeries, httpOptions);
+    return this.http.post<AppointmentSeries>(this.apiUrl + 'appointment-series', appointmentSeries, httpOptions);
   }
 
   updateAppointment(appointment: Appointment): Observable<Appointment> {
@@ -51,6 +49,6 @@ export class AppointmentService {
   }
 
   updateAppointmentSeries(appointmentSeries: AppointmentSeries): Observable<AppointmentSeries> {
-    return this.http.post<AppointmentSeries>(this.apiUrl + 'appointmentSeries/' + appointmentSeries.id, appointmentSeries, httpOptions);
+    return this.http.post<AppointmentSeries>(this.apiUrl + 'appointment-series/' + appointmentSeries.id, appointmentSeries, httpOptions);
   }
 }

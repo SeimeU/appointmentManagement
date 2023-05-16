@@ -22,6 +22,9 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatSelectModule} from "@angular/material/select";
 import {MatGridListModule} from "@angular/material/grid-list";
+import {FormsModule} from "@angular/forms";
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import { AppointmentCreatorComponent } from './components/appointment-creator/appointment-creator.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,8 @@ import {MatGridListModule} from "@angular/material/grid-list";
     CalendarComponent,
     AppointmentTableComponent,
     MayorDashboardComponent,
-    AppointmentEditorComponent
+    AppointmentEditorComponent,
+    AppointmentCreatorComponent
   ],
   imports: [
     BrowserModule,
@@ -49,7 +53,9 @@ import {MatGridListModule} from "@angular/material/grid-list";
     MatDialogModule,
     MatCheckboxModule,
     MatSelectModule,
-    MatGridListModule
+    MatGridListModule,
+    FormsModule,
+    MatDatepickerModule
   ],
   providers: [],
   bootstrap: [AppComponent]

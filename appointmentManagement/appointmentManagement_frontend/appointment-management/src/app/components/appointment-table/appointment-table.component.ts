@@ -4,6 +4,8 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {AppointmentService} from "../../services/appointment.service";
+import {AppointmentEditorComponent} from "../appointment-editor/appointment-editor.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-appointment-table',
@@ -18,17 +20,20 @@ export class AppointmentTableComponent implements OnInit, AfterViewInit{
   @ViewChild(MatPaginator) paginator: any;
   @ViewChild(MatSort) sort: any;
 
-  constructor(private appointmentService: AppointmentService) {
-    this.appointmentService.getAppointments().subscribe((appointments) => this.appointments = appointments);
-    this.dataSource = new MatTableDataSource(this.appointments);
+  constructor(private appointmentService: AppointmentService, public dialog: MatDialog) {
+    this.appointmentService.getAppointments().subscribe((appointments) => {
+      this.appointments = appointments;
+      this.dataSource = new MatTableDataSource<Appointment>(this.appointments);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+    });
+    this.dataSource = new MatTableDataSource<Appointment>(this.appointments);
   }
 
   ngOnInit(): void {
   }
 
   ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
   }
 
   applyFilter(event: KeyboardEvent) {
@@ -40,7 +45,16 @@ export class AppointmentTableComponent implements OnInit, AfterViewInit{
     }
   }
 
-  onRowClick(row: any) {
-    console.log(row)
+  onRowClick(row: Appointment) {
+    const dialogRef = this.dialog.open(AppointmentEditorComponent, {
+      data: {location: row.location, line: row.line, booked: row.booked, substance: row.substance, date: row.date, duration: row.duration}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+      if(result !== null) {
+
+      }
+    });
   }
 }

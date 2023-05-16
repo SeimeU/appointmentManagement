@@ -1,7 +1,8 @@
 import {Component, HostListener, OnInit} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
-import {AppointmentEditorComponent} from "./components/appointment-editor/appointment-editor.component";
 import {Appointment} from "./Appointment";
+import {AppointmentCreatorComponent} from "./components/appointment-creator/appointment-creator.component";
+import {AppointmentService} from "./services/appointment.service";
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,7 @@ export class AppComponent implements OnInit{
   public getScreenWidth: number = 0;
   public getScreenHeight: number = 0;
 
-  constructor(public dialog: MatDialog) {
+  constructor(public dialog: MatDialog, private appointmentService: AppointmentService) {
   }
 
   ngOnInit() {
@@ -28,12 +29,16 @@ export class AppComponent implements OnInit{
   }
 
   onClick(): void {
-    const dialogRef = this.dialog.open(AppointmentEditorComponent, {
+    const dialogRef = this.dialog.open(AppointmentCreatorComponent, {
+      disableClose: true,
       data: {location: "", line: "", booked: false, substance: "", date: "", duration: ""}
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log(result);
+      if(result !== null) {
+        this.appointmentService.createAppointment(result).subscribe(s => console.log(s));
+      }
     });
   }
 }
