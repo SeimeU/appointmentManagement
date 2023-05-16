@@ -4,80 +4,152 @@ import dke.appointment_Management.entity.Appointment;
 import dke.appointment_Management.entity.AppointmentSeries;
 import dke.appointment_Management.service.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
 public class AppointmentController {
+    private static final String DATE_FORMAT = "yyyy-MM-dd";
+    private static final DateFormat df = new SimpleDateFormat(DATE_FORMAT);
 
     @Autowired
     private AppointmentService service;
 
     @PostMapping("/appointment")
-    public Appointment createAppointment(@RequestBody Appointment appointment) {
-        return service.createAppointment(appointment);
+    public ResponseEntity<Appointment> createAppointment(@RequestBody Appointment appointment) {
+        if(appointment == null)
+            return ResponseEntity.badRequest().build();
+
+        return new ResponseEntity<>(service.saveAppointment(appointment), HttpStatus.CREATED);
     }
 
-    @PostMapping("/appointmentSeries")
-    public AppointmentSeries createAppointmentSeries(@RequestBody AppointmentSeries appointmentSeries) {
-        return service.createAppointmentSeries(appointmentSeries);
+    @PostMapping("/appointment-series")
+    public ResponseEntity<AppointmentSeries> createAppointmentSeries(@RequestBody AppointmentSeries appointmentSeries) {
+        if(appointmentSeries == null)
+            return ResponseEntity.badRequest().build();
+
+        return new ResponseEntity<>(service.saveAppointmentSeries(appointmentSeries), HttpStatus.CREATED);
     }
 
-    @PostMapping("/appointment/{appointment-id}")
-    public Appointment saveAppointment(@RequestBody Appointment appointment) {
-        return service.saveAppointment(appointment);
+    @PostMapping("/save-appointment")
+    public ResponseEntity<Appointment> saveAppointment(@RequestBody Appointment appointment) {
+        if(appointment == null)
+            return ResponseEntity.badRequest().build();
+
+        if(!service.isAvailable(appointment.getId(), false))
+            return ResponseEntity.notFound().build();
+
+
+        return ResponseEntity.ok(service.saveAppointment(appointment));
     }
 
-    @PostMapping("/appointmentSeries/{appointment-id}")
-    public AppointmentSeries saveAppointmentSeries(@RequestBody AppointmentSeries appointmentSeries) {
-        return service.saveAppointmentSeries(appointmentSeries);
+    @PostMapping("/save-appointment-series")
+    public ResponseEntity<AppointmentSeries> saveAppointmentSeries(@RequestBody AppointmentSeries appointmentSeries) {
+        if(appointmentSeries == null)
+            return ResponseEntity.badRequest().build();
+
+        if(!service.isAvailable(appointmentSeries.getId(), true))
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(service.saveAppointmentSeries(appointmentSeries));
     }
 
-    @DeleteMapping("/appointment/{appointment-id}")
-    public void deleteAppointment(@RequestBody Appointment appointment) {
-        service.deleteAppointment(appointment);
+    @DeleteMapping("/appointment")
+    public ResponseEntity deleteAppointment(final Long id) {
+        if(id == null || id < 1)
+            return ResponseEntity.badRequest().build();
+
+        if(!service.isAvailable(id, false))
+            return ResponseEntity.notFound().build();
+
+        service.deleteAppointment(id);
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/appointmentSeries/{appointment-id}")
-    public void deleteAppointmentSeries(@RequestBody AppointmentSeries appointmentSeries) {
-        service.deleteAppointmentSeries(appointmentSeries);
+    @DeleteMapping("/appointment-series")
+    public ResponseEntity deleteAppointmentSeries(final Long id) {
+        if(id == null || id < 1)
+            return ResponseEntity.badRequest().build();
+
+        if(!service.isAvailable(id, true))
+            return ResponseEntity.notFound().build();
+
+        service.deleteAppointmentSeries(id);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/appointments")
-    public List<Appointment> getAllAppointments() {
-        return service.getAppointments();
+    @GetMapping("/all-appointments")
+    public ResponseEntity<List<Appointment>> getAllAppointments() {
+        if(service.isEmpty(false))
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(service.getAppointments());
     }
 
-    @GetMapping("/appointmentSeries")
-    public List<AppointmentSeries> getAllAppointmentSeries() {
-        return service.getAppointmentSeries();
+    @GetMapping("/all-appointment-series")
+    public ResponseEntity<List<AppointmentSeries>> getAllAppointmentSeries() {
+        if(service.isEmpty(true))
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(service.getAppointmentSeries());
     }
 
-    @GetMapping("/appointment/{appointment-id}")
-    public Appointment getAppointmentById(@PathVariable int id) {
-        return service.getAppointmentById(id);
+    @GetMapping("/appointment")
+    public ResponseEntity<Appointment> getAppointmentById(final Long id) {
+        if(id == null || id < 1)
+            return ResponseEntity.badRequest().build();
+
+        if(!service.isAvailable(id, false))
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(service.getAppointmentById(id));
     }
 
-    @GetMapping("/appointmentSeries/{appointment-id}")
-    public AppointmentSeries getAppointmentSeriesById(@PathVariable int id) {
-        return service.getAppointmentSeriesById(id);
+    @GetMapping("/appointment-series")
+    public ResponseEntity<AppointmentSeries> getAppointmentSeriesById(final Long id) {
+        if(id == null || id < 1)
+            return ResponseEntity.badRequest().build();
+
+        if(!service.isAvailable(id, true))
+            return ResponseEntity.notFound().build();
+
+        return ResponseEntity.ok(service.getAppointmentSeriesById(id));
     }
 
-    @GetMapping("/appointments/{date}/")
-    public List<Appointment> getAppointmentsByDate(@RequestBody Date date) {
-        return service.getAppointmentsByDate(date);
+    @GetMapping("/appointments-date")
+    public ResponseEntity<List<Appointment>> getAppointmentsByDate(String date) {
+        if(date == null)
+            return ResponseEntity.badRequest().build();
+
+        try {
+            Date d = df.parse(date);
+            return ResponseEntity.ok(service.getAppointmentsByDate(d));
+        } catch (ParseException ex) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
-    @GetMapping("/appointments/{loc-name}/")
-    public List<Appointment> getAppointmentsByLocation(@RequestBody String[] locations) {
-        return service.getAppointmentsByLocation(locations);
+    @GetMapping("/appointments-loc")
+    public ResponseEntity<List<Appointment>> getAppointmentsByLocation(String location) {
+        if(location == null || location.equals(""))
+            return ResponseEntity.badRequest().build();
+
+        return ResponseEntity.ok(service.getAppointmentsByLocation(location));
     }
 
-    @GetMapping("/locations/{loc-name}/free-appointments")
-    public List<Appointment> getFreeAppointmentsByLocation(@RequestBody String[] locations) {
-        return service.getFreeAppointmentsByLocation(locations);
+    @GetMapping("/free-appointments-loc")
+    public ResponseEntity<List<Appointment>> getFreeAppointmentsByLocation(String location) {
+        if(location == null || location.equals(""))
+            return ResponseEntity.badRequest().build();
+
+        return ResponseEntity.ok(service.getFreeAppointmentsByLocation(location));
     }
 }

@@ -6,11 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Date;
 import java.util.List;
 
-public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
+public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
     List<Appointment> findAllByDate(Date date);
 
-    List<Appointment> findAllByLocation(String[] location);
-
-    List<Appointment> findFreeByLocation(String[] location);
+    List<Appointment> findAllByLocation(String location);
 }

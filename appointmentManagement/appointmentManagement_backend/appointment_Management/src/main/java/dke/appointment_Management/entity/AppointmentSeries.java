@@ -19,17 +19,18 @@ public class AppointmentSeries {
     @Temporal(TemporalType.DATE)
     private Date endDate;
 
-    private String interval;
+    private String period_interval;
     private String number;
     private Duration duration;
     private String location;
     private int line;
     private String substance;
 
-    @OneToMany
     //@ElementCollection
     //@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
     //@JoinTable(name = "appointmentSeries_appointments", joinColumns = @JoinColumn(name = "AppointmentSeries_id"), inverseJoinColumns = @JoinColumn(name = "Appointment_id"))
+    //@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany
     private List<Appointment> appointments;
     //endregion
 
@@ -43,7 +44,7 @@ public class AppointmentSeries {
     ) {
         this.startDate = startDate;
         this.endDate = endDate;
-        this.interval = interval;
+        this.period_interval = interval;
         this.number = number;
         this.duration = duration;
         this.location = location;
@@ -80,11 +81,11 @@ public class AppointmentSeries {
     }
 
     public String getInterval() {
-        return interval;
+        return period_interval;
     }
 
     public void setInterval(String interval) {
-        this.interval = interval;
+        this.period_interval = interval;
     }
 
     public String getNumber() {
@@ -144,7 +145,7 @@ public class AppointmentSeries {
                 "Startdatum=" + this.startDate +
                 ", Enddatum=" + this.endDate +
                 ", Anzahl=" + this.number +
-                ", Intervall=" + this.interval +
+                ", Intervall=" + this.period_interval +
                 ", Dauer='" + this.duration + '\'' +
                 ", Standort='" + this.location + '\'' +
                 ", Linie=" + this.line +

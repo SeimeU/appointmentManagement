@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentService {
@@ -19,12 +21,24 @@ public class AppointmentService {
     @Autowired
     private AppointmentSeriesRepository repositoryAS;
 
-    public Appointment createAppointment(Appointment appointment) {
-        return repository.save(appointment);
+    public boolean isAvailable(long id, boolean appointmentSeries) {
+        if(appointmentSeries) {
+            Optional<AppointmentSeries> opt = repositoryAS.findById(id);
+
+            return opt.isPresent();
+        } else {
+            Optional<Appointment> opt = repository.findById(id);
+
+            return opt.isPresent();
+        }
     }
 
-    public AppointmentSeries createAppointmentSeries(AppointmentSeries appointmentSeries) {
-        return repositoryAS.save(appointmentSeries);
+    public boolean isEmpty(boolean appointmentSeries) {
+        if(appointmentSeries) {
+            return repositoryAS.count() == 0;
+        } else {
+            return repository.count() == 0;
+        }
     }
 
     public Appointment saveAppointment(Appointment appointment) {
@@ -35,11 +49,17 @@ public class AppointmentService {
         return repositoryAS.save(appointmentSeries);
     }
 
-    public void deleteAppointment(Appointment appointment) {
-        repository.delete(appointment);
+    public void deleteAppointment(long id) {
+        if(getAppointmentById(id) != null) {
+            repository.delete(getAppointmentById(id));
+        }
     }
 
-    public void deleteAppointmentSeries(AppointmentSeries appointmentSeries) {
+    public void deleteAppointmentSeries(long id) {
+        AppointmentSeries appointmentSeries = getAppointmentSeriesById(id);
+        if(appointmentSeries == null)
+            return;
+
         for (Appointment appointment : appointmentSeries.getAppointments()) {
             repository.delete(appointment);
         }
@@ -54,11 +74,11 @@ public class AppointmentService {
         return repositoryAS.findAll();
     }
 
-    public Appointment getAppointmentById(int id) {
+    public Appointment getAppointmentById(long id) {
         return repository.findById(id).orElse(null);
     }
 
-    public AppointmentSeries getAppointmentSeriesById(int id) {
+    public AppointmentSeries getAppointmentSeriesById(long id) {
         return repositoryAS.findById(id).orElse(null);
     }
 
@@ -66,11 +86,11 @@ public class AppointmentService {
         return repository.findAllByDate(date);
     }
 
-    public List<Appointment> getAppointmentsByLocation(String[] locations) {
-        return repository.findAllByLocation(locations);
+    public List<Appointment> getAppointmentsByLocation(String location) {
+        return repository.findAllByLocation(location);
     }
 
-    public List<Appointment> getFreeAppointmentsByLocation(String[] locations) {
-        return repository.findFreeByLocation(locations);
+    public List<Appointment> getFreeAppointmentsByLocation(String location) {
+        return repository.findAllByLocation(location).stream().filter(a -> !a.isBooked()).collect(Collectors.toList());
     }
  }
