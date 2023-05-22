@@ -5,11 +5,6 @@
 <table>
   <tr>
     <th></th>
-    <th>
-      <div mat-dialog-content>
-        <h1>Wiederholen</h1>
-      </div>
-    </th>
   </tr>
   <tr>
     <th>
@@ -27,6 +22,7 @@
           <mat-select name="linie" [(ngModel)]="data.line">
             <mat-option value="1">1</mat-option>
             <mat-option value="2">2</mat-option>
+            <mat-option value=11>11</mat-option>
           </mat-select>
 
         </mat-form-field>
@@ -64,18 +60,6 @@
 
       </div>
     </th>
-    <th>
-      <mat-form-field appearance="fill">
-        <mat-label>Zeitraum</mat-label>
-        <mat-select onchange="changeSelect();"  id="zeitraum" name="zeitraum">
-          <mat-option value="daily">täglich</mat-option>
-          <mat-option value="weekly">wöchentlich</mat-option>
-          <mat-option value="monthly">monatlich</mat-option>
-          <mat-option value="yearly">jährlich</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <div id="wiederholen"></div>
-    </th> <!-- Bei Wiederholen reinschreiben -->
   </tr>
 </table>
 

@@ -64,17 +64,39 @@
       </div>
     </th>
     <th>
+      <div class="editor">
+      <mat-form-field appearance="fill">
+        <mat-label>Start</mat-label>
+        <input matInput [min]="minDate" [matDatepicker]="startPicker">
+        <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
+      </mat-form-field>
+
       <mat-form-field appearance="fill">
         <mat-label>Zeitraum</mat-label>
-        <mat-select onchange="changeSelect();"  id="zeitraum" name="zeitraum">
+        <mat-select (selectionChange)="onChangeSelect($event)">
+          <mat-option>None</mat-option>
           <mat-option value="daily">täglich</mat-option>
           <mat-option value="weekly">wöchentlich</mat-option>
           <mat-option value="monthly">monatlich</mat-option>
           <mat-option value="yearly">jährlich</mat-option>
         </mat-select>
       </mat-form-field>
-      <div id="wiederholen"></div>
-    </th> <!-- Bei Wiederholen reinschreiben -->
+
+      <app-daily-editor-form></app-daily-editor-form>
+      <app-weekly-editor-form></app-weekly-editor-form>
+      <app-monthly-editor-form></app-monthly-editor-form>
+      <app-yearly-editor-form></app-yearly-editor-form>
+
+        <!--Min datum anpassen wenn startDatum verschoben-->
+        <mat-form-field appearance="fill">
+          <mat-label>Ende</mat-label>
+          <input matInput [min]="minDate" [matDatepicker]="endPicker">
+          <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+          <mat-datepicker #endPicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </th>
   </tr>
 </table>
 

@@ -1,0 +1,18 @@
+<form *ngIf="showDailyForm">
+  <div class="daily">
+    <mat-radio-group class="radio-buttons">
+      <mat-radio-button value="1">Alle</mat-radio-button>
+      <mat-radio-button value="2">Arbeitstag</mat-radio-button>
+    </mat-radio-group>
+    <mat-form-field appearance="outline">
+      <mat-label>Tag(e)</mat-label>
+      <mat-select>
+        <mat-option value="1">1</mat-option>
+        <mat-option value="2">2</mat-option>
+        <mat-option value="3">3</mat-option>
+        <mat-option value="4">4</mat-option>
+        <mat-option value="5">5</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</form>

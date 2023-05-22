@@ -24,6 +24,8 @@ export class AppointmentEditorComponent implements OnInit{
     const selectElement = document.getElementById('zeitraum') as HTMLSelectElement;
     const selectedOption = selectElement.options[selectElement.selectedIndex].value;
 
+    console.log(selectElement);
+
     if(selectedOption == "daily"){
       console.log('jaa');
     }

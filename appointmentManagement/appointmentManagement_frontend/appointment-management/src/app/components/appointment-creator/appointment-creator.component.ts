@@ -1,6 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Appointment} from "../../Appointment";
+import {UiService} from "../../services/ui.service"; [UiService]
 
 @Component({
   selector: 'app-appointment-creator',
@@ -9,20 +10,16 @@ import {Appointment} from "../../Appointment";
 })
 export class AppointmentCreatorComponent {
   isBooked: any;
-  constructor(public dialogRef: MatDialogRef<AppointmentCreatorComponent>, @Inject(MAT_DIALOG_DATA) public data: Appointment) {
+  minDate: Date;
+  constructor(public dialogRef: MatDialogRef<AppointmentCreatorComponent>, private uiService: UiService, @Inject(MAT_DIALOG_DATA) public data: Appointment) {
+    this.minDate = new Date()
   }
 
   ngOnInit(): void {
   }
 
-  changeSelect() {
-    const selectElement = document.getElementById('zeitraum') as HTMLSelectElement;
-    const selectedOption = selectElement.options[selectElement.selectedIndex].value;
-
-    if(selectedOption == "daily"){
-      console.log('jaa');
-    }
-
+  onChangeSelect(event: any) {
+    this.uiService.toggleForm(event.value);
   }
 
   onStore(data: Appointment) {

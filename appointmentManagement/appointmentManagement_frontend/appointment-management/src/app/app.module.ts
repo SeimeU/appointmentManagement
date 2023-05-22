@@ -3,17 +3,13 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import {ToolbarModule} from "primeng/toolbar";
-import { CalendarComponent } from './components/calendar/calendar.component';
 import {FullCalendarModule} from "@fullcalendar/angular";
 import {MatToolbarModule} from '@angular/material/toolbar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AppointmentTableComponent } from './components/appointment-table/appointment-table.component';
 import { MatTableModule} from "@angular/material/table";
-import { MayorDashboardComponent } from './components/mayor-dashboard/mayor-dashboard.component';
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatTooltipModule} from "@angular/material/tooltip";
-import { AppointmentEditorComponent } from './components/appointment-editor/appointment-editor.component';
 import {MatSortModule} from "@angular/material/sort";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatInputModule} from "@angular/material/input";
@@ -24,7 +20,19 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatGridListModule} from "@angular/material/grid-list";
 import {FormsModule} from "@angular/forms";
 import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatNativeDateModule} from "@angular/material/core";
+
+
+import { CalendarComponent } from './components/calendar/calendar.component';
+import { AppointmentTableComponent } from './components/appointment-table/appointment-table.component';
+import { MayorDashboardComponent } from './components/mayor-dashboard/mayor-dashboard.component';
+import { AppointmentEditorComponent } from './components/appointment-editor/appointment-editor.component';
 import { AppointmentCreatorComponent } from './components/appointment-creator/appointment-creator.component';
+import { DailyEditorFormComponent } from './components/daily-editor-form/daily-editor-form.component';
+import { WeeklyEditorFormComponent } from './components/weekly-editor-form/weekly-editor-form.component';
+import { MonthlyEditorFormComponent } from './components/monthly-editor-form/monthly-editor-form.component';
+import { YearlyEditorFormComponent } from './components/yearly-editor-form/yearly-editor-form.component';
+import {MatRadioModule} from "@angular/material/radio";
 
 @NgModule({
   declarations: [
@@ -33,7 +41,11 @@ import { AppointmentCreatorComponent } from './components/appointment-creator/ap
     AppointmentTableComponent,
     MayorDashboardComponent,
     AppointmentEditorComponent,
-    AppointmentCreatorComponent
+    AppointmentCreatorComponent,
+    DailyEditorFormComponent,
+    WeeklyEditorFormComponent,
+    MonthlyEditorFormComponent,
+    YearlyEditorFormComponent
   ],
   imports: [
     BrowserModule,
@@ -55,7 +67,9 @@ import { AppointmentCreatorComponent } from './components/appointment-creator/ap
     MatSelectModule,
     MatGridListModule,
     FormsModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatRadioModule
   ],
   providers: [],
   bootstrap: [AppComponent]
