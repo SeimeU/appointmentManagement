@@ -3,6 +3,12 @@ import {MatDialog} from "@angular/material/dialog";
 import {Appointment} from "./Appointment";
 import {AppointmentCreatorComponent} from "./components/appointment-creator/appointment-creator.component";
 import {AppointmentService} from "./services/appointment.service";
+import {DISTRICTS} from "./districts";
+import {MatSelectChange} from "@angular/material/select";
+
+
+const BGM: string = "Bürgermeister";
+const GEM: string = "Gemeindemitarbeiter";
 
 @Component({
   selector: 'app-root',
@@ -10,11 +16,26 @@ import {AppointmentService} from "./services/appointment.service";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit{
-  title: string = 'Appointment management';
+
+  title: string = 'Terminverwaltung';
   public getScreenWidth: number = 0;
   public getScreenHeight: number = 0;
 
+  districts: string[];
+
+  user: string[] = [
+    BGM,
+    GEM
+  ];
+
+  gemSelected: boolean = false;
+  bgmSelected: boolean = false;
+  districtSelected: boolean = false;
+  us: string = "";
+  dis: string = "";
+
   constructor(public dialog: MatDialog, private appointmentService: AppointmentService) {
+    this.districts = DISTRICTS;
   }
 
   ngOnInit() {
@@ -40,5 +61,35 @@ export class AppComponent implements OnInit{
         this.appointmentService.createAppointment(result).subscribe(s => console.log(s));
       }
     });
+  }
+
+  onUserChanged($event: MatSelectChange) {
+    this.gemSelected = false;
+    this.bgmSelected = false;
+
+    if($event.value == BGM) {
+      this.bgmSelected = true;
+      this.us = BGM;
+    } else if($event.value == GEM) {
+      this.gemSelected = true;
+      this.us = GEM;
+    }
+  }
+
+  onDistrictChanged($event: MatSelectChange) {
+    this.districtSelected = false;
+
+    if($event.value != undefined) {
+      this.districtSelected = true;
+      this.dis = $event.value;
+      this.appointmentService.district = $event.value;
+    }
+    /*
+    if($event.value == undefined) {
+      this.districtSelected = false;
+    } else {
+      this.districtSelected = true;
+      this.appointmentService.district = $event.value;
+    }*/
   }
 }

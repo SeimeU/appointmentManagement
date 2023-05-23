@@ -11,6 +11,10 @@ export class DailyEditorFormComponent {
   showDailyForm: boolean = false;
   subscription: Subscription;
 
+  days: number[] = [
+    1,2,3,4,5,6
+  ]
+
   constructor(private uiService:UiService) {
     this.subscription = this.uiService.onToggleDaily().subscribe((value) => this.showDailyForm = value);
   }

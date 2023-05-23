@@ -1,9 +1,3 @@
-.radio-buttons {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
 .daily {
   display: flex;
   flex-direction: row;

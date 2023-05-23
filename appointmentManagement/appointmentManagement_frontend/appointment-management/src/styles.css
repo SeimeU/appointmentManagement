@@ -82,5 +82,18 @@ body {
   height: 20px;
 }
 
+.gem-container {
+  max-width: 1500px;
+  margin: 5px auto;
+  overflow: auto;
+  min-height: 300px;
+  padding: 30px;
+  border-radius: 5px;
+}
+
+.bgm-container {
+
+}
+
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -1,3 +1,30 @@
 <form *ngIf="showMonthlyForm">
-  <p>monthly-editor-form works!</p>
+  <div>
+    <mat-label>Alle</mat-label>
+    <mat-form-field appearance="outline">
+      <mat-select>
+        <mat-option *ngFor="let month of months" [value]="month">
+          {{month}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-label>Monat(e)</mat-label>
+  </div>
+  <div>
+    <mat-label>Am</mat-label>
+    <mat-form-field appearance="outline">
+      <mat-select>
+        <mat-option *ngFor="let p of period" [value]="p">
+          {{p}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-select>
+        <mat-option *ngFor="let day of days" [value]="day">
+          {{day}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
 </form>

@@ -145,11 +145,27 @@ public class AppointmentController {
         return ResponseEntity.ok(service.getAppointmentsByLocation(location));
     }
 
+    @GetMapping("/number-of-appointments-loc")
+    public ResponseEntity<Integer> getNumberofAppointmentsByLocation(String location) {
+        if(location == null || location.equals(""))
+            return ResponseEntity.badRequest().build();
+
+        return ResponseEntity.ok(service.getAppointmentsByLocation(location).size());
+    }
+
     @GetMapping("/free-appointments-loc")
     public ResponseEntity<List<Appointment>> getFreeAppointmentsByLocation(String location) {
         if(location == null || location.equals(""))
             return ResponseEntity.badRequest().build();
 
         return ResponseEntity.ok(service.getFreeAppointmentsByLocation(location));
+    }
+
+    @GetMapping("/number-of-free-appointments-loc")
+    public ResponseEntity<Integer> getNumberOfFreeAppointmentsByLocation(String location) {
+        if(location == null || location.equals(""))
+            return ResponseEntity.badRequest().build();
+
+        return ResponseEntity.ok(service.getFreeAppointmentsByLocation(location).size());
     }
 }

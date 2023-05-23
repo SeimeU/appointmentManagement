@@ -1,12 +1,10 @@
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-
-import { AppComponent } from './app.component';
+import {NgModule} from '@angular/core';
+import { BrowserModule} from '@angular/platform-browser';
 import {ToolbarModule} from "primeng/toolbar";
 import {FullCalendarModule} from "@fullcalendar/angular";
 import {MatToolbarModule} from '@angular/material/toolbar';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatTableModule} from "@angular/material/table";
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatTableModule} from "@angular/material/table";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatTooltipModule} from "@angular/material/tooltip";
@@ -21,8 +19,13 @@ import {MatGridListModule} from "@angular/material/grid-list";
 import {FormsModule} from "@angular/forms";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
+import {MatRadioModule} from "@angular/material/radio";
+import {NgxMatDatetimePickerModule} from "@angular-material-components/datetime-picker";
+import {NgxMatTimepickerModule} from "@angular-material-components/datetime-picker";
+import {NgxMatNativeDateModule} from "@angular-material-components/datetime-picker";
 
 
+import { AppComponent } from './app.component';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { AppointmentTableComponent } from './components/appointment-table/appointment-table.component';
 import { MayorDashboardComponent } from './components/mayor-dashboard/mayor-dashboard.component';
@@ -31,8 +34,7 @@ import { AppointmentCreatorComponent } from './components/appointment-creator/ap
 import { DailyEditorFormComponent } from './components/daily-editor-form/daily-editor-form.component';
 import { WeeklyEditorFormComponent } from './components/weekly-editor-form/weekly-editor-form.component';
 import { MonthlyEditorFormComponent } from './components/monthly-editor-form/monthly-editor-form.component';
-import { YearlyEditorFormComponent } from './components/yearly-editor-form/yearly-editor-form.component';
-import {MatRadioModule} from "@angular/material/radio";
+import { MayorChartComponent } from './components/mayor-chart/mayor-chart.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +47,7 @@ import {MatRadioModule} from "@angular/material/radio";
     DailyEditorFormComponent,
     WeeklyEditorFormComponent,
     MonthlyEditorFormComponent,
-    YearlyEditorFormComponent
+    MayorChartComponent,
   ],
   imports: [
     BrowserModule,
@@ -69,7 +71,10 @@ import {MatRadioModule} from "@angular/material/radio";
     FormsModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatRadioModule
+    MatRadioModule,
+    NgxMatDatetimePickerModule,
+    NgxMatTimepickerModule,
+    NgxMatNativeDateModule
   ],
   providers: [],
   bootstrap: [AppComponent]

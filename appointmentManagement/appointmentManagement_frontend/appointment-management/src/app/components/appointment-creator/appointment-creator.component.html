@@ -3,59 +3,52 @@
 </div>
 <table>
   <tr>
-    <th></th>
-    <th>
-      <div mat-dialog-content>
-        <h1>Wiederholen</h1>
-      </div>
-    </th>
-  </tr>
-  <tr>
     <th>
       <div mat-dialog-content class="editor">
         <mat-form-field appearance="outline">
           <mat-label>Standort</mat-label>
           <mat-select name="standort" [(ngModel)]="data.location" required>
-            <mat-option value="Braunau">Braunau</mat-option>
-            <mat-option value="Linz">Linz</mat-option>
+            <mat-option *ngFor="let loc of locations" [value]="loc">
+              {{loc}}
+            </mat-option>
           </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Linie</mat-label>
           <mat-select name="linie" [(ngModel)]="data.line" required>
-            <mat-option value="1">1</mat-option>
-            <mat-option value="2">2</mat-option>
+            <mat-option *ngFor="let line of lines" [value]="line">
+              {{line}}
+            </mat-option>
           </mat-select>
+        </mat-form-field>
 
+        <mat-form-field appearance="fill">
+          <mat-label>Start</mat-label>
+          <input matInput [min]="minDate" placeholder="Datum auswählen" [matDatepicker]="picker" [(ngModel)]="data.date" required>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
 
         <mat-form-field>
-          <input matInput type="datetime-local" placeholder="Datum" [(ngModel)]="data.date" required>
+          <input matInput type="time" placeholder="Zeit auswählen" [(ngModel)]="data.time" required>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Dauer</mat-label>
           <mat-select name="dauer" [(ngModel)]="data.duration" required>
-            <mat-option value="5min">5min</mat-option>
-            <mat-option value="10min">10min</mat-option>
-            <mat-option value="15min">15min</mat-option>
-            <mat-option value="20min">20min</mat-option>
-            <mat-option value="25min">25min</mat-option>
-            <mat-option value="30min">30min</mat-option>
-            <mat-option value="35min">35min</mat-option>
-            <mat-option value="40min">40min</mat-option>
-            <mat-option value="45min">45min</mat-option>
-            <mat-option value="50min">50min</mat-option>
-            <mat-option value="55min">55min</mat-option>
+            <mat-option *ngFor="let dur of duration" [value]="dur.value">
+              {{dur.viewValue}}
+            </mat-option>
           </mat-select>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
           <mat-label>Wirkstoff</mat-label>
           <mat-select name="wirkstoff" [(ngModel)]="data.substance" required>
-            <mat-option value="Pfizer">Pfizer</mat-option>
-            <mat-option value="Medikament">Medikament</mat-option>
+            <mat-option *ngFor="let substance of substances" [value]="substance">
+              {{substance}}
+            </mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -64,6 +57,9 @@
       </div>
     </th>
     <th>
+      <div mat-dialog-content>
+        <h1>Wiederholen</h1>
+      </div>
       <div class="editor">
       <mat-form-field appearance="fill">
         <mat-label>Start</mat-label>
@@ -76,17 +72,15 @@
         <mat-label>Zeitraum</mat-label>
         <mat-select (selectionChange)="onChangeSelect($event)">
           <mat-option>None</mat-option>
-          <mat-option value="daily">täglich</mat-option>
-          <mat-option value="weekly">wöchentlich</mat-option>
-          <mat-option value="monthly">monatlich</mat-option>
-          <mat-option value="yearly">jährlich</mat-option>
+          <mat-option *ngFor="let period of timePeriod" [value]="period.value">
+            {{period.viewValue}}
+          </mat-option>
         </mat-select>
       </mat-form-field>
 
       <app-daily-editor-form></app-daily-editor-form>
       <app-weekly-editor-form></app-weekly-editor-form>
       <app-monthly-editor-form></app-monthly-editor-form>
-      <app-yearly-editor-form></app-yearly-editor-form>
 
         <!--Min datum anpassen wenn startDatum verschoben-->
         <mat-form-field appearance="fill">

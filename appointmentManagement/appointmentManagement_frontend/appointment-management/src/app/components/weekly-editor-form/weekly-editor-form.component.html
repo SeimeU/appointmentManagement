@@ -1,4 +1,20 @@
 <form *ngIf="showWeeklyForm">
-  <p>weekly-editor-form works!</p>
+  <mat-label>Alle</mat-label>
+  <mat-form-field appearance="outline">
+    <mat-select>
+      <mat-option *ngFor="let week of weeks" [value]="week">
+        {{week}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-label>Woche(n) am:</mat-label>
+
+  <mat-checkbox [aria-label]="monday">Mo</mat-checkbox>
+  <mat-checkbox [aria-label]="tuesday">Di</mat-checkbox>
+  <mat-checkbox [aria-label]="wednesday">Mi</mat-checkbox>
+  <mat-checkbox [aria-label]="thursday">Do</mat-checkbox>
+  <mat-checkbox [aria-label]="friday">Fr</mat-checkbox>
+  <mat-checkbox [aria-label]="saturday">Sa</mat-checkbox>
+  <mat-checkbox [aria-label]="sunday">So</mat-checkbox>
 </form>
 

@@ -14,12 +14,29 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class AppointmentService {
-  private apiUrl = 'http://localhost:9193/';
+  private apiUrl: string = 'http://localhost:9193/';
+  private _district: string = "";
 
   constructor(private http:HttpClient) { }
 
+  set district(value: string) {
+    this._district = value;
+  }
+
   getAppointments(): Observable<Appointment[]> {
+    return this.http.get<Appointment[]>(this.apiUrl + 'appointments-loc?location=' + this._district);
+  }
+
+  getAllAppointments(): Observable<Appointment[]> {
     return this.http.get<Appointment[]>(this.apiUrl + 'all-appointments');
+  }
+
+  getNumberOfFreeAppointments(): Observable<number> {
+    return this.http.get<number>(this.apiUrl + 'number-of-free-appointments-loc?location=' + this._district);
+  }
+
+  getNumberOfAppointments(): Observable<number> {
+    return this.http.get<number>(this.apiUrl + 'number-of-appointments-loc?location=' + this._district);
   }
 
   getAppointmentSeries(): Observable<AppointmentSeries[]> {

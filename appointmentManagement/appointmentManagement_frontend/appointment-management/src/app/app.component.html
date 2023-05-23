@@ -1,13 +1,35 @@
 <mat-toolbar color="primary">
   <span>{{title}}</span>
   <span class="spacer"></span>
-  <button mat-fab color="warn" matTooltip="Termin/Terminserie hinzufügen" aria-label="Button with plus icon" (click)="onClick()">
+  <button mat-fab color="warn" matTooltip="Termin/Terminserie hinzufügen" aria-label="Button with plus icon" (click)="onClick()" *ngIf="gemSelected && districtSelected">
     <mat-icon>add</mat-icon>
   </button>
 </mat-toolbar>
 
-<div class="container">
+<mat-form-field>
+  <mat-select (selectionChange)="onDistrictChanged($event)">
+    <mat-option>None</mat-option>
+    <mat-option *ngFor="let district of districts" [value]="district">
+      {{district}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<mat-form-field>
+  <mat-select (selectionChange)="onUserChanged($event)">
+    <mat-option>None</mat-option>
+    <mat-option *ngFor="let u of user" [value]="u">
+      {{u}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<div class="gem-container" *ngIf="gemSelected && districtSelected">
   <app-calendar></app-calendar>
   <p class="margin"></p>
   <app-appointment-table></app-appointment-table>
+</div>
+
+<div class="bgm-container" *ngIf="bgmSelected && districtSelected">
+ <app-mayor-dashboard></app-mayor-dashboard>
 </div>

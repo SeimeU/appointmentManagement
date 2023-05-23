@@ -1,0 +1,20 @@
+export const DISTRICTS: string[] = [
+  'Braunau am Inn',
+  'Eferding',
+  'Freistadt',
+  'Gmunden',
+  'Grieskirchen',
+  'Kirchdorf an der Krems',
+  'Linz',
+  'Linz-Land',
+  'Perg',
+  'Ried im Innkreis',
+  'Rohrbach',
+  'Schärding',
+  'Steyr',
+  'Steyr-Land',
+  'Urfahr-Umgebung',
+  'Vöcklabruck',
+  'Wels',
+  'Wels-Land'
+]
