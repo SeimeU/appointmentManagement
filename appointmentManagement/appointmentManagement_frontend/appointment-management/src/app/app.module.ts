@@ -35,6 +35,7 @@ import { DailyEditorFormComponent } from './components/daily-editor-form/daily-e
 import { WeeklyEditorFormComponent } from './components/weekly-editor-form/weekly-editor-form.component';
 import { MonthlyEditorFormComponent } from './components/monthly-editor-form/monthly-editor-form.component';
 import { MayorChartComponent } from './components/mayor-chart/mayor-chart.component';
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 @NgModule({
   declarations: [
@@ -75,7 +76,8 @@ import { MayorChartComponent } from './components/mayor-chart/mayor-chart.compon
     NgxMatDatetimePickerModule,
     NgxMatTimepickerModule,
     NgxMatNativeDateModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatSlideToggleModule
   ],
   providers: [],
   bootstrap: [AppComponent]
