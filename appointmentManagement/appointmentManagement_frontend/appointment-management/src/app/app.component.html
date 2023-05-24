@@ -16,7 +16,7 @@
 </mat-form-field>
 
 <mat-form-field>
-  <mat-select (selectionChange)="onUserChanged($event)">
+  <mat-select (selectionChange)="onUserChanged($event)" [formControl]="selectedOption">
     <mat-option>None</mat-option>
     <mat-option *ngFor="let u of user" [value]="u">
       {{u}}

@@ -7,6 +7,10 @@
   <tr>
     <td>{{bookedAppointments}}</td>
     <td>{{freeAppointments}}</td>
-    <td>{{percentage}}%</td>
+    <td>{{percentage | number:'1.2-2' }}%</td>
   </tr>
 </table>
+
+<div>
+  <canvas id="PieChart">{{chart}}</canvas>
+</div>

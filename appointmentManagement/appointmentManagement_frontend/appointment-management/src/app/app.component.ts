@@ -5,6 +5,7 @@ import {AppointmentCreatorComponent} from "./components/appointment-creator/appo
 import {AppointmentService} from "./services/appointment.service";
 import {DISTRICTS} from "./districts";
 import {MatSelectChange} from "@angular/material/select";
+import {FormControl} from "@angular/forms";
 
 
 const BGM: string = "Bürgermeister";
@@ -28,14 +29,15 @@ export class AppComponent implements OnInit{
     GEM
   ];
 
+  selectedOption: FormControl;
   gemSelected: boolean = false;
   bgmSelected: boolean = false;
   districtSelected: boolean = false;
   us: string = "";
-  dis: string = "";
 
   constructor(public dialog: MatDialog, private appointmentService: AppointmentService) {
     this.districts = DISTRICTS;
+    this.selectedOption = new FormControl('None');
   }
 
   ngOnInit() {
@@ -77,19 +79,16 @@ export class AppComponent implements OnInit{
   }
 
   onDistrictChanged($event: MatSelectChange) {
-    this.districtSelected = false;
-
-    if($event.value != undefined) {
-      this.districtSelected = true;
-      this.dis = $event.value;
-      this.appointmentService.district = $event.value;
-    }
-    /*
     if($event.value == undefined) {
       this.districtSelected = false;
     } else {
       this.districtSelected = true;
       this.appointmentService.district = $event.value;
-    }*/
+
+      // Set the selection of the user to 'None' - so that the screen gets cleared
+      this.selectedOption.setValue('None');
+      this.gemSelected = false;
+      this.bgmSelected = false;
+    }
   }
 }

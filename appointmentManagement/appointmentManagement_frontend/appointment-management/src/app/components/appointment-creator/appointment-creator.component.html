@@ -1,101 +1,124 @@
 <div class="test">
   <h1 mat-dialog-title>Termineditor</h1>
 </div>
-<table>
-  <tr>
-    <th>
-      <div mat-dialog-content class="editor">
-        <mat-form-field appearance="outline">
-          <mat-label>Standort</mat-label>
-          <mat-select name="standort" [(ngModel)]="data.location" required>
-            <mat-option *ngFor="let loc of locations" [value]="loc">
-              {{loc}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+<div>
+  <table>
+    <tr>
+      <th>
+        <div mat-dialog-content class="editor">
+          <mat-form-field appearance="outline">
+            <mat-label>Standort</mat-label>
+            <mat-select name="standort" [formControl]="locationForm" required>
+              <mat-option *ngFor="let loc of locations" [value]="loc">
+                {{loc}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="locationForm.hasError('required')">
+              Der gewünschte Standort <strong>muss</strong> ausgewählt werden!
+            </mat-error>
+          </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Linie</mat-label>
-          <mat-select name="linie" [(ngModel)]="data.line" required>
-            <mat-option *ngFor="let line of lines" [value]="line">
-              {{line}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Linie</mat-label>
+            <mat-select name="linie" [formControl]="lineForm" required>
+              <mat-option *ngFor="let line of lines" [value]="line">
+                {{line}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="lineForm.hasError('required')">
+              Die gewünschte Linie <strong>muss</strong> ausgewählt werden!
+            </mat-error>
+          </mat-form-field>
 
+          <mat-form-field appearance="fill">
+            <mat-label>Datum</mat-label>
+            <input matInput [min]="minDate" placeholder="Datum auswählen" [matDatepicker]="picker" [formControl]="dateForm" required>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="dateForm.hasError('required')">
+              Das gewünschte Datum <strong>muss</strong> ausgewählt werden!
+            </mat-error>
+            <mat-error *ngIf="dateBelowMin || timeBelowMin">
+              Datum ist darf <strong>nicht</strong> in der Vergangenheit liegen!
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput type="time" placeholder="Zeit auswählen" [formControl]="timeForm" required>
+            <mat-error *ngIf="timeForm.hasError('required')">
+              Die gewünschte Uhrzeit <strong>muss</strong> angegeben werden!
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Dauer</mat-label>
+            <mat-select name="dauer" [formControl]="durationForm" required>
+              <mat-option *ngFor="let dur of duration" [value]="dur.value">
+                {{dur.viewValue}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="durationForm.hasError('required')">
+              Die gewünschte Dauer <strong>muss</strong> ausgewählt werden!
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Wirkstoff</mat-label>
+            <mat-select name="wirkstoff" [formControl]="substanceForm" required>
+              <mat-option *ngFor="let substance of substances" [value]="substance">
+                {{substance}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="substanceForm.hasError('required')">
+              Der gewünschte Wirkstoff <strong>muss</strong> ausgewählt werden!
+            </mat-error>
+          </mat-form-field>
+
+          <mat-checkbox [aria-label]="isBooked"  [formControl]="bookedForm">Termin gebucht</mat-checkbox>
+
+        </div>
+      </th>
+      <th>
+        <div mat-dialog-content>
+          <h1>Wiederholen</h1>
+        </div>
+        <div class="editor">
         <mat-form-field appearance="fill">
           <mat-label>Start</mat-label>
-          <input matInput [min]="minDate" placeholder="Datum auswählen" [matDatepicker]="picker" [(ngModel)]="data.date" required>
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
+          <input matInput [min]="minDate" [matDatepicker]="startPicker">
+          <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+          <mat-datepicker #startPicker></mat-datepicker>
         </mat-form-field>
 
-        <mat-form-field>
-          <input matInput type="time" placeholder="Zeit auswählen" [(ngModel)]="data.time" required>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Dauer</mat-label>
-          <mat-select name="dauer" [(ngModel)]="data.duration" required>
-            <mat-option *ngFor="let dur of duration" [value]="dur.value">
-              {{dur.viewValue}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-form-field appearance="outline">
-          <mat-label>Wirkstoff</mat-label>
-          <mat-select name="wirkstoff" [(ngModel)]="data.substance" required>
-            <mat-option *ngFor="let substance of substances" [value]="substance">
-              {{substance}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        <mat-checkbox [aria-label]="isBooked"  [(ngModel)]="data.booked">Termin gebucht</mat-checkbox>
-
-      </div>
-    </th>
-    <th>
-      <div mat-dialog-content>
-        <h1>Wiederholen</h1>
-      </div>
-      <div class="editor">
-      <mat-form-field appearance="fill">
-        <mat-label>Start</mat-label>
-        <input matInput [min]="minDate" [matDatepicker]="startPicker">
-        <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
-        <mat-datepicker #startPicker></mat-datepicker>
-      </mat-form-field>
-
-      <mat-form-field appearance="fill">
-        <mat-label>Zeitraum</mat-label>
-        <mat-select (selectionChange)="onChangeSelect($event)">
-          <mat-option>None</mat-option>
-          <mat-option *ngFor="let period of timePeriod" [value]="period.value">
-            {{period.viewValue}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-
-      <app-daily-editor-form></app-daily-editor-form>
-      <app-weekly-editor-form></app-weekly-editor-form>
-      <app-monthly-editor-form></app-monthly-editor-form>
-
-        <!--Min datum anpassen wenn startDatum verschoben-->
         <mat-form-field appearance="fill">
-          <mat-label>Ende</mat-label>
-          <input matInput [min]="minDate" [matDatepicker]="endPicker">
-          <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
-          <mat-datepicker #endPicker></mat-datepicker>
+          <mat-label>Zeitraum</mat-label>
+          <mat-select (selectionChange)="onChangeSelect($event)">
+            <mat-option>None</mat-option>
+            <mat-option *ngFor="let period of timePeriod" [value]="period.value">
+              {{period.viewValue}}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
-      </div>
-    </th>
-  </tr>
-</table>
+
+        <app-daily-editor-form></app-daily-editor-form>
+        <app-weekly-editor-form></app-weekly-editor-form>
+        <app-monthly-editor-form></app-monthly-editor-form>
+
+          <!--Min datum anpassen wenn startDatum verschoben-->
+          <mat-form-field appearance="fill">
+            <mat-label>Ende</mat-label>
+            <input matInput [min]="minDate" [matDatepicker]="endPicker">
+            <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
+            <mat-datepicker #endPicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </th>
+    </tr>
+  </table>
+</div>
 
 
 <div mat-dialog-actions class="dialog-actions">
   <button mat-button [mat-dialog-close]="null">Abbrechen</button>
-  <button mat-button (click)="onStore(data)" cdkFocusInitial>Speichern</button>
+  <button mat-button (click)="onStore()" cdkFocusInitial>Speichern</button>
 </div>
