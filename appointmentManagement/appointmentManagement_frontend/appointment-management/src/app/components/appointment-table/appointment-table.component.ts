@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {Appointment} from "../../Appointment";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
@@ -12,13 +12,21 @@ import {MatDialog} from "@angular/material/dialog";
   templateUrl: './appointment-table.component.html',
   styleUrls: ['./appointment-table.component.css']
 })
-export class AppointmentTableComponent implements OnInit, AfterViewInit{
-  dataSource: MatTableDataSource<Appointment>;
-  appointments: Appointment[] = [];
+export class AppointmentTableComponent{
+  //region Fields
+
+  // Hard-coded table columns array
   displayColumns: string[] = ['id', 'date' , 'location', 'line', 'duration', 'booked', 'substance']
 
+  // Data stores for the table
+  dataSource: MatTableDataSource<Appointment>;
+  appointments: Appointment[] = [];
+
+  // Table variables for the paginator and the sort function
   @ViewChild(MatPaginator) paginator: any;
   @ViewChild(MatSort) sort: any;
+  //endregion
+
 
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog) {
     this.appointmentService.getAppointments().subscribe((appointments) => {
@@ -30,30 +38,32 @@ export class AppointmentTableComponent implements OnInit, AfterViewInit{
     this.dataSource = new MatTableDataSource<Appointment>(this.appointments);
   }
 
-  ngOnInit(): void {
-  }
-
-  ngAfterViewInit(): void {
-  }
-
+  // Event handler for the filter function of the table
   applyFilter(event: KeyboardEvent) {
+    // Filter the data according to the input
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
 
+    // Check if the paginator exists
     if (this.dataSource.paginator) {
+      // Jump back to the first page
       this.dataSource.paginator.firstPage();
     }
   }
 
+  // Event handler for a click on a row of the table
   onRowClick(row: Appointment) {
+    // Create a dialog with the data of the clicked appointment
     const dialogRef = this.dialog.open(AppointmentEditorComponent, {
       data: {location: row.location, line: row.line, booked: row.booked, substance: row.substance, date: row.date, duration: row.duration}
     });
 
+    // Check if the dialog was closed with the store button
     dialogRef.afterClosed().subscribe(result => {
       console.log(result);
+      // Send the http request to create the appointment (series)
       if(result !== null) {
-
+        this.appointmentService.updateAppointment(result).subscribe(s => console.log(s));
       }
     });
   }

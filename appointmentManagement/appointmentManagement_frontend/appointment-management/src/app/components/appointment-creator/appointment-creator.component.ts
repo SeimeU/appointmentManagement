@@ -5,6 +5,8 @@ import {UiService} from "../../services/ui.service";
 import {FormControl} from "@angular/forms";
 import {MatSlideToggleChange} from "@angular/material/slide-toggle";
 import {AppointmentSeries} from "../../AppointmentSeries";
+import {AppointmentService} from "../../services/appointment.service";
+import {Result} from "../../Result";
 
 interface TimePeriod {
   value: string;
@@ -91,7 +93,7 @@ export class AppointmentCreatorComponent{
   ];
   //endregion
 
-  constructor(public dialogRef: MatDialogRef<AppointmentCreatorComponent>, private uiService: UiService) {
+  constructor(public dialogRef: MatDialogRef<AppointmentCreatorComponent>, private uiService: UiService, private appointmentService: AppointmentService) {
     // Set min date of datepickers to current date
     this.minDate = new Date();
 
@@ -246,11 +248,7 @@ export class AppointmentCreatorComponent{
       return;
     }
 
-    // Check if there is already an appointment on this location, line and time
-    if(false) {
-      alert('Es is bereits ein Termin an diesem Standort auf dieser Linie zur gewünschten Zeit vorhanden!');
-      return;
-    }
+    let result: Result;
 
     // Check if the return value should be an appointment or appointment series
     if(this.sliderValue) {
@@ -265,16 +263,37 @@ export class AppointmentCreatorComponent{
         count: this.countForm.value,
         interval: intervalValue
       }
-      // Close popup and return the data
-      this.dialogRef.close(appointmentSeries);
+
+      // Check if there is already an appointment on this location, line and time
+      if(false) {
+        alert('Es is bereits ein Termin an diesem Standort auf dieser Linie zur gewünschten Zeit vorhanden!');
+        return;
+      }
+
+      // Create the return value
+      result = {
+        appointmentSeries: appointmentSeries
+      };
     } else {
       // Create appointment object with the data
       let appointment: Appointment = {
         location: this.locationForm.value, line: this.lineForm.value, date: inputDate, duration: this.durationForm.value, substance: this.substanceForm.value, booked: this.bookedForm.value
       };
-      // Close popup and return the data
-      this.dialogRef.close(appointment);
+
+      // Check if there is already an appointment on this location, line and time
+      if(false) {
+        alert('Es is bereits ein Termin an diesem Standort auf dieser Linie zur gewünschten Zeit vorhanden!');
+        return;
+      }
+
+      // Create the return value
+      result = {
+        appointment: appointment
+      };
     }
+
+    // Close popup and return the data
+    this.dialogRef.close(result);
   }
 
   //endregion

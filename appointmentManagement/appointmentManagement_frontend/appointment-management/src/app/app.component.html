@@ -1,12 +1,13 @@
 <mat-toolbar color="primary">
   <span>{{title}}</span>
   <span class="spacer"></span>
-  <button mat-fab color="warn" matTooltip="Termin/Terminserie hinzufügen" aria-label="Button with plus icon" (click)="onClick()" *ngIf="gemSelected && districtSelected">
+  <button mat-fab color="warn" matTooltip="Termin/Terminserie hinzufügen" aria-label="Button with plus icon" (click)="onAddAppointmentClick()" *ngIf="gemSelected && districtSelected">
     <mat-icon>add</mat-icon>
   </button>
 </mat-toolbar>
 
-<mat-form-field>
+<mat-form-field matTooltip="Wählen Sie den Bezirk aus in dem Sie arbeiten">
+  <mat-label>Bezirk</mat-label>
   <mat-select (selectionChange)="onDistrictChanged($event)">
     <mat-option>None</mat-option>
     <mat-option *ngFor="let district of districts" [value]="district">
@@ -15,7 +16,8 @@
   </mat-select>
 </mat-form-field>
 
-<mat-form-field>
+<mat-form-field matTooltip="Wählen Sie Ihren Job aus">
+  <mat-label>Benutzer</mat-label>
   <mat-select (selectionChange)="onUserChanged($event)" [formControl]="selectedOption">
     <mat-option>None</mat-option>
     <mat-option *ngFor="let u of user" [value]="u">

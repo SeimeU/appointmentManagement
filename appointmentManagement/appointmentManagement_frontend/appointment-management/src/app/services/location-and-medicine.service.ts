@@ -10,8 +10,8 @@ export class LocationAndMedicineService {
 
   constructor(private http:HttpClient) { }
 
-  getLocations(zipcode: string): Observable<string[]> {
-    return this.http.get<string[]>(this.apiUrl + 'locations/' + zipcode);
+  getLocationsWithCapacity(district: string): Observable<string[]> {
+    return this.http.get<string[]>(this.apiUrl + 'locations/' + district);
   }
 
   getLinesOfLocation(location: string): Observable<string[]> {

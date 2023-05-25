@@ -68,4 +68,12 @@ export class AppointmentService {
   updateAppointmentSeries(appointmentSeries: AppointmentSeries): Observable<AppointmentSeries> {
     return this.http.post<AppointmentSeries>(this.apiUrl + 'appointment-series/' + appointmentSeries.id, appointmentSeries, httpOptions);
   }
+
+  checkAppointmentPossible(appointment: Appointment): Observable<boolean> {
+    return this.http.post<boolean>(this.apiUrl + '', appointment, httpOptions);
+  }
+
+  checkAppointmentsSeriesPossible(appointmentSeries: AppointmentSeries): Observable<boolean> {
+    return this.http.post<boolean>(this.apiUrl + '', appointmentSeries, httpOptions);
+  }
 }
