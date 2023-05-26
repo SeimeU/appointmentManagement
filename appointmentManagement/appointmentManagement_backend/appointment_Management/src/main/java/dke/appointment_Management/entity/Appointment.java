@@ -14,7 +14,7 @@ public class Appointment {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime date;
 
-    private String duration;
+    private int duration;
     private String location;
     private int line;
     private boolean booked;
@@ -26,7 +26,7 @@ public class Appointment {
     }
 
     public Appointment(
-            LocalDateTime date, String duration,
+            LocalDateTime date, int duration,
             String location, int line, boolean booked, String substance
     ) {
         this.date = date;
@@ -56,11 +56,11 @@ public class Appointment {
         this.date = date;
     }
 
-    public String getDuration() {
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 

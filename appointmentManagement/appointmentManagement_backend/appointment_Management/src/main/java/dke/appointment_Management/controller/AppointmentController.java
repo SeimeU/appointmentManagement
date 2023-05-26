@@ -28,12 +28,22 @@ public class AppointmentController {
         if(appointment == null)
             return ResponseEntity.badRequest().build();
 
+        if(!service.isValid(appointment))
+            return ResponseEntity.badRequest().build();
+
         return new ResponseEntity<>(service.saveAppointment(appointment), HttpStatus.CREATED);
     }
 
     @PostMapping("/appointment-series")
     public ResponseEntity<AppointmentSeries> createAppointmentSeries(@RequestBody AppointmentSeries appointmentSeries) {
         if(appointmentSeries == null)
+            return ResponseEntity.badRequest().build();
+
+        // Check the syntax of the interval string
+        if(!service.checkIntervalSyntax(appointmentSeries.getInterval()))
+            return ResponseEntity.badRequest().build();
+
+        if(!service.isValid(appointmentSeries))
             return ResponseEntity.badRequest().build();
 
         return new ResponseEntity<>(service.saveAppointmentSeries(appointmentSeries), HttpStatus.CREATED);
@@ -54,6 +64,10 @@ public class AppointmentController {
     @PostMapping("/save-appointment-series")
     public ResponseEntity<AppointmentSeries> saveAppointmentSeries(@RequestBody AppointmentSeries appointmentSeries) {
         if(appointmentSeries == null)
+            return ResponseEntity.badRequest().build();
+
+        // Check the syntax of the interval string
+        if(!service.checkIntervalSyntax(appointmentSeries.getInterval()))
             return ResponseEntity.badRequest().build();
 
         if(!service.isAvailable(appointmentSeries.getId(), true))
@@ -167,5 +181,25 @@ public class AppointmentController {
             return ResponseEntity.badRequest().build();
 
         return ResponseEntity.ok(service.getFreeAppointmentsByLocation(location).size());
+    }
+
+    @GetMapping("/is-appointment-valid")
+    public ResponseEntity<Boolean> getIfAppointmentIsValid(Appointment appointment) {
+        if(appointment == null)
+            return ResponseEntity.badRequest().build();
+
+        return ResponseEntity.ok(service.isValid(appointment));
+    }
+
+    @GetMapping("/is-appointment-series-valid")
+    public ResponseEntity<Boolean> getIfAppointmentSeriesIsValid(AppointmentSeries appointmentSeries) {
+        if(appointmentSeries == null)
+            return ResponseEntity.badRequest().build();
+
+        // Check the syntax of the interval string
+        if(!service.checkIntervalSyntax(appointmentSeries.getInterval()))
+            return ResponseEntity.badRequest().build();
+
+        return ResponseEntity.ok(service.isValid(appointmentSeries));
     }
 }

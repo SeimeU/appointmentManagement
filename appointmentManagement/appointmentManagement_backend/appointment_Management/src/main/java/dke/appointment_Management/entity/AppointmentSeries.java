@@ -2,7 +2,7 @@ package dke.appointment_Management.entity;
 
 import jakarta.persistence.*;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -12,15 +12,15 @@ public class AppointmentSeries {
     @GeneratedValue
     private long id;
 
-    @Temporal(TemporalType.DATE)
-    private Date startDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime startDate;
 
-    @Temporal(TemporalType.DATE)
-    private Date endDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime endDate;
 
     private String period_interval;
-    private String number;
-    private String duration;
+    private int number;
+    private int duration;
     private String location;
     private int line;
     private String substance;
@@ -38,7 +38,7 @@ public class AppointmentSeries {
     }
 
     public AppointmentSeries(
-            Date startDate, Date endDate, String interval, String number, String duration, String location,
+            LocalDateTime startDate, LocalDateTime endDate, String interval, int number, int duration, String location,
             int line, String substance, List<Appointment> appointments
     ) {
         this.startDate = startDate;
@@ -63,19 +63,19 @@ public class AppointmentSeries {
         this.id = id;
     }
 
-    public Date getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
@@ -87,19 +87,19 @@ public class AppointmentSeries {
         this.period_interval = interval;
     }
 
-    public String getNumber() {
+    public int getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(int number) {
         this.number = number;
     }
 
-    public String getDuration() {
+    public int getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(int duration) {
         this.duration = duration;
     }
 
@@ -149,7 +149,6 @@ public class AppointmentSeries {
                 ", Standort='" + this.location + '\'' +
                 ", Linie=" + this.line +
                 ", Wirkstoff='" + this.substance +
-                ", Anzahl Termine=" + this.appointments.size() +
                 '}';
     }
 }
