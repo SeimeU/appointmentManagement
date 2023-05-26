@@ -159,6 +159,15 @@ public class AppointmentController {
         return ResponseEntity.ok(service.getAppointmentsByLocation(location));
     }
 
+    @GetMapping("/appointments-series-loc")
+    public ResponseEntity<List<AppointmentSeries>> getAppointmentSeriesByLocation(String location) {
+        if(location == null || location.equals(""))
+            return ResponseEntity.badRequest().build();
+
+        return ResponseEntity.ok(service.getAppointmentSeriesByLocation(location));
+    }
+
+
     @GetMapping("/number-of-appointments-loc")
     public ResponseEntity<Integer> getNumberofAppointmentsByLocation(String location) {
         if(location == null || location.equals(""))
@@ -183,7 +192,7 @@ public class AppointmentController {
         return ResponseEntity.ok(service.getFreeAppointmentsByLocation(location).size());
     }
 
-    @GetMapping("/is-appointment-valid")
+    @PostMapping("/is-appointment-valid")
     public ResponseEntity<Boolean> getIfAppointmentIsValid(Appointment appointment) {
         if(appointment == null)
             return ResponseEntity.badRequest().build();
@@ -191,7 +200,7 @@ public class AppointmentController {
         return ResponseEntity.ok(service.isValid(appointment));
     }
 
-    @GetMapping("/is-appointment-series-valid")
+    @PostMapping("/is-appointment-series-valid")
     public ResponseEntity<Boolean> getIfAppointmentSeriesIsValid(AppointmentSeries appointmentSeries) {
         if(appointmentSeries == null)
             return ResponseEntity.badRequest().build();

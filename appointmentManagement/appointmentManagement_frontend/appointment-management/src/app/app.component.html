@@ -27,9 +27,13 @@
 </mat-form-field>
 
 <div class="gem-container" *ngIf="gemSelected && districtSelected">
-  <app-calendar></app-calendar>
+  <!--<app-calendar></app-calendar>-->
   <p class="margin"></p>
+  <label>Termine</label>
   <app-appointment-table></app-appointment-table>
+  <p class="margin"></p>
+  <label>Terminserien</label>
+  <app-appointment-series-table></app-appointment-series-table>
 </div>
 
 <div class="bgm-container" *ngIf="bgmSelected && districtSelected">

@@ -120,6 +120,10 @@ public class AppointmentService {
         return repository.findAllByLocation(location);
     }
 
+    public List<AppointmentSeries> getAppointmentSeriesByLocation(String location) {
+        return repositoryAS.findAllByLocation(location);
+    }
+
     public List<Appointment> getFreeAppointmentsByLocation(String location) {
         return repository.findAllByLocation(location).stream().filter(a -> !a.isBooked()).collect(Collectors.toList());
     }
@@ -159,6 +163,7 @@ public class AppointmentService {
             }
         }
 
+        deleteAppointments(tempAppointments);
         return true;
     }
 

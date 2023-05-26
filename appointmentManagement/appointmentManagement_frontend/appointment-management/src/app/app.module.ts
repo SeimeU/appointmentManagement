@@ -36,6 +36,7 @@ import { WeeklyEditorFormComponent } from './components/weekly-editor-form/weekl
 import { MonthlyEditorFormComponent } from './components/monthly-editor-form/monthly-editor-form.component';
 import { MayorChartComponent } from './components/mayor-chart/mayor-chart.component';
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import { AppointmentSeriesTableComponent } from './components/appointment-series-table/appointment-series-table.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +50,7 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
     WeeklyEditorFormComponent,
     MonthlyEditorFormComponent,
     MayorChartComponent,
+    AppointmentSeriesTableComponent,
   ],
   imports: [
     BrowserModule,

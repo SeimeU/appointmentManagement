@@ -40,7 +40,7 @@ export class AppointmentService {
   }
 
   getAppointmentSeries(): Observable<AppointmentSeries[]> {
-    return this.http.get<AppointmentSeries[]>(this.apiUrl + 'appointment-series');
+    return this.http.get<AppointmentSeries[]>(this.apiUrl + 'appointments-series-loc?location=' + this._district);
   }
 
   deleteAppointment(appointment: Appointment): void {
@@ -70,10 +70,10 @@ export class AppointmentService {
   }
 
   checkAppointmentPossible(appointment: Appointment): Observable<boolean> {
-    return this.http.post<boolean>(this.apiUrl + '', appointment, httpOptions);
+    return this.http.post<boolean>(this.apiUrl + 'is-appointment-valid', appointment, httpOptions);
   }
 
   checkAppointmentsSeriesPossible(appointmentSeries: AppointmentSeries): Observable<boolean> {
-    return this.http.post<boolean>(this.apiUrl + '', appointmentSeries, httpOptions);
+    return this.http.post<boolean>(this.apiUrl + 'is-appointment-series-valid', appointmentSeries, httpOptions);
   }
 }
