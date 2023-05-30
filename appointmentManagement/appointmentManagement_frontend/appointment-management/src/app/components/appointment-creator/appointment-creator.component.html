@@ -1,4 +1,4 @@
-<div class="test">
+<div class="headline">
   <h1 mat-dialog-title>Termineditor</h1>
   <mat-slide-toggle (change)="onSliderChanged($event)">{{sliderLabel}}</mat-slide-toggle>
 </div>
@@ -79,7 +79,7 @@
 
         </div>
       </th>
-      <th *ngIf="sliderValue">
+      <th id="repeat" *ngIf="sliderValue">
         <div mat-dialog-content>
           <h1>Wiederholen</h1>
         </div>

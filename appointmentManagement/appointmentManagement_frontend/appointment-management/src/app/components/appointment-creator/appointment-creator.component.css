@@ -4,12 +4,6 @@
   overflow: hidden;
 }
 
-.test {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
 #delete {
   margin: 10px;
 }
@@ -19,4 +13,19 @@
   flex-direction: row;
   justify-content: space-between;
   margin: 10px;
+}
+
+.headline {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+mat-slide-toggle {
+  margin-top: 20px;
+  margin-right: 20px;
+}
+
+#repeat {
+  padding-left: 40px;
 }
