@@ -1,12 +1,8 @@
-import {Component, Input} from '@angular/core';
-import {MatDialogRef} from "@angular/material/dialog";
-import {Appointment} from "../../Appointment";
-import {UiService} from "../../services/ui.service";
+import {Component, Inject, Input} from '@angular/core';
 import {FormControl} from "@angular/forms";
-import {MatSlideToggleChange} from "@angular/material/slide-toggle";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {UiService} from "../../services/ui.service";
 import {AppointmentSeries} from "../../AppointmentSeries";
-import {AppointmentService} from "../../services/appointment.service";
-import {Result} from "../../Result";
 
 interface TimePeriod {
   value: string;
@@ -19,11 +15,11 @@ interface Select {
 }
 
 @Component({
-  selector: 'app-appointment-creator',
-  templateUrl: './appointment-creator.component.html',
-  styleUrls: ['./appointment-creator.component.css']
+  selector: 'app-appointment-series-editor',
+  templateUrl: './appointment-series-editor.component.html',
+  styleUrls: ['./appointment-series-editor.component.css']
 })
-export class AppointmentCreatorComponent{
+export class AppointmentSeriesEditorComponent {
   //region Form Controls
   @Input('formControl') locationForm: FormControl;
   @Input('formControl') lineForm: FormControl;
@@ -31,7 +27,6 @@ export class AppointmentCreatorComponent{
   @Input('formControl') timeForm: FormControl;
   @Input('formControl') durationForm: FormControl;
   @Input('formControl') substanceForm: FormControl;
-  @Input('formControl') bookedForm: FormControl;
   @Input('formControl') countForm: FormControl;
   @Input('formControl') endDateForm: FormControl;
   @Input('formControl') intervalForm: FormControl;
@@ -73,8 +68,6 @@ export class AppointmentCreatorComponent{
   //region Auxiliary variables
   isBooked: any;
   minDate: Date;
-  sliderLabel: string;
-  sliderValue: boolean;
   dailyRepeat: number;
   weeklyRepeat: number;
   weeklyDaysRepeat: number[];
@@ -99,7 +92,9 @@ export class AppointmentCreatorComponent{
   ];
   //endregion
 
-  constructor(public dialogRef: MatDialogRef<AppointmentCreatorComponent>, private uiService: UiService, private appointmentService: AppointmentService) {
+  constructor(public dialogRef: MatDialogRef<AppointmentSeriesEditorComponent>, private uiService: UiService, @Inject(MAT_DIALOG_DATA) public data: AppointmentSeries) {
+    console.log(data);
+
     // Set min date of datepickers to current date
     this.minDate = new Date();
 
@@ -116,35 +111,34 @@ export class AppointmentCreatorComponent{
     this.monthlyNumberRepeat = 0;
     this.monthlyDayRepeat = 0;
 
-
-    // Initialize slider values
-    this.sliderValue = false;
-    this.sliderLabel = 'Termin erstellen';
+    // Get time component from data - check if the hours or minutes is only one digit - then add a leading 0
+    let date: Date = new Date(data.startDate);
+    let time: string = '';
+    if(date.getHours() < 10) {
+      time += "0";
+    }
+    time += date.getHours() + ":";
+    if(date.getMinutes() < 10) {
+      time += "0";
+    }
+    time += date.getMinutes();
 
     // Initialize form controls
-    this.locationForm = new FormControl();
-    this.lineForm = new FormControl();
-    this.dateForm = new FormControl();
-    this.timeForm = new FormControl();
-    this.durationForm = new FormControl();
-    this.substanceForm = new FormControl();
-    this.bookedForm = new FormControl();
-    this.countForm = new FormControl();
-    this.endDateForm = new FormControl();
+    this.locationForm = new FormControl(data.location);
+    this.lineForm = new FormControl(data.line);
+    this.dateForm = new FormControl(data.startDate);
+    this.timeForm = new FormControl(time);
+    this.durationForm = new FormControl(data.duration);
+    this.substanceForm = new FormControl(data.substance);
+    this.countForm = new FormControl(data.cnt);
+    this.endDateForm = new FormControl(data.endDate);
     this.intervalForm = new FormControl();
   }
 
-  //region Methods
-
-  // Event handler for slider
-  onSliderChanged($event: MatSlideToggleChange): void {
-    this.sliderValue = $event.checked;
-
-    if(this.sliderValue) {
-      this.sliderLabel = 'Terminserie erstellen'
-    } else {
-      this.sliderLabel = 'Termin erstellen';
-    }
+  // Event handler for delete click
+  onDeleteClick() {
+    console.log('Gelöscht');
+    this.dialogRef.close(null);
   }
 
   // Event handler for time interval select
@@ -255,55 +249,52 @@ export class AppointmentCreatorComponent{
       validInput = false;
     }
 
-    // Check if the user wants to create an appointment series
-    if(this.sliderValue) {
-      // Check appointment series attributes
+    // Check appointment series attributes
 
-      // Check if count input is empty
-      if(this.countForm.value == null) {
-        this.countForm.markAsTouched();
-        validInput = false;
-      }
+    // Check if count input is empty
+    if(this.countForm.value == null) {
+      this.countForm.markAsTouched();
+      validInput = false;
+    }
 
-      // Check if interval input is empty
-      if(this.intervalForm.value == null) {
-        this.intervalForm.markAsTouched();
-        validInput = false;
-      }
+    // Check if interval input is empty
+    if(this.intervalForm.value == null) {
+      this.intervalForm.markAsTouched();
+      validInput = false;
+    }
 
-      // Check if endDate input is empty
-      if(this.endDateForm.value == null) {
-        this.endDateForm.markAsTouched();
-        validInput = false;
-      }
+    // Check if endDate input is empty
+    if(this.endDateForm.value == null) {
+      this.endDateForm.markAsTouched();
+      validInput = false;
+    }
 
-      // Check if endDate is before startDate
-      if(this.endDateForm.value < this.dateForm.value) {
-        this.endDateBeforeStartDate = true;
-        alert('Enddatum ist vor dem Startdatum!');
-        return;
-      }
+    // Check if endDate is before startDate
+    if(this.endDateForm.value < this.dateForm.value) {
+      this.endDateBeforeStartDate = true;
+      alert('Enddatum ist vor dem Startdatum!');
+      return;
+    }
 
-      // Check interval value
-      if(this.intervalForm.value == null) {
-        this.intervalForm.markAsTouched();
-        validInput = false;
-      } else if(this.intervalForm.value == 'daily' && this.dailyRepeat != 0) {
-        // Correct input for the daily form - create interval value string
-        intervalValue = this.intervalForm.value + ";" + this.dailyRepeat;
-      } else if(this.intervalForm.value == 'weekly' && (this.weeklyRepeat != 0 && this.weeklyDaysRepeat.length != 0)) {
-        // Correct input for the weekly form - create interval value string
-        intervalValue = this.intervalForm.value + ";" + this.weeklyRepeat + ";";
-        this.weeklyDaysRepeat.forEach(value => {intervalValue = intervalValue + value + ","});
-        // Remove the last comma of the string - to match the expected pattern
-        intervalValue = intervalValue.slice(0, -1);
-      } else if(this.intervalForm.value == 'monthly' && (this.monthlyRepeat != 0 && this.monthlyNumberRepeat != 0 && this.monthlyDayRepeat != 0)) {
-        // Correct input for the monthly form - create interval value string
-        intervalValue = this.intervalForm.value + ";" + this.monthlyRepeat + ";" + this.monthlyNumberRepeat + ";" + this.monthlyDayRepeat;
-      } else {
-        // Input is not correct - at least one field is empty
-        validInput = false;
-      }
+    // Check interval value
+    if(this.intervalForm.value == null) {
+      this.intervalForm.markAsTouched();
+      validInput = false;
+    } else if(this.intervalForm.value == 'daily' && this.dailyRepeat != 0) {
+      // Correct input for the daily form - create interval value string
+      intervalValue = this.intervalForm.value + ";" + this.dailyRepeat;
+    } else if(this.intervalForm.value == 'weekly' && (this.weeklyRepeat != 0 && this.weeklyDaysRepeat.length != 0)) {
+      // Correct input for the weekly form - create interval value string
+      intervalValue = this.intervalForm.value + ";" + this.weeklyRepeat + ";";
+      this.weeklyDaysRepeat.forEach(value => {intervalValue = intervalValue + value + ","});
+      // Remove the last comma of the string - to match the expected pattern
+      intervalValue = intervalValue.slice(0, -1);
+    } else if(this.intervalForm.value == 'monthly' && (this.monthlyRepeat != 0 && this.monthlyNumberRepeat != 0 && this.monthlyDayRepeat != 0)) {
+      // Correct input for the monthly form - create interval value string
+      intervalValue = this.intervalForm.value + ";" + this.monthlyRepeat + ";" + this.monthlyNumberRepeat + ";" + this.monthlyDayRepeat;
+    } else {
+      // Input is not correct - at least one field is empty
+      validInput = false;
     }
 
     if(!validInput) {
@@ -328,52 +319,26 @@ export class AppointmentCreatorComponent{
       return;
     }
 
-    let result: Result;
+    // Create appointment series object with the data
+    let appointmentSeries: AppointmentSeries = {
+      location: this.locationForm.value,
+      line: this.lineForm.value,
+      startDate: inputDate,
+      duration: this.durationForm.value,
+      substance: this.substanceForm.value,
+      endDate: this.endDateForm.value,
+      cnt: this.countForm.value,
+      interval: intervalValue
+    }
 
-    // Check if the return value should be an appointment or appointment series
-    if(this.sliderValue) {
-      // Create appointment series object with the data
-      let appointmentSeries: AppointmentSeries = {
-        location: this.locationForm.value,
-        line: this.lineForm.value,
-        startDate: inputDate,
-        duration: this.durationForm.value,
-        substance: this.substanceForm.value,
-        endDate: this.endDateForm.value,
-        cnt: this.countForm.value,
-        interval: intervalValue
-      }
-
-      // Check if there is already an appointment on this location, line and time
-      if(false) {
-        alert('Es is bereits ein Termin an diesem Standort auf dieser Linie zur gewünschten Zeit vorhanden!');
-        return;
-      }
-
-      // Create the return value
-      result = {
-        appointmentSeries: appointmentSeries
-      };
-    } else {
-      // Create appointment object with the data
-      let appointment: Appointment = {
-        location: this.locationForm.value, line: this.lineForm.value, date: inputDate, duration: this.durationForm.value, substance: this.substanceForm.value, booked: this.bookedForm.value
-      };
-
-      // Check if there is already an appointment on this location, line and time
-      if(false) {
-        alert('Es is bereits ein Termin an diesem Standort auf dieser Linie zur gewünschten Zeit vorhanden!');
-        return;
-      }
-
-      // Create the return value
-      result = {
-        appointment: appointment
-      };
+    // Check if there is already an appointment on this location, line and time
+    if(false) {
+      alert('Es is bereits ein Termin an diesem Standort auf dieser Linie zur gewünschten Zeit vorhanden!');
+      return;
     }
 
     // Close popup and return the data
-    this.dialogRef.close(result);
+    this.dialogRef.close(appointmentSeries);
   }
 
   //endregion

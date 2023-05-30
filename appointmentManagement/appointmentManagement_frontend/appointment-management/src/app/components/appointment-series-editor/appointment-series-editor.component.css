@@ -25,3 +25,7 @@ mat-slide-toggle {
 #repeat {
   padding-left: 40px;
 }
+
+#delete {
+  margin: 10px;
+}

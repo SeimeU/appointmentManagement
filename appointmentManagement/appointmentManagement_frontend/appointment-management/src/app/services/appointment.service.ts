@@ -62,11 +62,11 @@ export class AppointmentService {
   }
 
   updateAppointment(appointment: Appointment): Observable<Appointment> {
-    return this.http.post<Appointment>(this.apiUrl + 'appointment/' + appointment.id, appointment, httpOptions);
+    return this.http.post<Appointment>(this.apiUrl + 'save-appointment', appointment, httpOptions);
   }
 
   updateAppointmentSeries(appointmentSeries: AppointmentSeries): Observable<AppointmentSeries> {
-    return this.http.post<AppointmentSeries>(this.apiUrl + 'appointment-series/' + appointmentSeries.id, appointmentSeries, httpOptions);
+    return this.http.post<AppointmentSeries>(this.apiUrl + 'save-appointment-series', appointmentSeries, httpOptions);
   }
 
   checkAppointmentPossible(appointment: Appointment): Observable<boolean> {

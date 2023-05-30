@@ -4,7 +4,7 @@
   overflow: hidden;
 }
 
-.test {
+.headline {
   display: flex;
   flex-direction: row;
   justify-content: space-between;

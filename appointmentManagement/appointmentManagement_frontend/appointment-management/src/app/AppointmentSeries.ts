@@ -6,7 +6,7 @@ export interface AppointmentSeries{
   startDate: Date;
   endDate: Date;
   interval: string;
-  count: number;
+  cnt: number;
   duration: Duration;
   location: string;
   line: number;

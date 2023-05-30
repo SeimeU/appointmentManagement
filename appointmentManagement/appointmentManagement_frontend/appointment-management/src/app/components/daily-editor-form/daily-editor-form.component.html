@@ -2,7 +2,7 @@
   <div class="daily">
     <mat-label>Alle</mat-label>
     <mat-form-field appearance="outline">
-      <mat-select>
+      <mat-select (selectionChange)="onChange($event)" required>
         <mat-option *ngFor="let day of days" [value]="day">
           {{day}}
         </mat-option>

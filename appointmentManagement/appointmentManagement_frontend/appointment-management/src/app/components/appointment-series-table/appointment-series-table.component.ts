@@ -5,7 +5,7 @@ import {MatSort} from "@angular/material/sort";
 import {AppointmentService} from "../../services/appointment.service";
 import {MatDialog} from "@angular/material/dialog";
 import {AppointmentSeries} from "../../AppointmentSeries";
-import {AppointmentEditorComponent} from "../appointment-editor/appointment-editor.component";
+import {AppointmentSeriesEditorComponent} from "../appointment-series-editor/appointment-series-editor.component";
 
 @Component({
   selector: 'app-appointment-series-table',
@@ -15,7 +15,7 @@ import {AppointmentEditorComponent} from "../appointment-editor/appointment-edit
 export class AppointmentSeriesTableComponent {
   //region Fields
   // Hard-coded table columns array
-  displayColumns: string[] = ['id', 'startDate', 'endDate', 'timeInterval', 'number', 'location', 'line', 'duration', 'substance']
+  displayColumns: string[] = ['id', 'startDate', 'endDate', 'timeInterval', 'cnt', 'location', 'line', 'duration', 'substance']
 
   // Data stores for the table
   dataSource: MatTableDataSource<AppointmentSeries>;
@@ -29,7 +29,6 @@ export class AppointmentSeriesTableComponent {
   constructor(private appointmentService: AppointmentService, public dialog: MatDialog) {
     this.appointmentService.getAppointmentSeries().subscribe((appointmentSeries) => {
       this.appointmentSeries = appointmentSeries;
-      console.log(this.appointmentSeries)
       this.dataSource = new MatTableDataSource<AppointmentSeries>(this.appointmentSeries);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
@@ -53,8 +52,8 @@ export class AppointmentSeriesTableComponent {
   // Event handler for a click on a row of the table
   onRowClick(row: AppointmentSeries) {
     // Create a dialog with the data of the clicked appointment
-    const dialogRef = this.dialog.open(AppointmentEditorComponent, {
-      data: {location: row.location, line: row.line, substance: row.substance, duration: row.duration}
+    const dialogRef = this.dialog.open(AppointmentSeriesEditorComponent, {
+      data: {location: row.location, line: row.line, substance: row.substance, duration: row.duration, startDate: row.startDate, endDate: row.endDate, count: row.cnt, interval: row.interval }
     });
 
     // Check if the dialog was closed with the store button

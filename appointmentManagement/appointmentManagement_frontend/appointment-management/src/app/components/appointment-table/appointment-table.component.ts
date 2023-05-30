@@ -55,15 +55,14 @@ export class AppointmentTableComponent{
   onRowClick(row: Appointment) {
     // Create a dialog with the data of the clicked appointment
     const dialogRef = this.dialog.open(AppointmentEditorComponent, {
-      data: {location: row.location, line: row.line, booked: row.booked, substance: row.substance, date: row.date, duration: row.duration}
+      data: {id: row.id, location: row.location, line: row.line, booked: row.booked, substance: row.substance, date: row.date, duration: row.duration}
     });
 
     // Check if the dialog was closed with the store button
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
-      // Send the http request to create the appointment (series)
+      // Send the http request to update the appointment
       if(result !== null) {
-        this.appointmentService.updateAppointment(result).subscribe(s => console.log(s));
+        this.appointmentService.updateAppointment(result).subscribe(s => this.dataSource._filterData(this.appointments.filter(a => a.id != result.id)));
       }
     });
   }

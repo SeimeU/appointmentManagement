@@ -1,6 +1,6 @@
 <div class="headline">
   <h1 mat-dialog-title>Termineditor</h1>
-  <mat-slide-toggle (change)="onSliderChanged($event)">{{sliderLabel}}</mat-slide-toggle>
+  <button mat-raised-button onclick="onDeleteClick();" color="warn" id="delete">Löschen</button>
 </div>
 <div mat-dialog-content>
   <table>
@@ -74,11 +74,9 @@
               Der gewünschte Wirkstoff <strong>muss</strong> ausgewählt werden!
             </mat-error>
           </mat-form-field>
-
-          <mat-checkbox [aria-label]="isBooked"  [formControl]="bookedForm">Termin gebucht</mat-checkbox>
         </div>
       </th>
-      <th id="repeat" *ngIf="sliderValue">
+      <th id="repeat">
         <div mat-dialog-content>
           <h1>Wiederholen</h1>
         </div>
