@@ -61,7 +61,7 @@ export class AppointmentSeriesTableComponent {
       console.log(result);
       // Send the http request to create the appointment (series)
       if(result !== null) {
-        this.appointmentService.updateAppointmentSeries(result).subscribe(s => console.log(s));
+        this.appointmentService.saveAppointmentSeries(result).subscribe(s => console.log(s));
       }
     });
   }

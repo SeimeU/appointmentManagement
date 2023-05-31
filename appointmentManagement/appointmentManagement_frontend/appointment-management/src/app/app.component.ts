@@ -61,9 +61,9 @@ export class AppComponent{
 
         // Send the http request to create the appointment (series)
         if (res.appointment) {
-          this.appointmentService.createAppointment(res.appointment).subscribe(s => console.log(s));
+          this.appointmentService.saveAppointment(res.appointment).subscribe(s => console.log(s));
         } else if (res.appointmentSeries) {
-          this.appointmentService.createAppointmentSeries(res.appointmentSeries).subscribe(s => console.log(s));
+          this.appointmentService.saveAppointmentSeries(res.appointmentSeries).subscribe(s => console.log(s));
         }
       }
     });

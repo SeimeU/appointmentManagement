@@ -100,20 +100,12 @@ export class AppointmentService {
     this.http.delete<void>(url);
   }
 
-  createAppointment(appointment: Appointment): Observable<Appointment> {
+  saveAppointment(appointment: Appointment): Observable<Appointment> {
     return this.http.post<Appointment>(this.apiUrl + 'appointment', appointment, httpOptions);
   }
 
-  createAppointmentSeries(appointmentSeries: AppointmentSeries): Observable<AppointmentSeries> {
+  saveAppointmentSeries(appointmentSeries: AppointmentSeries): Observable<AppointmentSeries> {
     return this.http.post<AppointmentSeries>(this.apiUrl + 'appointment-series', appointmentSeries, httpOptions);
-  }
-
-  updateAppointment(appointment: Appointment): Observable<Appointment> {
-    return this.http.post<Appointment>(this.apiUrl + 'save-appointment', appointment, httpOptions);
-  }
-
-  updateAppointmentSeries(appointmentSeries: AppointmentSeries): Observable<AppointmentSeries> {
-    return this.http.post<AppointmentSeries>(this.apiUrl + 'save-appointment-series', appointmentSeries, httpOptions);
   }
 
   checkAppointmentPossible(appointment: Appointment): Observable<boolean> {

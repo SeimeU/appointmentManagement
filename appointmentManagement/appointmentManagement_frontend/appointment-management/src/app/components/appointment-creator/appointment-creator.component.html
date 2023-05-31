@@ -75,7 +75,7 @@
             </mat-error>
           </mat-form-field>
 
-          <mat-checkbox [aria-label]="isBooked"  [formControl]="bookedForm">Termin gebucht</mat-checkbox>
+          <mat-checkbox *ngIf="!sliderValue" [aria-label]="isBooked"  [formControl]="bookedForm">Termin gebucht</mat-checkbox>
         </div>
       </th>
       <th id="repeat" *ngIf="sliderValue">

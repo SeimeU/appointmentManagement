@@ -62,7 +62,7 @@ export class AppointmentTableComponent{
     dialogRef.afterClosed().subscribe(result => {
       // Send the http request to update the appointment
       if(result !== null) {
-        this.appointmentService.updateAppointment(result).subscribe(s => this.dataSource._filterData(this.appointments.filter(a => a.id != result.id)));
+        this.appointmentService.saveAppointment(result).subscribe(s => this.dataSource._filterData(this.appointments.filter(a => a.id != result.id)));
       }
     });
   }
