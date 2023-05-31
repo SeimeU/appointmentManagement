@@ -19,6 +19,7 @@ public class Appointment {
     private int line;
     private boolean booked;
     private String substance;
+    private boolean deleted;
     //endregion
 
     //region Constructor
@@ -27,7 +28,7 @@ public class Appointment {
 
     public Appointment(
             LocalDateTime date, int duration,
-            String location, int line, boolean booked, String substance
+            String location, int line, boolean booked, String substance, boolean deleted
     ) {
         this.date = date;
         this.duration = duration;
@@ -35,6 +36,7 @@ public class Appointment {
         this.line = line;
         this.booked = booked;
         this.substance = substance;
+        this.deleted = deleted;
     }
     //endregion
 
@@ -96,6 +98,14 @@ public class Appointment {
         this.substance = substance;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     //endregion
 
     @Override
@@ -107,6 +117,7 @@ public class Appointment {
                 ", Linie=" + this.line +
                 ", Gebucht=" + this.booked +
                 ", Wirkstoff='" + this.substance +
+                ", Gelöscht='" + this.deleted +
                 '}';
     }
 }

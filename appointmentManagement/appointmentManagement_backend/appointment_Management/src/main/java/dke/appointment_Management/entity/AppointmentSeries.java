@@ -24,11 +24,8 @@ public class AppointmentSeries {
     private String location;
     private int line;
     private String substance;
+    private boolean deleted;
 
-    //@ElementCollection
-    //@OneToMany(fetch = FetchType.LAZY, cascade=CascadeType.MERGE)
-    //@JoinTable(name = "appointmentSeries_appointments", joinColumns = @JoinColumn(name = "AppointmentSeries_id"), inverseJoinColumns = @JoinColumn(name = "Appointment_id"))
-    //@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @OneToMany
     private List<Appointment> appointments;
     //endregion
@@ -39,7 +36,7 @@ public class AppointmentSeries {
 
     public AppointmentSeries(
             LocalDateTime startDate, LocalDateTime endDate, String interval, int number, int duration, String location,
-            int line, String substance, List<Appointment> appointments
+            int line, String substance, List<Appointment> appointments, boolean deleted
     ) {
         this.startDate = startDate;
         this.endDate = endDate;
@@ -50,6 +47,7 @@ public class AppointmentSeries {
         this.line = line;
         this.substance = substance;
         this.appointments = appointments;
+        this.deleted = deleted;
     }
     //endregion
 
@@ -136,6 +134,14 @@ public class AppointmentSeries {
         this.appointments = appointments;
     }
 
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
     //endregion
 
     @Override
@@ -149,6 +155,7 @@ public class AppointmentSeries {
                 ", Standort='" + this.location + '\'' +
                 ", Linie=" + this.line +
                 ", Wirkstoff='" + this.substance +
+                ", Gelöscht='" + this.deleted +
                 '}';
     }
 }

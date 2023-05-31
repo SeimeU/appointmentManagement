@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface AppointmentSeriesRepository extends JpaRepository<AppointmentSeries, Long> {
     List<AppointmentSeries> findAllByLocation(String location);
+    List<AppointmentSeries> findAllByDeleted(boolean deleted);
 }
