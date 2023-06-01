@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
@@ -167,8 +168,10 @@ public class AppointmentService {
      * @return
      *      - Returns a list with all appointments on the specified date
      */
-    public List<Appointment> getAppointmentsByDate(Date date) {
-        return repository.findAllByDate(date).stream().filter(a -> !a.isDeleted()).collect(Collectors.toList());
+    public List<Appointment> getAppointmentsByDate(LocalDate date) {
+        List<Appointment> appointments = getAppointments();
+
+        return appointments.stream().filter(a -> a.getDate().toLocalDate().equals(date)).collect(Collectors.toList());
     }
 
     /**
@@ -278,6 +281,7 @@ public class AppointmentService {
         Appointment appointment = getAppointmentById(id);
         if(appointment != null) {
             appointment.setDeleted(true);
+            repository.save(appointment);
         }
     }
 
@@ -295,6 +299,7 @@ public class AppointmentService {
             deleteAppointment(appointment.getId());
         }
         appointmentSeries.setDeleted(true);
+        repositoryAS.save(appointmentSeries);
     }
 
     //endregion
@@ -321,8 +326,8 @@ public class AppointmentService {
                 int days = Integer.parseInt(temp[1]);
                 tempDate = appointmentSeries.getStartDate();
 
-                // While the temporary date is before the end date - create appointments
-                while (tempDate.isBefore(appointmentSeries.getEndDate())) {
+                // While the temporary date is before the end date (the or connection is there so that also on the last day anappointment gets created) - create appointments
+                while (tempDate.isBefore(appointmentSeries.getEndDate()) || tempDate.isEqual(appointmentSeries.getEndDate())) {
                     appointments.addAll(create(appointmentSeries, tempDate));
                     tempDate = tempDate.plusDays(days);
                 }
@@ -337,9 +342,9 @@ public class AppointmentService {
                 LocalDateTime cur = tempDate;
 
                 // While the temporary date is before the end date - create appointments
-                while (tempDate.isBefore(appointmentSeries.getEndDate())) {
+                while (tempDate.isBefore(appointmentSeries.getEndDate()) || tempDate.isEqual(appointmentSeries.getEndDate())) {
                     // Run through the coming week and create appointments on the selected days
-                    for (int i = 0; i < 7; i++) {
+                    for (int i = 0; i < 7 && (cur.isBefore(appointmentSeries.getEndDate()) || cur.isEqual(appointmentSeries.getEndDate())); i++) {
                         LocalDateTime finalCur = cur;
                         // Check if the current day is available in the weekdays array
                         if (Arrays.stream(weekdays).anyMatch(d -> Integer.parseInt(d) == finalCur.getDayOfWeek().getValue())) {
@@ -366,12 +371,14 @@ public class AppointmentService {
                 // Check if the current e.g. "second monday" is before the start date - add one month if true
                 if (tempDate.isBefore(appointmentSeries.getStartDate())) {
                     tempDate = tempDate.plusMonths(1);
+                    tempDate = tempDate.with(TemporalAdjusters.dayOfWeekInMonth(period, DayOfWeek.of(weekday)));
                 }
 
                 // While the temporary date is before the end date - create appointments
                 while (tempDate.isBefore(appointmentSeries.getEndDate())) {
                     appointments.addAll(create(appointmentSeries, tempDate));
                     tempDate = tempDate.plusMonths(months);
+                    tempDate = tempDate.with(TemporalAdjusters.dayOfWeekInMonth(period, DayOfWeek.of(weekday)));
                 }
                 return appointments;
             }
@@ -392,7 +399,7 @@ public class AppointmentService {
         LocalDateTime tempDate = date;
 
         for(int i = 0;i < appointmentSeries.getNumber();i++) {
-            appointments.add(new Appointment(date, appointmentSeries.getDuration(), appointmentSeries.getLocation(), appointmentSeries.getLine(), false, appointmentSeries.getSubstance(), false));
+            appointments.add(new Appointment(tempDate, appointmentSeries.getDuration(), appointmentSeries.getLocation(), appointmentSeries.getLine(), false, appointmentSeries.getSubstance(), false));
             tempDate = tempDate.plusMinutes(appointmentSeries.getDuration());
         }
         return appointments;

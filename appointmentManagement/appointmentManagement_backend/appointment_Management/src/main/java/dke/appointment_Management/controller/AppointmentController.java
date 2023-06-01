@@ -8,11 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -20,7 +19,7 @@ import java.util.List;
 public class AppointmentController {
     // Auxiliary variables to convert the incoming string of the getAppointmentsByDate() function into a Date object
     private static final String DATE_FORMAT = "yyyy-MM-dd";
-    private static final DateFormat df = new SimpleDateFormat(DATE_FORMAT);
+    private static final DateTimeFormatter df = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
     @Autowired
     private AppointmentService service;
@@ -66,6 +65,27 @@ public class AppointmentController {
             return ResponseEntity.ok(service.saveAppointment(appointment));
 
         return new ResponseEntity<>(service.saveAppointment(appointment), HttpStatus.CREATED);
+    }
+
+    /**
+     * Function to set the status of an appointment to booked
+     * @param id Specifies which appointment is required
+     * @return
+     *      - Returns "Bad request" if the id is null or < 1
+     *      - Returns "Not found" if there is no appointment with this id
+     *      - Returns "Ok" and the updated appointment if it is found
+     */
+    @PutMapping("/appointment/{id}")
+    public ResponseEntity<Appointment> bookAppointment(@PathVariable final Long id) {
+        if(id == null || id < 1)
+            return ResponseEntity.badRequest().build();
+
+        if(!service.isPresent(id, false))
+            return ResponseEntity.notFound().build();
+
+        Appointment appointment = service.getAppointmentById(id);
+        appointment.setBooked(true);
+        return ResponseEntity.ok(service.saveAppointment(appointment));
     }
 
     /**
@@ -223,9 +243,9 @@ public class AppointmentController {
             return ResponseEntity.badRequest().build();
 
         try {
-            Date d = df.parse(date);
+            LocalDate d = LocalDate.parse(date, df);
             return ResponseEntity.ok(service.getAppointmentsByDate(d));
-        } catch (ParseException ex) {
+        } catch (DateTimeParseException ex) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -335,27 +355,6 @@ public class AppointmentController {
     }
 
     /**
-     * Function to set the status of an appointment to booked
-     * @param id Specifies which appointment is required
-     * @return
-     *      - Returns "Bad request" if the id is null or < 1
-     *      - Returns "Not found" if there is no appointment with this id
-     *      - Returns "Ok" and the updated appointment if it is found
-     */
-    @PostMapping("/book-appointment")
-    public ResponseEntity<Appointment> bookAppointment(@RequestParam final Long id) {
-        if(id == null || id < 1)
-            return ResponseEntity.badRequest().build();
-
-        if(!service.isPresent(id, false))
-            return ResponseEntity.notFound().build();
-
-        Appointment appointment = service.getAppointmentById(id);
-        appointment.setBooked(true);
-        return ResponseEntity.ok(service.saveAppointment(appointment));
-    }
-
-    /**
      * Function to check if the requested appointment would be valid (has now no overlaps)
      * @param appointment Specifies the requested appointment
      * @return
@@ -364,7 +363,7 @@ public class AppointmentController {
      *      - Otherwise returns true
      */
     @PostMapping("/is-appointment-valid")
-    public ResponseEntity<Boolean> getIfAppointmentIsValid(Appointment appointment) {
+    public ResponseEntity<Boolean> getIfAppointmentIsValid(@RequestBody Appointment appointment) {
         if(appointment == null)
             return ResponseEntity.badRequest().build();
 
@@ -380,7 +379,7 @@ public class AppointmentController {
      *      - Otherwise returns true
      */
     @PostMapping("/is-appointment-series-valid")
-    public ResponseEntity<Boolean> getIfAppointmentSeriesIsValid(AppointmentSeries appointmentSeries) {
+    public ResponseEntity<Boolean> getIfAppointmentSeriesIsValid(@RequestBody AppointmentSeries appointmentSeries) {
         if(appointmentSeries == null)
             return ResponseEntity.badRequest().build();
 
