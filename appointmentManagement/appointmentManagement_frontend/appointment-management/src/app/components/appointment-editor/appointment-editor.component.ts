@@ -1,7 +1,9 @@
-import {Component, Inject, Input} from '@angular/core';
+import {Component, Inject, Input, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Appointment} from "../../Appointment";
 import {FormControl} from "@angular/forms";
+import {LocationAndMedicineService} from "../../services/location-and-medicine.service";
+import {AppointmentService} from "../../services/appointment.service";
 
 interface Select {
   value: number;
@@ -13,7 +15,7 @@ interface Select {
   templateUrl: './appointment-editor.component.html',
   styleUrls: ['./appointment-editor.component.css']
 })
-export class AppointmentEditorComponent{
+export class AppointmentEditorComponent implements OnInit{
   //region Form Controls
   @Input('formControl') locationForm: FormControl;
   @Input('formControl') lineForm: FormControl;
@@ -29,15 +31,7 @@ export class AppointmentEditorComponent{
     {value: 5, viewValue: '5min'},
     {value: 10, viewValue: '10min'},
     {value: 15, viewValue: '15min'},
-    {value: 20, viewValue: '20min'},
-    {value: 25, viewValue: '25min'},
-    {value: 30, viewValue: '30min'},
-    {value: 35, viewValue: '35min'},
-    {value: 40, viewValue: '40min'},
-    {value: 45, viewValue: '45min'},
-    {value: 50, viewValue: '50min'},
-    {value: 55, viewValue: '55min'},
-    {value: 60, viewValue: '60min'}
+    {value: 20, viewValue: '20min'}
   ];
   //endregion
 
@@ -69,7 +63,7 @@ export class AppointmentEditorComponent{
 
   //endregion
 
-  constructor(public dialogRef: MatDialogRef<AppointmentEditorComponent>, @Inject(MAT_DIALOG_DATA) public data: Appointment) {
+  constructor(public dialogRef: MatDialogRef<AppointmentEditorComponent>, @Inject(MAT_DIALOG_DATA) public data: Appointment, private locService: LocationAndMedicineService, private appointmentService: AppointmentService) {
     // Set min date of datepickers to current date
     this.minDate = new Date();
 
@@ -99,14 +93,48 @@ export class AppointmentEditorComponent{
     this.bookedForm = new FormControl(data.booked);
   }
 
+  ngOnInit(): void {
+    // Get the selection possibilities for the current selection
+    //this.locService.getLocationsWithCapacity().subscribe(loc => this.locations = loc);
+    //this.locService.getLinesOfLocation(this.data.location).subscribe(li => this.lines = li);
+    //this.locService.getSubstancesOfLine(this.data.location, this.data.line).subscribe(sub => this.substances = sub);
+  }
+
+  // Event handler for location selection
+  onLocationChanged(event: any) {
+    // Reset the line and substance - adjust it to new location
+    this.lineForm.setValue("");
+    this.substanceForm.setValue("");
+
+    //this.locService.getLinesOfLocation(event.value).subscribe(li => this.lines = li);
+    //this.substances = [];
+  }
+
+  // Event handler for line selection
+  onLineChanged(event: any) {
+    if(event.value != null && this.locationForm.value != null) {
+      this.substanceForm.setValue("");
+      //this.locService.getSubstancesOfLine(this.locationForm.value, event.value).subscribe(sub => this.substances = sub);
+    }
+  }
+
   // Event handler for delete click
   onDeleteClick() {
-    console.log('Gelöscht');
-    this.dialogRef.close(null);
+    let appointment: Appointment = {
+      id: this.data.id,
+      location: this.data.location,
+      line: this.data.line,
+      date: this.data.date,
+      duration: this.data.duration,
+      substance: this.data.substance,
+      booked: this.data.booked,
+      deleted: true
+    }
+    this.dialogRef.close(appointment);
   }
 
   // Event handler for creator popup
-  onStore() {
+  async onStore() {
     // Validate input
     this.timeBeforeMin = false;
     this.dateBeforeMin = false;
@@ -167,7 +195,9 @@ export class AppointmentEditorComponent{
     // Check if date und time is in the future
     const [hours, minutes] = this.timeForm.value.split(':').map(Number);
     let inputDate: Date = new Date(this.dateForm.value);
-    inputDate.setHours(hours, minutes);
+
+    // Add two hours because of time offset
+    inputDate.setHours(hours+2, minutes);
 
     if (inputDate < new Date()) {
       this.timeBeforeMin = true;
@@ -191,8 +221,14 @@ export class AppointmentEditorComponent{
       booked: this.bookedForm.value
     };
 
+    let valid: boolean = false;
+    this.appointmentService.checkAppointmentPossible(appointment).subscribe(res => valid = res);
+
+    // wait to get the right values through subscribe
+    await new Promise(f => setTimeout(f, 50));
+
     // Check if there is already an appointment on this location, line and time
-    if (false) {
+    if (!valid) {
       alert('Es is bereits ein Termin an diesem Standort auf dieser Linie zur gewünschten Zeit vorhanden!');
       return;
     }

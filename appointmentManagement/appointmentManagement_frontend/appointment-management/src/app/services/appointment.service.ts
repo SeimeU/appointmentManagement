@@ -23,7 +23,8 @@ export class AppointmentService {
 
   set district(value: string) {
     this._district = value;
-    this.locService.getLocationsOfDistrict(value).subscribe(loc => this._locations = loc);
+    this.locService.district = value;
+    //this.locService.getLocationsOfDistrict().subscribe(loc => this._locations = loc);
   }
 
   get locations(): string[] {
@@ -92,12 +93,12 @@ export class AppointmentService {
 
   deleteAppointment(appointment: Appointment): void {
     const url = this.apiUrl + 'appointment?id=' + appointment.id;
-    this.http.delete<void>(url);
+    this.http.delete(url).subscribe();
   }
 
   deleteAppointmentSeries(appointmentSeries: AppointmentSeries): void {
     const url = this.apiUrl + 'appointment-series?id=' + appointmentSeries.id;
-    this.http.delete<void>(url);
+    this.http.delete(url).subscribe();
   }
 
   saveAppointment(appointment: Appointment): Observable<Appointment> {

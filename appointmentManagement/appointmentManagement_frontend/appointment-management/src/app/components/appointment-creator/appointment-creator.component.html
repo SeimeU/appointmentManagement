@@ -9,7 +9,7 @@
         <div class="editor">
           <mat-form-field appearance="outline">
             <mat-label>Standort</mat-label>
-            <mat-select [formControl]="locationForm" required>
+            <mat-select [formControl]="locationForm" required (selectionChange)="onLocationChanged($event)">
               <mat-option *ngFor="let loc of locations" [value]="loc">
                 {{loc}}
               </mat-option>
@@ -21,7 +21,7 @@
 
           <mat-form-field appearance="outline">
             <mat-label>Linie</mat-label>
-            <mat-select [formControl]="lineForm" required>
+            <mat-select [formControl]="lineForm" required (selectionChange)="onLineChanged($event)">
               <mat-option *ngFor="let line of lines" [value]="line">
                 {{line}}
               </mat-option>

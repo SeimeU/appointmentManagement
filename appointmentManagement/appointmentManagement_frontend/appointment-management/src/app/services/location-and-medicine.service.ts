@@ -7,22 +7,32 @@ import {HttpClient} from "@angular/common/http";
 })
 export class LocationAndMedicineService {
   private apiUrl = 'http://localhost:9192/';
+  private _district: string = "";
 
   constructor(private http:HttpClient) { }
 
-  getLocationsWithCapacity(district: string): Observable<string[]> {
-    return this.http.get<string[]>(this.apiUrl + 'locations/' + district);
+
+  get district(): string {
+    return this._district;
   }
 
-  getLocationsOfDistrict(district: string): Observable<string[]> {
-    return this.http.get<string[]>(this.apiUrl + 'locations/' + district);
+  set district(value: string) {
+    this._district = value;
   }
 
-  getLinesOfLocation(location: string): Observable<string[]> {
-    return this.http.get<string[]>(this.apiUrl + 'location/' + location + "/lines");
+  getLocationsWithCapacity(): Observable<string[]> {
+    return this.http.get<string[]>(this.apiUrl + 'locations/' + this._district);
   }
 
-  getSubstancesOfLine(location: string, line: string): Observable<string[]> {
+  getLocationsOfDistrict(): Observable<string[]> {
+    return this.http.get<string[]>(this.apiUrl + 'locations/' + this._district);
+  }
+
+  getLinesOfLocation(location: string): Observable<number[]> {
+    return this.http.get<number[]>(this.apiUrl + 'location/' + location + "/lines");
+  }
+
+  getSubstancesOfLine(location: string, line: number): Observable<string[]> {
     return this.http.get<string[]>(this.apiUrl + 'location/' + location + '/line/' + line + '/substances');
   }
 }

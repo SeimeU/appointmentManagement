@@ -6,4 +6,5 @@ export interface Appointment{
   line: number;
   booked: boolean;
   substance: string;
+  deleted?: boolean;
 }

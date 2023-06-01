@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
 import {Appointment} from "../../Appointment";
 import {UiService} from "../../services/ui.service";
@@ -7,6 +7,7 @@ import {MatSlideToggleChange} from "@angular/material/slide-toggle";
 import {AppointmentSeries} from "../../AppointmentSeries";
 import {AppointmentService} from "../../services/appointment.service";
 import {Result} from "../../Result";
+import {LocationAndMedicineService} from "../../services/location-and-medicine.service";
 
 interface TimePeriod {
   value: string;
@@ -23,7 +24,7 @@ interface Select {
   templateUrl: './appointment-creator.component.html',
   styleUrls: ['./appointment-creator.component.css']
 })
-export class AppointmentCreatorComponent{
+export class AppointmentCreatorComponent implements OnInit{
   //region Form Controls
   @Input('formControl') locationForm: FormControl;
   @Input('formControl') lineForm: FormControl;
@@ -42,15 +43,7 @@ export class AppointmentCreatorComponent{
     {value: 5, viewValue: '5min'},
     {value: 10, viewValue: '10min'},
     {value: 15, viewValue: '15min'},
-    {value: 20, viewValue: '20min'},
-    {value: 25, viewValue: '25min'},
-    {value: 30, viewValue: '30min'},
-    {value: 35, viewValue: '35min'},
-    {value: 40, viewValue: '40min'},
-    {value: 45, viewValue: '45min'},
-    {value: 50, viewValue: '50min'},
-    {value: 55, viewValue: '55min'},
-    {value: 60, viewValue: '60min'}
+    {value: 20, viewValue: '20min'}
   ];
 
   timePeriod: TimePeriod[] = [
@@ -99,7 +92,7 @@ export class AppointmentCreatorComponent{
   ];
   //endregion
 
-  constructor(public dialogRef: MatDialogRef<AppointmentCreatorComponent>, private uiService: UiService, private appointmentService: AppointmentService) {
+  constructor(public dialogRef: MatDialogRef<AppointmentCreatorComponent>, private uiService: UiService, private appointmentService: AppointmentService, private locService: LocationAndMedicineService) {
     // Set min date of datepickers to current date
     this.minDate = new Date();
 
@@ -134,6 +127,11 @@ export class AppointmentCreatorComponent{
     this.intervalForm = new FormControl();
   }
 
+  ngOnInit(): void {
+    // Get the selection possibilities for the current selection
+    //this.locService.getLocationsWithCapacity().subscribe(loc => this.locations = loc);
+    }
+
   //region Methods
 
   // Event handler for slider
@@ -144,6 +142,24 @@ export class AppointmentCreatorComponent{
       this.sliderLabel = 'Terminserie erstellen'
     } else {
       this.sliderLabel = 'Termin erstellen';
+    }
+  }
+
+  // Event handler for location selection
+  onLocationChanged(event: any) {
+    // Reset the line and substance - adjust it to new location
+    this.lineForm.setValue("");
+    this.substanceForm.setValue("");
+
+    //this.locService.getLinesOfLocation(event.value).subscribe(li => this.lines = li);
+    //this.substances = [];
+  }
+
+  // Event handler for line selection
+  onLineChanged(event: any) {
+    if(event.value != null && this.locationForm.value != null) {
+      this.substanceForm.setValue("");
+      //this.locService.getSubstancesOfLine(this.locationForm.value, event.value).subscribe(sub => this.substances = sub);
     }
   }
 
@@ -200,8 +216,8 @@ export class AppointmentCreatorComponent{
     this.monthlyDayRepeat = event.value;
   }
 
-  // Event handler for creator popup
-  onStore() {
+  // Event handler for creator popup - make it async to enable promise timeout
+  async onStore() {
     // Validate input
     this.endDateBeforeStartDate = false;
     this.timeBeforeMin = false;
@@ -315,7 +331,8 @@ export class AppointmentCreatorComponent{
     // Check if date und time is in the future
     const [hours, minutes]  = this.timeForm.value.split(':').map(Number);
     let inputDate: Date = new Date(this.dateForm.value);
-    inputDate.setHours(hours, minutes);
+    // Add two hours because of time offset
+    inputDate.setHours(hours+2, minutes);
 
     if(inputDate < new Date()) {
       this.timeBeforeMin = true;
@@ -344,8 +361,14 @@ export class AppointmentCreatorComponent{
         interval: intervalValue
       }
 
+      let valid: boolean = false;
+      this.appointmentService.checkAppointmentsSeriesPossible(appointmentSeries).subscribe(res => valid = res);
+
+      // wait to get the right values through subscribe
+      await new Promise(f => setTimeout(f, 50));
+
       // Check if there is already an appointment on this location, line and time
-      if(false) {
+      if(!valid) {
         alert('Es is bereits ein Termin an diesem Standort auf dieser Linie zur gewünschten Zeit vorhanden!');
         return;
       }
@@ -357,11 +380,22 @@ export class AppointmentCreatorComponent{
     } else {
       // Create appointment object with the data
       let appointment: Appointment = {
-        location: this.locationForm.value, line: this.lineForm.value, date: inputDate, duration: this.durationForm.value, substance: this.substanceForm.value, booked: this.bookedForm.value
+        location: this.locationForm.value,
+        line: this.lineForm.value,
+        date: inputDate,
+        duration: this.durationForm.value,
+        substance: this.substanceForm.value,
+        booked: this.bookedForm.value
       };
 
+      let valid: boolean = false;
+      this.appointmentService.checkAppointmentPossible(appointment).subscribe(res => valid = res);
+
+      // wait to get the right values through subscribe
+      await new Promise(f => setTimeout(f, 50));
+
       // Check if there is already an appointment on this location, line and time
-      if(false) {
+      if(!valid) {
         alert('Es is bereits ein Termin an diesem Standort auf dieser Linie zur gewünschten Zeit vorhanden!');
         return;
       }

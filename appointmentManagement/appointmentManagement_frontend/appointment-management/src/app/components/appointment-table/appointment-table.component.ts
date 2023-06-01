@@ -60,10 +60,45 @@ export class AppointmentTableComponent{
 
     // Check if the dialog was closed with the store button
     dialogRef.afterClosed().subscribe(result => {
-      // Send the http request to update the appointment
+      // Send the http request to update or delete the appointment
       if(result !== null) {
-        this.appointmentService.saveAppointment(result).subscribe(s => this.dataSource._filterData(this.appointments.filter(a => a.id != result.id)));
+        // Check if the appointment should be deleted
+        if(result.deleted != undefined) {
+          this.appointmentService.deleteAppointment(result);
+          // Filter out the old appointment object
+          this.appointments = this.appointments.filter(a => a.id != result.id);
+          // Sort the array ascending based on their id
+          this.appointments = this.appointments.sort((a,b) => this.compare(a, b));
+
+          // Update the table
+          this.dataSource = new MatTableDataSource<Appointment>(this.appointments);
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
+        } else {
+          this.appointmentService.saveAppointment(result).subscribe(s => {
+            // Filter out the old appointment object and add the new one
+            this.appointments = this.appointments.filter(a => a.id != result.id);
+
+            if(result.location == row.location) {
+              this.appointments.push(s);
+            }
+
+            // Sort the array ascending based on their id
+            this.appointments = this.appointments.sort((a,b) => this.compare(a, b));
+
+            // Need this to update the table object - can not be outside (therefore duplicate like in the delete)
+            this.dataSource = new MatTableDataSource<Appointment>(this.appointments);
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+          });
+        }
       }
     });
+  }
+
+  // Function to compare two appointment objects
+  compare(a: Appointment, b: Appointment) {
+    // @ts-ignore - to ignore that they can be undefined
+    return a.id - b.id;
   }
 }

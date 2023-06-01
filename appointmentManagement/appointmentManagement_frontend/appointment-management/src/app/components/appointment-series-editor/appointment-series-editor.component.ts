@@ -37,15 +37,7 @@ export class AppointmentSeriesEditorComponent {
     {value: 5, viewValue: '5min'},
     {value: 10, viewValue: '10min'},
     {value: 15, viewValue: '15min'},
-    {value: 20, viewValue: '20min'},
-    {value: 25, viewValue: '25min'},
-    {value: 30, viewValue: '30min'},
-    {value: 35, viewValue: '35min'},
-    {value: 40, viewValue: '40min'},
-    {value: 45, viewValue: '45min'},
-    {value: 50, viewValue: '50min'},
-    {value: 55, viewValue: '55min'},
-    {value: 60, viewValue: '60min'}
+    {value: 20, viewValue: '20min'}
   ];
 
   timePeriod: TimePeriod[] = [
