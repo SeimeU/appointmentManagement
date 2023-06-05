@@ -15,7 +15,7 @@ import {AppointmentSeriesEditorComponent} from "../appointment-series-editor/app
 export class AppointmentSeriesTableComponent {
   //region Fields
   // Hard-coded table columns array
-  displayColumns: string[] = ['id', 'startDate', 'endDate', 'timeInterval', 'cnt', 'location', 'line', 'duration', 'substance']
+  displayColumns: string[] = ['id', 'startDate', 'endDate', 'periodInterval', 'number', 'location', 'line', 'duration', 'substance']
 
   // Data stores for the table
   dataSource: MatTableDataSource<AppointmentSeries>;
@@ -53,16 +53,50 @@ export class AppointmentSeriesTableComponent {
   onRowClick(row: AppointmentSeries) {
     // Create a dialog with the data of the clicked appointment
     const dialogRef = this.dialog.open(AppointmentSeriesEditorComponent, {
-      data: {location: row.location, line: row.line, substance: row.substance, duration: row.duration, startDate: row.startDate, endDate: row.endDate, count: row.cnt, interval: row.interval }
+      data: {id: row.id, location: row.location, line: row.line, substance: row.substance, duration: row.duration, startDate: row.startDate, endDate: row.endDate, number: row.number, periodInterval: row.periodInterval }
     });
 
     // Check if the dialog was closed with the store button
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
       // Send the http request to create the appointment (series)
       if(result !== null) {
-        this.appointmentService.saveAppointmentSeries(result).subscribe(s => console.log(s));
+        // Check if the appointment series should be deleted
+        if(result.deleted != undefined) {
+          this.appointmentService.deleteAppointmentSeries(result);
+          // Filter out the old appointment object
+          this.appointmentSeries = this.appointmentSeries.filter(a => a.id != result.id);
+          // Sort the array ascending based on their id
+          this.appointmentSeries = this.appointmentSeries.sort((a,b) => this.compare(a, b));
+
+          // Update the table
+          this.dataSource = new MatTableDataSource<AppointmentSeries>(this.appointmentSeries);
+          this.dataSource.sort = this.sort;
+          this.dataSource.paginator = this.paginator;
+        } else {
+          this.appointmentService.saveAppointmentSeries(result).subscribe(s => {
+            this.appointmentSeries = this.appointmentSeries.filter(a => a.id != result.id);
+
+            if(result.location == row.location) {
+              this.appointmentSeries.push(s);
+            }
+
+            // Sort the array ascending based on their id
+            this.appointmentSeries = this.appointmentSeries.sort((a,b) => this.compare(a, b));
+
+            // Need this to update the table object - can not be outside (therefore duplicate like in the delete)
+            this.dataSource = new MatTableDataSource<AppointmentSeries>(this.appointmentSeries);
+            this.dataSource.sort = this.sort;
+            this.dataSource.paginator = this.paginator;
+          });
+
+        }
       }
     });
+  }
+
+  // Function to compare two appointment objects
+  compare(a: AppointmentSeries, b: AppointmentSeries) {
+    // @ts-ignore - to ignore that they can be undefined
+    return a.id - b.id;
   }
 }

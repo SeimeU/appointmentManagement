@@ -314,7 +314,7 @@ public class AppointmentService {
      */
     private List<Appointment> createAppointmentsForSeries(AppointmentSeries appointmentSeries) {
         // Split the interval string - to get all data
-        String[] temp = appointmentSeries.getInterval().split(";");
+        String[] temp = appointmentSeries.getPeriodInterval().split(";");
 
         LocalDateTime tempDate;
         List<Appointment> appointments = new ArrayList<>();

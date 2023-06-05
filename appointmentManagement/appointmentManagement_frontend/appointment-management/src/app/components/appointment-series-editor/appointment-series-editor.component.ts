@@ -1,8 +1,9 @@
-import {Component, Inject, Input} from '@angular/core';
+import {Component, Inject, Input, OnInit} from '@angular/core';
 import {FormControl} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {UiService} from "../../services/ui.service";
 import {AppointmentSeries} from "../../AppointmentSeries";
+import {AppointmentService} from "../../services/appointment.service";
 
 interface TimePeriod {
   value: string;
@@ -19,7 +20,7 @@ interface Select {
   templateUrl: './appointment-series-editor.component.html',
   styleUrls: ['./appointment-series-editor.component.css']
 })
-export class AppointmentSeriesEditorComponent {
+export class AppointmentSeriesEditorComponent implements OnInit{
   //region Form Controls
   @Input('formControl') locationForm: FormControl;
   @Input('formControl') lineForm: FormControl;
@@ -84,9 +85,7 @@ export class AppointmentSeriesEditorComponent {
   ];
   //endregion
 
-  constructor(public dialogRef: MatDialogRef<AppointmentSeriesEditorComponent>, private uiService: UiService, @Inject(MAT_DIALOG_DATA) public data: AppointmentSeries) {
-    console.log(data);
-
+  constructor(public dialogRef: MatDialogRef<AppointmentSeriesEditorComponent>, private uiService: UiService, private appointmentService: AppointmentService, @Inject(MAT_DIALOG_DATA) public data: AppointmentSeries) {
     // Set min date of datepickers to current date
     this.minDate = new Date();
 
@@ -115,6 +114,10 @@ export class AppointmentSeriesEditorComponent {
     }
     time += date.getMinutes();
 
+    // Get the interval value
+    let period_interval: string = data.periodInterval.split(';')[0];
+    this.uiService.toggleForm(period_interval);
+
     // Initialize form controls
     this.locationForm = new FormControl(data.location);
     this.lineForm = new FormControl(data.line);
@@ -122,15 +125,51 @@ export class AppointmentSeriesEditorComponent {
     this.timeForm = new FormControl(time);
     this.durationForm = new FormControl(data.duration);
     this.substanceForm = new FormControl(data.substance);
-    this.countForm = new FormControl(data.cnt);
+    this.countForm = new FormControl(data.number);
     this.endDateForm = new FormControl(data.endDate);
-    this.intervalForm = new FormControl();
+    this.intervalForm = new FormControl(period_interval);
+  }
+
+  ngOnInit(): void {
+    // Get the selection possibilities for the current selection
+    //this.locService.getLocationsWithCapacity().subscribe(loc => this.locations = loc);
+    //this.locService.getLinesOfLocation(this.data.location).subscribe(li => this.lines = li);
+    //this.locService.getSubstancesOfLine(this.data.location, this.data.line).subscribe(sub => this.substances = sub);
+  }
+
+  // Event handler for location selection
+  onLocationChanged(event: any) {
+    // Reset the line and substance - adjust it to new location
+    this.lineForm.setValue("");
+    this.substanceForm.setValue("");
+
+    //this.locService.getLinesOfLocation(event.value).subscribe(li => this.lines = li);
+    //this.substances = [];
+  }
+
+  // Event handler for line selection
+  onLineChanged(event: any) {
+    if(event.value != null && this.locationForm.value != null) {
+      this.substanceForm.setValue("");
+      //this.locService.getSubstancesOfLine(this.locationForm.value, event.value).subscribe(sub => this.substances = sub);
+    }
   }
 
   // Event handler for delete click
   onDeleteClick() {
-    console.log('Gelöscht');
-    this.dialogRef.close(null);
+    let appointmentSeries: AppointmentSeries = {
+      id: this.data.id,
+      location: this.data.location,
+      line: this.data.line,
+      startDate: this.data.startDate,
+      endDate: this.data.endDate,
+      duration: this.data.duration,
+      substance: this.data.substance,
+      number: this.data.number,
+      periodInterval: this.data.periodInterval,
+      deleted: true
+    }
+    this.dialogRef.close(appointmentSeries);
   }
 
   // Event handler for time interval select
@@ -187,7 +226,7 @@ export class AppointmentSeriesEditorComponent {
   }
 
   // Event handler for creator popup
-  onStore() {
+  async onStore() {
     // Validate input
     this.endDateBeforeStartDate = false;
     this.timeBeforeMin = false;
@@ -319,12 +358,18 @@ export class AppointmentSeriesEditorComponent {
       duration: this.durationForm.value,
       substance: this.substanceForm.value,
       endDate: this.endDateForm.value,
-      cnt: this.countForm.value,
-      interval: intervalValue
+      number: this.countForm.value,
+      periodInterval: intervalValue
     }
 
+    let valid: boolean = false;
+    this.appointmentService.checkAppointmentsSeriesPossible(appointmentSeries).subscribe(res => valid = res);
+
+    // wait to get the right values through subscribe
+    await new Promise(f => setTimeout(f, 50));
+
     // Check if there is already an appointment on this location, line and time
-    if(false) {
+    if(!valid) {
       alert('Es is bereits ein Termin an diesem Standort auf dieser Linie zur gewünschten Zeit vorhanden!');
       return;
     }

@@ -5,11 +5,12 @@ export interface AppointmentSeries{
   id?: number;
   startDate: Date;
   endDate: Date;
-  interval: string;
-  cnt: number;
+  periodInterval: string;
+  number: number;
   duration: Duration;
   location: string;
   line: number;
   substance: string;
+  deleted?: boolean;
   appointments?: Appointment[];
 }

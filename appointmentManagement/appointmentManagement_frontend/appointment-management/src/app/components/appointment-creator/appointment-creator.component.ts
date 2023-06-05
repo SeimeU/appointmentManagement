@@ -357,8 +357,9 @@ export class AppointmentCreatorComponent implements OnInit{
         duration: this.durationForm.value,
         substance: this.substanceForm.value,
         endDate: this.endDateForm.value,
-        cnt: this.countForm.value,
-        interval: intervalValue
+        number: this.countForm.value,
+        periodInterval: intervalValue,
+        deleted: false
       }
 
       let valid: boolean = false;

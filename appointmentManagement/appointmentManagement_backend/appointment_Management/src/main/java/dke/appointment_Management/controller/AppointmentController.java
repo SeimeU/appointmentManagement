@@ -146,7 +146,7 @@ public class AppointmentController {
             return ResponseEntity.badRequest().build();
 
         // Check the syntax of the interval string
-        if(!service.checkIntervalSyntax(appointmentSeries.getInterval()))
+        if(!service.checkIntervalSyntax(appointmentSeries.getPeriodInterval()))
             return ResponseEntity.badRequest().build();
 
         if(!service.isValid(appointmentSeries))
@@ -384,7 +384,7 @@ public class AppointmentController {
             return ResponseEntity.badRequest().build();
 
         // Check the syntax of the interval string
-        if(!service.checkIntervalSyntax(appointmentSeries.getInterval()))
+        if(!service.checkIntervalSyntax(appointmentSeries.getPeriodInterval()))
             return ResponseEntity.badRequest().build();
 
         return ResponseEntity.ok(service.isValid(appointmentSeries));

@@ -54,7 +54,6 @@ export class AppComponent{
 
     // Send the http request
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
       // Check if the dialog was closed with the store button
       if(result !== null) {
         let res: Result = result;

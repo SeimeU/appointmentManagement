@@ -18,7 +18,7 @@ public class AppointmentSeries {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime endDate;
 
-    private String period_interval;
+    private String periodInterval;
     private int number;
     private int duration;
     private String location;
@@ -35,12 +35,12 @@ public class AppointmentSeries {
     }
 
     public AppointmentSeries(
-            LocalDateTime startDate, LocalDateTime endDate, String interval, int number, int duration, String location,
+            LocalDateTime startDate, LocalDateTime endDate, String periodInterval, int number, int duration, String location,
             int line, String substance, List<Appointment> appointments, boolean deleted
     ) {
         this.startDate = startDate;
         this.endDate = endDate;
-        this.period_interval = interval;
+        this.periodInterval = periodInterval;
         this.number = number;
         this.duration = duration;
         this.location = location;
@@ -77,12 +77,12 @@ public class AppointmentSeries {
         this.endDate = endDate;
     }
 
-    public String getInterval() {
-        return period_interval;
+    public String getPeriodInterval() {
+        return periodInterval;
     }
 
-    public void setInterval(String interval) {
-        this.period_interval = interval;
+    public void setPeriodInterval(String interval) {
+        this.periodInterval = interval;
     }
 
     public int getNumber() {
@@ -150,7 +150,7 @@ public class AppointmentSeries {
                 "Startdatum=" + this.startDate +
                 ", Enddatum=" + this.endDate +
                 ", Anzahl=" + this.number +
-                ", Intervall=" + this.period_interval +
+                ", Intervall=" + this.periodInterval +
                 ", Dauer='" + this.duration + '\'' +
                 ", Standort='" + this.location + '\'' +
                 ", Linie=" + this.line +
