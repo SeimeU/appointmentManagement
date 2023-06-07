@@ -167,6 +167,7 @@ export class AppointmentSeriesEditorComponent implements OnInit{
       substance: this.data.substance,
       number: this.data.number,
       periodInterval: this.data.periodInterval,
+      appointments: this.data.appointments,
       deleted: true
     }
     this.dialogRef.close(appointmentSeries);

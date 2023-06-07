@@ -6,7 +6,8 @@ import {HttpClient} from "@angular/common/http";
   providedIn: 'root'
 })
 export class LocationAndMedicineService {
-  private apiUrl = 'http://localhost:9192/';
+  private apiUrl: string = 'http://localhost:9192/';
+  private appointmentBookingUrl: string = 'http://localhost:9191/';
   private _district: string = "";
 
   constructor(private http:HttpClient) { }
@@ -34,5 +35,14 @@ export class LocationAndMedicineService {
 
   getSubstancesOfLine(location: string, line: number): Observable<string[]> {
     return this.http.get<string[]>(this.apiUrl + 'location/' + location + '/line/' + line + '/substances');
+  }
+
+  setSubstanceAppointment(location: string, line: number, substance: string): void {
+    this.http.post(this.apiUrl + '/create-appointment/' + location + '/line/' + line, substance);
+  }
+
+  setAppointmentDeleted(id: number, location: string, line: number, substance: string): void {
+    this.http.put(this.appointmentBookingUrl + '/booked-appointments/' + id, id);
+    this.http.post(this.apiUrl + '/set-free/' + location + '/line/' + line, substance);
   }
 }

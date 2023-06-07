@@ -6,6 +6,8 @@ import {AppointmentService} from "../../services/appointment.service";
 import {MatDialog} from "@angular/material/dialog";
 import {AppointmentSeries} from "../../AppointmentSeries";
 import {AppointmentSeriesEditorComponent} from "../appointment-series-editor/appointment-series-editor.component";
+import {LocationAndMedicineService} from "../../services/location-and-medicine.service";
+import {Appointment} from "../../Appointment";
 
 @Component({
   selector: 'app-appointment-series-table',
@@ -26,7 +28,7 @@ export class AppointmentSeriesTableComponent {
   @ViewChild(MatSort) sort: any;
   //endregion
 
-  constructor(private appointmentService: AppointmentService, public dialog: MatDialog) {
+  constructor(private appointmentService: AppointmentService,private locationService: LocationAndMedicineService, public dialog: MatDialog) {
     this.appointmentService.getAppointmentSeries().subscribe((appointmentSeries) => {
       this.appointmentSeries = appointmentSeries;
       this.dataSource = new MatTableDataSource<AppointmentSeries>(this.appointmentSeries);
@@ -53,7 +55,7 @@ export class AppointmentSeriesTableComponent {
   onRowClick(row: AppointmentSeries) {
     // Create a dialog with the data of the clicked appointment
     const dialogRef = this.dialog.open(AppointmentSeriesEditorComponent, {
-      data: {id: row.id, location: row.location, line: row.line, substance: row.substance, duration: row.duration, startDate: row.startDate, endDate: row.endDate, number: row.number, periodInterval: row.periodInterval }
+      data: {id: row.id, location: row.location, line: row.line, substance: row.substance, duration: row.duration, startDate: row.startDate, endDate: row.endDate, number: row.number, periodInterval: row.periodInterval, appointments: row.appointments }
     });
 
     // Check if the dialog was closed with the store button
@@ -63,6 +65,15 @@ export class AppointmentSeriesTableComponent {
         // Check if the appointment series should be deleted
         if(result.deleted != undefined) {
           this.appointmentService.deleteAppointmentSeries(result);
+
+          // Set the delete flag for all appointments in the appointment series in the other applications
+          for(let i = 0; i<result.appointments.length; i++){
+            let appointment: Appointment = result.appointments[i];
+            // @ts-ignore - ignore error because id is in this case never undefined
+            let id: number = appointment.id;
+            //this.locationService.setAppointmentDeleted(id, appointment.location, appointment.line, appointment.substance);
+          }
+
           // Filter out the old appointment object
           this.appointmentSeries = this.appointmentSeries.filter(a => a.id != result.id);
           // Sort the array ascending based on their id

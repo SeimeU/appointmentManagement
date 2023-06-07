@@ -6,6 +6,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {AppointmentService} from "../../services/appointment.service";
 import {AppointmentEditorComponent} from "../appointment-editor/appointment-editor.component";
 import {MatDialog} from "@angular/material/dialog";
+import {LocationAndMedicineService} from "../../services/location-and-medicine.service";
 
 @Component({
   selector: 'app-appointment-table',
@@ -28,7 +29,7 @@ export class AppointmentTableComponent{
   //endregion
 
 
-  constructor(private appointmentService: AppointmentService, public dialog: MatDialog) {
+  constructor(private appointmentService: AppointmentService, private locationService: LocationAndMedicineService, public dialog: MatDialog) {
     this.appointmentService.getAppointments().subscribe((appointments) => {
       this.appointments = appointments;
       this.dataSource = new MatTableDataSource<Appointment>(this.appointments);
@@ -65,6 +66,10 @@ export class AppointmentTableComponent{
         // Check if the appointment should be deleted
         if(result.deleted != undefined) {
           this.appointmentService.deleteAppointment(result);
+
+          // Set the delete flag for the appointment in the other applications
+          this.locationService.setAppointmentDeleted(result.id, result.location, result.line, result.substance);
+
           // Filter out the old appointment object
           this.appointments = this.appointments.filter(a => a.id != result.id);
           // Sort the array ascending based on their id
