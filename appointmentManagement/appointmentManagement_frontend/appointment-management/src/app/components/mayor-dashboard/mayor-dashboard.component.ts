@@ -1,4 +1,4 @@
-import {Component, OnInit, ChangeDetectorRef} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {AppointmentService} from "../../services/appointment.service";
 import {Chart} from 'chart.js/auto'
 
@@ -18,42 +18,37 @@ export class MayorDashboardComponent implements OnInit{
   constructor(private appointmentService: AppointmentService) {
   }
 
-  async init() {
+  ngOnInit(): void {
     this.appointmentService.getNumberOfFreeAppointments().subscribe((num) => {
       this.freeAppointments = num;
-    });
-    this.appointmentService.getNumberOfAppointments().subscribe((num) => {
-      this.allAppointments = num;
-    });
 
-    // wait to get the right values through subscribe
-    await new Promise(f => setTimeout(f, 50));
-    this.bookedAppointments = this.allAppointments - this.freeAppointments;
+      this.appointmentService.getNumberOfAppointments().subscribe((num) => {
+        this.allAppointments = num;
 
-    if (this.allAppointments != 0) {
-      this.percentage = (this.bookedAppointments / this.allAppointments) * 100;
-    }
+        this.bookedAppointments = this.allAppointments - this.freeAppointments;
 
-    this.chart = new Chart("PieChart", {
-      type: 'doughnut',  // type of the chart
-      data: {
-        labels: ['Freie Termine', 'Gebuchte Termine'],
-        datasets: [
-          {
-            label: 'Termine',
-            data: [this.freeAppointments, this.bookedAppointments],
-            backgroundColor: ['rgba(53,250,0,0.84)', 'rgba(245,0,0,0.77)'],
-            hoverOffset: 4
+        if (this.allAppointments != 0) {
+          this.percentage = (this.bookedAppointments / this.allAppointments) * 100;
+        }
+
+        this.chart = new Chart("PieChart", {
+          type: 'doughnut',  // type of the chart
+          data: {
+            labels: ['Freie Termine', 'Gebuchte Termine'],
+            datasets: [
+              {
+                label: 'Termine',
+                data: [this.freeAppointments, this.bookedAppointments],
+                backgroundColor: ['rgba(53,250,0,0.84)', 'rgba(245,0,0,0.77)'],
+                hoverOffset: 4
+              }
+            ]
+          },
+          options: {
+            aspectRatio: 2.5
           }
-        ]
-      },
-      options: {
-        aspectRatio: 2.5
-      }
+        });
+      });
     });
-  }
-
-  ngOnInit(): void {
-    this.init();
   }
 }

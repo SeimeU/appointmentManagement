@@ -134,7 +134,7 @@ export class AppointmentEditorComponent implements OnInit{
   }
 
   // Event handler for creator popup
-  async onStore() {
+  onStore() {
     // Validate input
     this.timeBeforeMin = false;
     this.dateBeforeMin = false;
@@ -221,20 +221,16 @@ export class AppointmentEditorComponent implements OnInit{
       booked: this.bookedForm.value
     };
 
-    let valid: boolean = false;
-    this.appointmentService.checkAppointmentPossible(appointment).subscribe(res => valid = res);
+    this.appointmentService.checkAppointmentPossible(appointment).subscribe(valid => {
+      // Check if there is already an appointment on this location, line and time
+      if (!valid) {
+        alert('Es is bereits ein Termin an diesem Standort auf dieser Linie zur gewünschten Zeit vorhanden!');
+        return;
+      }
 
-    // wait to get the right values through subscribe
-    await new Promise(f => setTimeout(f, 50));
-
-    // Check if there is already an appointment on this location, line and time
-    if (!valid) {
-      alert('Es is bereits ein Termin an diesem Standort auf dieser Linie zur gewünschten Zeit vorhanden!');
-      return;
-    }
-
-    // Close popup and return the data
-    this.dialogRef.close(appointment);
+      // Close popup and return the data
+      this.dialogRef.close(appointment);
+    });
   }
 }
 

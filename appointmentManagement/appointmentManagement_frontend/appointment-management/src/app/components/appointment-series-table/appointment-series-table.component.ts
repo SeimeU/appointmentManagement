@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
@@ -14,8 +14,12 @@ import {Appointment} from "../../Appointment";
   templateUrl: './appointment-series-table.component.html',
   styleUrls: ['./appointment-series-table.component.css']
 })
-export class AppointmentSeriesTableComponent {
+export class AppointmentSeriesTableComponent implements OnChanges{
   //region Fields
+
+  // Input variable to receive created appointment series
+  @Input() createdAppointmentSeries: AppointmentSeries | undefined;
+
   // Hard-coded table columns array
   displayColumns: string[] = ['id', 'startDate', 'endDate', 'periodInterval', 'number', 'location', 'line', 'duration', 'substance']
 
@@ -36,6 +40,23 @@ export class AppointmentSeriesTableComponent {
       this.dataSource.paginator = this.paginator;
     });
     this.dataSource = new MatTableDataSource<AppointmentSeries>(this.appointmentSeries);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(changes['createdAppointmentSeries'].currentValue != undefined) {
+      // Check if the current value is the same as the previous value
+      if(changes['createdAppointmentSeries'].previousValue == undefined || changes['createdAppointmentSeries'].currentValue.id != changes['createdAppointmentSeries'].previousValue.id) {
+        this.appointmentSeries.push(changes['createdAppointmentSeries'].currentValue);
+
+        // Sort the array ascending based on their id
+        this.appointmentSeries = this.appointmentSeries.sort((a,b) => this.compare(a, b));
+
+        // Need this to update the table object - can not be outside (therefore duplicate like in the delete)
+        this.dataSource = new MatTableDataSource<AppointmentSeries>(this.appointmentSeries);
+        this.dataSource.sort = this.sort;
+        this.dataSource.paginator = this.paginator;
+      }
+    }
   }
 
   // Event handler for the filter function of the table
@@ -87,9 +108,7 @@ export class AppointmentSeriesTableComponent {
           this.appointmentService.saveAppointmentSeries(result).subscribe(s => {
             this.appointmentSeries = this.appointmentSeries.filter(a => a.id != result.id);
 
-            if(result.location == row.location) {
-              this.appointmentSeries.push(s);
-            }
+            this.appointmentSeries.push(s);
 
             // Sort the array ascending based on their id
             this.appointmentSeries = this.appointmentSeries.sort((a,b) => this.compare(a, b));

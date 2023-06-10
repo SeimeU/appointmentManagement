@@ -217,7 +217,7 @@ export class AppointmentCreatorComponent implements OnInit{
   }
 
   // Event handler for creator popup - make it async to enable promise timeout
-  async onStore() {
+  onStore() {
     // Validate input
     this.endDateBeforeStartDate = false;
     this.timeBeforeMin = false;
@@ -349,6 +349,10 @@ export class AppointmentCreatorComponent implements OnInit{
 
     // Check if the return value should be an appointment or appointment series
     if(this.sliderValue) {
+      // Add two hours because of time offset
+      let endDate: Date = new Date(this.endDateForm.value);
+      endDate.setHours(hours+2, minutes);
+
       // Create appointment series object with the data
       let appointmentSeries: AppointmentSeries = {
         location: this.locationForm.value,
@@ -356,28 +360,27 @@ export class AppointmentCreatorComponent implements OnInit{
         startDate: inputDate,
         duration: this.durationForm.value,
         substance: this.substanceForm.value,
-        endDate: this.endDateForm.value,
+        endDate: endDate,
         number: this.countForm.value,
         periodInterval: intervalValue,
         deleted: false
       }
 
-      let valid: boolean = false;
-      this.appointmentService.checkAppointmentsSeriesPossible(appointmentSeries).subscribe(res => valid = res);
+      this.appointmentService.checkAppointmentsSeriesPossible(appointmentSeries).subscribe(valid => {
+        // Check if there is already an appointment on this location, line and time
+        if(!valid) {
+          alert('Es is bereits ein Termin an diesem Standort auf dieser Linie zur gewünschten Zeit vorhanden!');
+          return;
+        }
 
-      // wait to get the right values through subscribe
-      await new Promise(f => setTimeout(f, 50));
+        // Create the return value
+        result = {
+          appointmentSeries: appointmentSeries
+        };
 
-      // Check if there is already an appointment on this location, line and time
-      if(!valid) {
-        alert('Es is bereits ein Termin an diesem Standort auf dieser Linie zur gewünschten Zeit vorhanden!');
-        return;
-      }
-
-      // Create the return value
-      result = {
-        appointmentSeries: appointmentSeries
-      };
+        // Close popup and return the data
+        this.dialogRef.close(result);
+      });
     } else {
       // Create appointment object with the data
       let appointment: Appointment = {
@@ -389,26 +392,22 @@ export class AppointmentCreatorComponent implements OnInit{
         booked: this.bookedForm.value
       };
 
-      let valid: boolean = false;
-      this.appointmentService.checkAppointmentPossible(appointment).subscribe(res => valid = res);
+      this.appointmentService.checkAppointmentPossible(appointment).subscribe(valid => {
+        // Check if there is already an appointment on this location, line and time
+        if(!valid) {
+          alert('Es is bereits ein Termin an diesem Standort auf dieser Linie zur gewünschten Zeit vorhanden!');
+          return;
+        }
 
-      // wait to get the right values through subscribe
-      await new Promise(f => setTimeout(f, 50));
+        // Create the return value
+        result = {
+          appointment: appointment
+        };
 
-      // Check if there is already an appointment on this location, line and time
-      if(!valid) {
-        alert('Es is bereits ein Termin an diesem Standort auf dieser Linie zur gewünschten Zeit vorhanden!');
-        return;
-      }
-
-      // Create the return value
-      result = {
-        appointment: appointment
-      };
+        // Close popup and return the data
+        this.dialogRef.close(result);
+      });
     }
-
-    // Close popup and return the data
-    this.dialogRef.close(result);
   }
 
   //endregion

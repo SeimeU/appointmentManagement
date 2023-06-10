@@ -227,7 +227,7 @@ export class AppointmentSeriesEditorComponent implements OnInit{
   }
 
   // Event handler for creator popup
-  async onStore() {
+  onStore() {
     // Validate input
     this.endDateBeforeStartDate = false;
     this.timeBeforeMin = false;
@@ -363,20 +363,16 @@ export class AppointmentSeriesEditorComponent implements OnInit{
       periodInterval: intervalValue
     }
 
-    let valid: boolean = false;
-    this.appointmentService.checkAppointmentsSeriesPossible(appointmentSeries).subscribe(res => valid = res);
+    this.appointmentService.checkAppointmentsSeriesPossible(appointmentSeries).subscribe(valid => {
+      // Check if there is already an appointment on this location, line and time
+      if(!valid) {
+        alert('Es is bereits ein Termin an diesem Standort auf dieser Linie zur gewünschten Zeit vorhanden!');
+        return;
+      }
 
-    // wait to get the right values through subscribe
-    await new Promise(f => setTimeout(f, 50));
-
-    // Check if there is already an appointment on this location, line and time
-    if(!valid) {
-      alert('Es is bereits ein Termin an diesem Standort auf dieser Linie zur gewünschten Zeit vorhanden!');
-      return;
-    }
-
-    // Close popup and return the data
-    this.dialogRef.close(appointmentSeries);
+      // Close popup and return the data
+      this.dialogRef.close(appointmentSeries);
+    });
   }
 
   //endregion

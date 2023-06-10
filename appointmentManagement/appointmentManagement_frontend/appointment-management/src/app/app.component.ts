@@ -7,6 +7,8 @@ import {MatSelectChange} from "@angular/material/select";
 import {FormControl} from "@angular/forms";
 import {Result} from "./Result";
 import {LocationAndMedicineService} from "./services/location-and-medicine.service";
+import {Appointment} from "./Appointment";
+import {AppointmentSeries} from "./AppointmentSeries";
 
 // Constants for the users
 const BGM: string = "Bürgermeister";
@@ -37,6 +39,8 @@ export class AppComponent{
   bgmSelected: boolean = false;
   districtSelected: boolean = false;
   us: string = "";
+  appointment!: Appointment;
+  appointmentSeries!: AppointmentSeries;
   //endregion
 
   constructor(public dialog: MatDialog, private appointmentService: AppointmentService, private locationService: LocationAndMedicineService) {
@@ -62,13 +66,13 @@ export class AppComponent{
         // Send the http request to create the appointment (series)
         if (res.appointment) {
           this.appointmentService.saveAppointment(res.appointment).subscribe(s => {
-            console.log(s);
+            this.appointment = s;
             // Set the substance as booked in location application
             //this.locationService.setSubstanceAppointment(s.location, s.line, s.substance);
           });
         } else if (res.appointmentSeries) {
           this.appointmentService.saveAppointmentSeries(res.appointmentSeries).subscribe(s => {
-            console.log(s)
+            this.appointmentSeries = s;
             // Set the substances as booked for all appointments in the series in location application
             // @ts-ignore to suppress the appointments = undefined warning
             for(let i = 0; i<s.appointments.length; i++){
