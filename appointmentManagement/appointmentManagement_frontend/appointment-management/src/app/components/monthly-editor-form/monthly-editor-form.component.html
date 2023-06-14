@@ -2,7 +2,7 @@
   <div>
     <mat-label>Alle</mat-label>
     <mat-form-field id="month" appearance="outline">
-      <mat-select (selectionChange)="onNumberSwitchChange($event)" required>
+      <mat-select (selectionChange)="onNumberSwitchChange($event)" [formControl]="monthForm" required>
         <mat-option *ngFor="let month of months" [value]="month">
           {{month}}
         </mat-option>
@@ -13,14 +13,14 @@
   <div>
     <mat-label>Am</mat-label>
     <mat-form-field appearance="outline">
-      <mat-select (selectionChange)="onPeriodSwitchChange($event)" required>
+      <mat-select (selectionChange)="onPeriodSwitchChange($event)" [formControl]="periodForm" required>
         <mat-option *ngFor="let p of period" [value]="p.value">
           {{p.viewValue}}
         </mat-option>
       </mat-select>
     </mat-form-field>
     <mat-form-field id="day" appearance="outline">
-      <mat-select (selectionChange)="onDaySwitchChange($event)" required>
+      <mat-select (selectionChange)="onDaySwitchChange($event)" [formControl]="dayForm" required>
         <mat-option *ngFor="let day of days" [value]="day.value">
           {{day.viewValue}}
         </mat-option>

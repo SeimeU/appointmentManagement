@@ -2,13 +2,14 @@ import {Component, Input} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {AppointmentCreatorComponent} from "./components/appointment-creator/appointment-creator.component";
 import {AppointmentService} from "./services/appointment.service";
-import {DISTRICTS} from "./districts";
+import {Districts} from "./entities/Districts";
 import {MatSelectChange} from "@angular/material/select";
 import {FormControl} from "@angular/forms";
-import {Result} from "./Result";
+import {Result} from "./entities/Result";
 import {LocationAndMedicineService} from "./services/location-and-medicine.service";
-import {Appointment} from "./Appointment";
-import {AppointmentSeries} from "./AppointmentSeries";
+import {Appointment} from "./entities/Appointment";
+import {AppointmentSeries} from "./entities/AppointmentSeries";
+import {UiService} from "./services/ui.service";
 
 // Constants for the users
 const BGM: string = "Bürgermeister";
@@ -43,8 +44,8 @@ export class AppComponent{
   appointmentSeries!: AppointmentSeries;
   //endregion
 
-  constructor(public dialog: MatDialog, private appointmentService: AppointmentService, private locationService: LocationAndMedicineService) {
-    this.districts = DISTRICTS;
+  constructor(public dialog: MatDialog, private appointmentService: AppointmentService, private locationService: LocationAndMedicineService, private uiService: UiService) {
+    this.districts = Districts;
     this.selectedOption = new FormControl('None');
   }
 
@@ -81,6 +82,9 @@ export class AppComponent{
           });
         }
       }
+
+      // Reset form booleans for next usage
+      this.uiService.toggleForm('');
     });
   }
 

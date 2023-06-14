@@ -4,10 +4,11 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {AppointmentService} from "../../services/appointment.service";
 import {MatDialog} from "@angular/material/dialog";
-import {AppointmentSeries} from "../../AppointmentSeries";
+import {AppointmentSeries} from "../../entities/AppointmentSeries";
 import {AppointmentSeriesEditorComponent} from "../appointment-series-editor/appointment-series-editor.component";
 import {LocationAndMedicineService} from "../../services/location-and-medicine.service";
-import {Appointment} from "../../Appointment";
+import {Appointment} from "../../entities/Appointment";
+import {UiService} from "../../services/ui.service";
 
 @Component({
   selector: 'app-appointment-series-table',
@@ -32,7 +33,7 @@ export class AppointmentSeriesTableComponent implements OnChanges{
   @ViewChild(MatSort) sort: any;
   //endregion
 
-  constructor(private appointmentService: AppointmentService,private locationService: LocationAndMedicineService, public dialog: MatDialog) {
+  constructor(private appointmentService: AppointmentService,private locationService: LocationAndMedicineService, private uiService: UiService, public dialog: MatDialog) {
     this.appointmentService.getAppointmentSeries().subscribe((appointmentSeries) => {
       this.appointmentSeries = appointmentSeries;
       this.dataSource = new MatTableDataSource<AppointmentSeries>(this.appointmentSeries);
@@ -76,7 +77,8 @@ export class AppointmentSeriesTableComponent implements OnChanges{
   onRowClick(row: AppointmentSeries) {
     // Create a dialog with the data of the clicked appointment
     const dialogRef = this.dialog.open(AppointmentSeriesEditorComponent, {
-      data: {id: row.id, location: row.location, line: row.line, substance: row.substance, duration: row.duration, startDate: row.startDate, endDate: row.endDate, number: row.number, periodInterval: row.periodInterval, appointments: row.appointments }
+      data: {id: row.id, location: row.location, line: row.line, substance: row.substance, duration: row.duration, startDate: row.startDate, endDate: row.endDate, number: row.number, periodInterval: row.periodInterval, appointments: row.appointments },
+      disableClose: true
     });
 
     // Check if the dialog was closed with the store button
@@ -93,6 +95,9 @@ export class AppointmentSeriesTableComponent implements OnChanges{
             // @ts-ignore - ignore error because id is in this case never undefined
             let id: number = appointment.id;
             //this.locationService.setAppointmentDeleted(id, appointment.location, appointment.line, appointment.substance);
+
+            // Remove the appointment from the appointment table
+            this.uiService.removeAppointment(id);
           }
 
           // Filter out the old appointment object
@@ -105,6 +110,15 @@ export class AppointmentSeriesTableComponent implements OnChanges{
           this.dataSource.sort = this.sort;
           this.dataSource.paginator = this.paginator;
         } else {
+          // Remove old appointments from the appointment table
+          for(let i = 0; i<result.appointments.length; i++){
+            let appointment: Appointment = result.appointments[i];
+            // @ts-ignore - ignore error because id is in this case never undefined
+            let id: number = appointment.id;
+            this.uiService.removeAppointment(id);
+            //this.locationService.setAppointmentDeleted(id, appointment.location, appointment.line, appointment.substance);
+          }
+
           this.appointmentService.saveAppointmentSeries(result).subscribe(s => {
             this.appointmentSeries = this.appointmentSeries.filter(a => a.id != result.id);
 
@@ -117,10 +131,21 @@ export class AppointmentSeriesTableComponent implements OnChanges{
             this.dataSource = new MatTableDataSource<AppointmentSeries>(this.appointmentSeries);
             this.dataSource.sort = this.sort;
             this.dataSource.paginator = this.paginator;
-          });
 
+            // Insert new appointments into the appointment table
+            // @ts-ignore - ignore that s could be undefined
+            for(let i = 0; i<s.appointments.length; i++){
+              // @ts-ignore - ignore error because id is in this case never undefined
+              let appointment: Appointment = s.appointments[i];
+              console.log(appointment.id);
+              this.uiService.addAppointment(appointment);
+            }
+          });
         }
       }
+
+      // Reset form booleans for next usage
+      this.uiService.toggleForm('');
     });
   }
 

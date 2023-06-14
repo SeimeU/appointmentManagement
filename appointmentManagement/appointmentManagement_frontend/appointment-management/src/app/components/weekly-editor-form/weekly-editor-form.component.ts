@@ -1,13 +1,25 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {Subscription} from "rxjs";
 import {UiService} from "../../services/ui.service";
+import {FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-weekly-editor-form',
   templateUrl: './weekly-editor-form.component.html',
   styleUrls: ['./weekly-editor-form.component.css']
 })
-export class WeeklyEditorFormComponent {
+export class WeeklyEditorFormComponent implements OnChanges{
+  @Input() selectedWeek: number | undefined;
+  @Input() selectedDays: string | undefined;
+  @Input('formControl') weekForm: FormControl;
+  @Input('formControl') mondayForm: FormControl;
+  @Input('formControl') tuesdayForm: FormControl;
+  @Input('formControl') wednesdayForm: FormControl;
+  @Input('formControl') thursdayForm: FormControl;
+  @Input('formControl') fridayForm: FormControl;
+  @Input('formControl') saturdayForm: FormControl;
+  @Input('formControl') sundayForm: FormControl;
+
   @Output() numberSwitchChanged = new EventEmitter();
   @Output() dayCheckedChanged = new EventEmitter();
 
@@ -30,6 +42,15 @@ export class WeeklyEditorFormComponent {
 
   constructor(private uiService:UiService) {
     this.subscription = this.uiService.onToggleWeekly().subscribe((value) => this.showWeeklyForm = value);
+
+    this.weekForm = new FormControl();
+    this.mondayForm = new FormControl();
+    this.tuesdayForm = new FormControl();
+    this.wednesdayForm = new FormControl();
+    this.thursdayForm = new FormControl();
+    this.fridayForm = new FormControl();
+    this.saturdayForm = new FormControl();
+    this.sundayForm = new FormControl();
   }
 
   // Handler for the selection component
@@ -40,5 +61,40 @@ export class WeeklyEditorFormComponent {
   // Handler for the checkbox components
   onDayCheckedChange(event: any) {
     this.dayCheckedChanged.emit(event);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['selectedWeek'] != undefined && changes['selectedWeek'].currentValue != undefined) {
+      this.weekForm.setValue(changes['selectedWeek'].currentValue);
+    }
+
+    if(changes['selectedDays'] != undefined && changes['selectedDays'].currentValue != undefined) {
+      let days: string[] = changes['selectedDays'].currentValue.split(',');
+      for (let i = 0; i < days.length; i++) {
+        switch (Number(days[i])) {
+          case this.MONDAY:
+            this.mondayForm.setValue(true);
+            break;
+          case this.TUESDAY:
+            this.tuesdayForm.setValue(true);
+            break;
+          case this.WEDNESDAY:
+            this.wednesdayForm.setValue(true);
+            break;
+          case this.THURSDAY:
+            this.thursdayForm.setValue(true);
+            break;
+          case this.FRIDAY:
+            this.fridayForm.setValue(true);
+            break;
+          case this.SATURDAY:
+            this.saturdayForm.setValue(true);
+            break;
+          case this.SUNDAY:
+            this.sundayForm.setValue(true);
+            break;
+        }
+      }
+    }
   }
 }

@@ -105,7 +105,6 @@ public class Appointment {
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
-
     //endregion
 
     @Override
@@ -114,10 +113,10 @@ public class Appointment {
                 "Datum=" + this.date +
                 ", Dauer='" + this.duration + '\'' +
                 ", Standort='" + this.location + '\'' +
-                ", Linie=" + this.line +
-                ", Gebucht=" + this.booked +
-                ", Wirkstoff='" + this.substance +
-                ", Gelöscht='" + this.deleted +
+                ", Linie='" + this.line + '\'' +
+                ", Gebucht='" + this.booked + '\'' +
+                ", Wirkstoff='" + this.substance + '\'' +
+                ", Gelöscht='" + this.deleted + '\'' +
                 '}';
     }
 }

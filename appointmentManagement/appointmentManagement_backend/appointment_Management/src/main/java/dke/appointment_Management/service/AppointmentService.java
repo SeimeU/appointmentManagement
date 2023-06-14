@@ -326,7 +326,7 @@ public class AppointmentService {
                 int days = Integer.parseInt(temp[1]);
                 tempDate = appointmentSeries.getStartDate();
 
-                // While the temporary date is before the end date (the or connection is there so that also on the last day anappointment gets created) - create appointments
+                // While the temporary date is before the end date (the or connection is there so that also on the last day an appointment gets created) - create appointments
                 while (tempDate.isBefore(appointmentSeries.getEndDate()) || tempDate.isEqual(appointmentSeries.getEndDate())) {
                     appointments.addAll(create(appointmentSeries, tempDate));
                     tempDate = tempDate.plusDays(days);

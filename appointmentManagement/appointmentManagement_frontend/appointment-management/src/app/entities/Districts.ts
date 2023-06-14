@@ -1,4 +1,4 @@
-export const DISTRICTS: string[] = [
+export const Districts: string[] = [
   'Braunau',
   'Eferding',
   'Freistadt',

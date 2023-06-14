@@ -1,6 +1,6 @@
 import {Component, Inject, Input, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {Appointment} from "../../Appointment";
+import {Appointment} from "../../entities/Appointment";
 import {FormControl} from "@angular/forms";
 import {LocationAndMedicineService} from "../../services/location-and-medicine.service";
 import {AppointmentService} from "../../services/appointment.service";
@@ -103,8 +103,8 @@ export class AppointmentEditorComponent implements OnInit{
   // Event handler for location selection
   onLocationChanged(event: any) {
     // Reset the line and substance - adjust it to new location
-    this.lineForm.setValue("");
-    this.substanceForm.setValue("");
+    this.lineForm.setValue(null);
+    this.substanceForm.setValue(null);
 
     //this.locService.getLinesOfLocation(event.value).subscribe(li => this.lines = li);
     //this.substances = [];
@@ -113,7 +113,7 @@ export class AppointmentEditorComponent implements OnInit{
   // Event handler for line selection
   onLineChanged(event: any) {
     if(event.value != null && this.locationForm.value != null) {
-      this.substanceForm.setValue("");
+      this.substanceForm.setValue(null);
       //this.locService.getSubstancesOfLine(this.locationForm.value, event.value).subscribe(sub => this.substances = sub);
     }
   }

@@ -2,7 +2,7 @@ import {Component, Inject, Input, OnInit} from '@angular/core';
 import {FormControl} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {UiService} from "../../services/ui.service";
-import {AppointmentSeries} from "../../AppointmentSeries";
+import {AppointmentSeries} from "../../entities/AppointmentSeries";
 import {AppointmentService} from "../../services/appointment.service";
 
 interface TimePeriod {
@@ -59,7 +59,6 @@ export class AppointmentSeriesEditorComponent implements OnInit{
   //endregion
 
   //region Auxiliary variables
-  isBooked: any;
   minDate: Date;
   dailyRepeat: number;
   weeklyRepeat: number;
@@ -67,6 +66,13 @@ export class AppointmentSeriesEditorComponent implements OnInit{
   monthlyRepeat: number;
   monthlyNumberRepeat: number;
   monthlyDayRepeat: number;
+  selectedDay!: number;
+  selectedWeek!: number;
+  selectedDays!: string;
+  selectedMonth!: number;
+  selectedMonthlyNumber!: number;
+  selectedMonthlyDay!: number;
+
 
   locations: string[] = [
     "Braunau",
@@ -116,7 +122,6 @@ export class AppointmentSeriesEditorComponent implements OnInit{
 
     // Get the interval value
     let period_interval: string = data.periodInterval.split(';')[0];
-    this.uiService.toggleForm(period_interval);
 
     // Initialize form controls
     this.locationForm = new FormControl(data.location);
@@ -131,6 +136,29 @@ export class AppointmentSeriesEditorComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    // Get the interval value and toggle the ui form
+    let period_interval: string = this.data.periodInterval.split(';')[0];
+
+    // Transfer the values to the right component
+    if(period_interval == 'daily') {
+      this.selectedDay = Number(this.data.periodInterval.split(';')[1]);
+      this.dailyRepeat = this.selectedDay;
+    } else if(period_interval == 'weekly') {
+      this.selectedWeek = Number(this.data.periodInterval.split(';')[1]);
+      this.weeklyRepeat = this.selectedWeek;
+      this.selectedDays = this.data.periodInterval.split(';')[2];
+      this.weeklyDaysRepeat = this.selectedDays.split(',').map(Number);
+    } else if(period_interval == 'monthly') {
+      this.selectedMonth = Number(this.data.periodInterval.split(';')[1]);
+      this.monthlyRepeat = this.selectedMonth;
+      this.selectedMonthlyNumber = Number(this.data.periodInterval.split(';')[2]);
+      this.monthlyNumberRepeat = this.selectedMonthlyNumber;
+      this.selectedMonthlyDay = Number(this.data.periodInterval.split(';')[3]);
+      this.monthlyDayRepeat = this.selectedMonthlyDay;
+    }
+
+    this.uiService.toggleForm(period_interval);
+
     // Get the selection possibilities for the current selection
     //this.locService.getLocationsWithCapacity().subscribe(loc => this.locations = loc);
     //this.locService.getLinesOfLocation(this.data.location).subscribe(li => this.lines = li);
@@ -140,8 +168,8 @@ export class AppointmentSeriesEditorComponent implements OnInit{
   // Event handler for location selection
   onLocationChanged(event: any) {
     // Reset the line and substance - adjust it to new location
-    this.lineForm.setValue("");
-    this.substanceForm.setValue("");
+    this.lineForm.setValue(null);
+    this.substanceForm.setValue(null);
 
     //this.locService.getLinesOfLocation(event.value).subscribe(li => this.lines = li);
     //this.substances = [];
@@ -150,7 +178,7 @@ export class AppointmentSeriesEditorComponent implements OnInit{
   // Event handler for line selection
   onLineChanged(event: any) {
     if(event.value != null && this.locationForm.value != null) {
-      this.substanceForm.setValue("");
+      this.substanceForm.setValue(null);
       //this.locService.getSubstancesOfLine(this.locationForm.value, event.value).subscribe(sub => this.substances = sub);
     }
   }
@@ -360,7 +388,8 @@ export class AppointmentSeriesEditorComponent implements OnInit{
       substance: this.substanceForm.value,
       endDate: this.endDateForm.value,
       number: this.countForm.value,
-      periodInterval: intervalValue
+      periodInterval: intervalValue,
+      appointments: this.data.appointments
     }
 
     this.appointmentService.checkAppointmentsSeriesPossible(appointmentSeries).subscribe(valid => {

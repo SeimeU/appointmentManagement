@@ -1,5 +1,5 @@
 import {Component, Input, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
-import {Appointment} from "../../Appointment";
+import {Appointment} from "../../entities/Appointment";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
@@ -7,7 +7,8 @@ import {AppointmentService} from "../../services/appointment.service";
 import {AppointmentEditorComponent} from "../appointment-editor/appointment-editor.component";
 import {MatDialog} from "@angular/material/dialog";
 import {LocationAndMedicineService} from "../../services/location-and-medicine.service";
-import {AppointmentSeries} from "../../AppointmentSeries";
+import {AppointmentSeries} from "../../entities/AppointmentSeries";
+import {UiService} from "../../services/ui.service";
 
 @Component({
   selector: 'app-appointment-table',
@@ -34,9 +35,31 @@ export class AppointmentTableComponent implements OnChanges{
   //endregion
 
 
-  constructor(private appointmentService: AppointmentService, private locationService: LocationAndMedicineService, public dialog: MatDialog) {
+  constructor(private appointmentService: AppointmentService, private locationService: LocationAndMedicineService, public dialog: MatDialog, private uiService: UiService) {
     this.appointmentService.getAppointments().subscribe((appointments) => {
       this.appointments = appointments;
+      this.dataSource = new MatTableDataSource<Appointment>(this.appointments);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+    });
+    this.uiService.onRemoveAppointment().subscribe(id => {
+      // Filter out the old appointment object
+      this.appointments = this.appointments.filter(a => a.id != id);
+      // Sort the array ascending based on their id
+      this.appointments = this.appointments.sort((a,b) => this.compare(a, b));
+
+      // Update the table
+      this.dataSource = new MatTableDataSource<Appointment>(this.appointments);
+      this.dataSource.sort = this.sort;
+      this.dataSource.paginator = this.paginator;
+    });
+    this.uiService.onAddAppointment().subscribe((appointment) => {
+      this.appointments.push(appointment);
+
+      // Sort the array ascending based on their id
+      this.appointments = this.appointments.sort((a,b) => this.compare(a, b));
+
+      // Need this to update the table object - can not be outside (therefore duplicate like in the delete)
       this.dataSource = new MatTableDataSource<Appointment>(this.appointments);
       this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
@@ -113,7 +136,7 @@ export class AppointmentTableComponent implements OnChanges{
           this.appointmentService.deleteAppointment(result);
 
           // Set the delete flag for the appointment in the other applications
-          this.locationService.setAppointmentDeleted(result.id, result.location, result.line, result.substance);
+          //this.locationService.setAppointmentDeleted(result.id, result.location, result.line, result.substance);
 
           // Filter out the old appointment object
           this.appointments = this.appointments.filter(a => a.id != result.id);

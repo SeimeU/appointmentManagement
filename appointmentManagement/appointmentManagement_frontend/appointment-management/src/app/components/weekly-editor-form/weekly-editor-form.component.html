@@ -2,7 +2,7 @@
   <div id="week">
   <mat-label>Alle</mat-label>
   <mat-form-field appearance="outline">
-    <mat-select (selectionChange)="onSelectionChange($event)" required>
+    <mat-select (selectionChange)="onSelectionChange($event)" [formControl]="weekForm" required>
       <mat-option *ngFor="let week of weeks" [value]="week">
         {{week}}
       </mat-option>
@@ -11,13 +11,13 @@
   <mat-label>Woche(n) am:</mat-label>
   </div>
   <div id="day">
-  <mat-checkbox (change)="onDayCheckedChange($event)" aria-label="{{MONDAY}}">Mo</mat-checkbox>
-  <mat-checkbox (change)="onDayCheckedChange($event)" aria-label="{{TUESDAY}}">Di</mat-checkbox>
-  <mat-checkbox (change)="onDayCheckedChange($event)" aria-label="{{WEDNESDAY}}">Mi</mat-checkbox>
-  <mat-checkbox (change)="onDayCheckedChange($event)" aria-label="{{THURSDAY}}">Do</mat-checkbox>
-  <mat-checkbox (change)="onDayCheckedChange($event)" aria-label="{{FRIDAY}}">Fr</mat-checkbox>
-  <mat-checkbox (change)="onDayCheckedChange($event)" aria-label="{{SATURDAY}}">Sa</mat-checkbox>
-  <mat-checkbox (change)="onDayCheckedChange($event)" aria-label="{{SUNDAY}}">So</mat-checkbox>
+  <mat-checkbox (change)="onDayCheckedChange($event)" [formControl]="mondayForm" aria-label="{{MONDAY}}">Mo</mat-checkbox>
+  <mat-checkbox (change)="onDayCheckedChange($event)" [formControl]="tuesdayForm" aria-label="{{TUESDAY}}">Di</mat-checkbox>
+  <mat-checkbox (change)="onDayCheckedChange($event)" [formControl]="wednesdayForm" aria-label="{{WEDNESDAY}}">Mi</mat-checkbox>
+  <mat-checkbox (change)="onDayCheckedChange($event)" [formControl]="thursdayForm" aria-label="{{THURSDAY}}">Do</mat-checkbox>
+  <mat-checkbox (change)="onDayCheckedChange($event)" [formControl]="fridayForm" aria-label="{{FRIDAY}}">Fr</mat-checkbox>
+  <mat-checkbox (change)="onDayCheckedChange($event)" [formControl]="saturdayForm" aria-label="{{SATURDAY}}">Sa</mat-checkbox>
+  <mat-checkbox (change)="onDayCheckedChange($event)" [formControl]="sundayForm" aria-label="{{SUNDAY}}">So</mat-checkbox>
   </div>
 </form>
 

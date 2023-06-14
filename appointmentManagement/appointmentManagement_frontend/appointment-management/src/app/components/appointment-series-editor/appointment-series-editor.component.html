@@ -106,9 +106,9 @@
             </mat-error>
           </mat-form-field>
 
-          <app-daily-editor-form (switchChanged)="onDailyChanged($event)"></app-daily-editor-form>
-          <app-weekly-editor-form (numberSwitchChanged)="onWeeklySelectorChanged($event)" (dayCheckedChanged)="onWeeklyCheckboxesChanged($event)"></app-weekly-editor-form>
-          <app-monthly-editor-form (numberSwitchChanged)="onMonthlyRepeatSelectorChanged($event)" (periodSwitchChanged)="onMonthlyNumberSelectorChanged($event)" (daySwitchChanged)="onMonthlyWeekdaySelectorChanged($event)" ></app-monthly-editor-form>
+          <app-daily-editor-form (switchChanged)="onDailyChanged($event)" [selectedDay]="selectedDay"></app-daily-editor-form>
+          <app-weekly-editor-form (numberSwitchChanged)="onWeeklySelectorChanged($event)" (dayCheckedChanged)="onWeeklyCheckboxesChanged($event)" [selectedWeek]="selectedWeek" [selectedDays]="selectedDays"></app-weekly-editor-form>
+          <app-monthly-editor-form (numberSwitchChanged)="onMonthlyRepeatSelectorChanged($event)" (periodSwitchChanged)="onMonthlyNumberSelectorChanged($event)" (daySwitchChanged)="onMonthlyWeekdaySelectorChanged($event)" [selectedMonth]="selectedMonth" [selectedMonthlyNumber]="selectedMonthlyNumber" [selectedMonthlyDay]="selectedMonthlyDay"></app-monthly-editor-form>
 
           <mat-form-field appearance="fill">
             <mat-label>Ende</mat-label>

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import {Appointment} from "../Appointment";
+import {Appointment} from "../entities/Appointment";
 import {Observable} from "rxjs";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {AppointmentSeries} from "../AppointmentSeries";
+import {AppointmentSeries} from "../entities/AppointmentSeries";
 import {LocationAndMedicineService} from "./location-and-medicine.service";
 
 const httpOptions = {

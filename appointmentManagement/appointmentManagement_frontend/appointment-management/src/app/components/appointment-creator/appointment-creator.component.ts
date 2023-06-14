@@ -1,12 +1,12 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
-import {Appointment} from "../../Appointment";
+import {Appointment} from "../../entities/Appointment";
 import {UiService} from "../../services/ui.service";
 import {FormControl} from "@angular/forms";
 import {MatSlideToggleChange} from "@angular/material/slide-toggle";
-import {AppointmentSeries} from "../../AppointmentSeries";
+import {AppointmentSeries} from "../../entities/AppointmentSeries";
 import {AppointmentService} from "../../services/appointment.service";
-import {Result} from "../../Result";
+import {Result} from "../../entities/Result";
 import {LocationAndMedicineService} from "../../services/location-and-medicine.service";
 
 interface TimePeriod {
@@ -148,8 +148,8 @@ export class AppointmentCreatorComponent implements OnInit{
   // Event handler for location selection
   onLocationChanged(event: any) {
     // Reset the line and substance - adjust it to new location
-    this.lineForm.setValue("");
-    this.substanceForm.setValue("");
+    this.lineForm.setValue(null);
+    this.substanceForm.setValue(null);
 
     //this.locService.getLinesOfLocation(event.value).subscribe(li => this.lines = li);
     //this.substances = [];
@@ -158,7 +158,7 @@ export class AppointmentCreatorComponent implements OnInit{
   // Event handler for line selection
   onLineChanged(event: any) {
     if(event.value != null && this.locationForm.value != null) {
-      this.substanceForm.setValue("");
+      this.substanceForm.setValue(null);
       //this.locService.getSubstancesOfLine(this.locationForm.value, event.value).subscribe(sub => this.substances = sub);
     }
   }
