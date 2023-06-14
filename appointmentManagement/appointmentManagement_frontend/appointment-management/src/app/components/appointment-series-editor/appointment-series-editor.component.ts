@@ -381,6 +381,7 @@ export class AppointmentSeriesEditorComponent implements OnInit{
 
     // Create appointment series object with the data
     let appointmentSeries: AppointmentSeries = {
+      id: this.data.id,
       location: this.locationForm.value,
       line: this.lineForm.value,
       startDate: inputDate,

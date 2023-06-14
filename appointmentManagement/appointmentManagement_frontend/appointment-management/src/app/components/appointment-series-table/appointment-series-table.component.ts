@@ -137,7 +137,6 @@ export class AppointmentSeriesTableComponent implements OnChanges{
             for(let i = 0; i<s.appointments.length; i++){
               // @ts-ignore - ignore error because id is in this case never undefined
               let appointment: Appointment = s.appointments[i];
-              console.log(appointment.id);
               this.uiService.addAppointment(appointment);
             }
           });
