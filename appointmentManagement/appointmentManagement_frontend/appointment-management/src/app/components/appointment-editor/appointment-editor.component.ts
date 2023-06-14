@@ -105,8 +105,10 @@ export class AppointmentEditorComponent implements OnInit{
     // Reset the line and substance - adjust it to new location
     this.lineForm.setValue(null);
     this.substanceForm.setValue(null);
+    this.durationForm.setValue(null);
 
     //this.locService.getLinesOfLocation(event.value).subscribe(li => this.lines = li);
+    //this.locService.getDurationOfLocation(event.value).subscribe(dur => this.duration);
     //this.substances = [];
   }
 

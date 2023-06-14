@@ -25,8 +25,8 @@ export class LocationAndMedicineService {
     return this.http.get<string[]>(this.apiUrl + 'locations/' + this._district);
   }
 
-  getLocationsOfDistrict(): Observable<string[]> {
-    return this.http.get<string[]>(this.apiUrl + 'locations/' + this._district);
+  getDurationOfLocation(location: string): Observable<number> {
+    return this.http.get<number>(this.apiUrl + 'location/' + location + "/duration");
   }
 
   getLinesOfLocation(location: string): Observable<number[]> {
