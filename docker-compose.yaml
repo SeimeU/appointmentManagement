@@ -1,0 +1,14 @@
+version: '3'
+volumes:
+  data:
+services:
+  db:
+    image: mariadb
+    environment:
+      MYSQL_DATABASE: appointmentManagementDB
+      MYSQL_USER: root
+      MYSQL_PASSWORD: admin
+    volumes:
+      - data:/var/lib/mysql
+    ports:
+      - "3306:3308"
