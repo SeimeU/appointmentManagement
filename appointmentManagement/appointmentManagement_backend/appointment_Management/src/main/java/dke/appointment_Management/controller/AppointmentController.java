@@ -394,7 +394,7 @@ public class AppointmentController {
      * Function to get the number of appointments which a specified appointment series would create
      * @param appointmentSeries Specifies the appointment series
      * @return
-     *      - Returns "Bad request if the appointment series parameter is null or the interval syntax is wrong
+     *      - Returns "Bad request" if the appointment series parameter is null or the interval syntax is wrong
      *      - Returns the number of appointments the series would create
      */
     @PutMapping("/appointment-series/number-of-appointments")
@@ -407,5 +407,22 @@ public class AppointmentController {
             return ResponseEntity.badRequest().build();
 
         return ResponseEntity.ok(service.getNumberOfAppointments(appointmentSeries));
+    }
+
+    /**
+     * Function to delete all appointments on a line - if the line is delete in location application
+     * @param location Specifies the selected location
+     * @param line Specifies the selected line
+     * @return
+     *      - Returns "Bad request" if the location is null or ""
+     *      - Returns Ok otherwise
+     */
+    @PutMapping("/delete-appointments-on/{location}/line/{line}")
+    public ResponseEntity<Void> deleteAllAppointmentOnLin(@PathVariable final String location, @PathVariable final int line) {
+        if(location == null || location.equals(""))
+            return ResponseEntity.badRequest().build();
+
+        service.deleteAllAppointmentsOnLine(location, line);
+        return ResponseEntity.ok().build();
     }
 }

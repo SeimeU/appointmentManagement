@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Service
 public class AppointmentService {
@@ -308,9 +307,25 @@ public class AppointmentService {
      * @return The number of appointments
      */
     public int getNumberOfAppointments(AppointmentSeries appointmentSeries) {
-        return createAppointmentsForSeries(appointmentSeries).size();
+        List<Appointment> appointments = createAppointmentsForSeries(appointmentSeries);
+        if (appointments != null)
+            return appointments.size();
+
+        return 0;
     }
 
+    /**
+     * Function to delete all appointments and appointment series on a specified line - if the line gets deleted
+     * @param location Specifies the selected location
+     * @param line Specifies the selected line
+     */
+    public void deleteAllAppointmentsOnLine(String location, int line) {
+        List<AppointmentSeries> appointmentSeries = repositoryAS.findAllByLocation(location).stream().filter(a -> !a.isDeleted() && a.getLine() == line).toList();
+        appointmentSeries.forEach(as -> deleteAppointmentSeries(as.getId()));
+
+        List<Appointment> appointments = repository.findAllByLocation(location).stream().filter(a -> !a.isDeleted() && a.getLine() == line).toList();
+        appointments.forEach(a -> deleteAppointment(a.getId()));
+    }
     //endregion
 
     //region private auxiliary functions
