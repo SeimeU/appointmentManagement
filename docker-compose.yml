@@ -1,0 +1,28 @@
+version: '3.1'
+volumes:
+  data:
+services:
+  db:
+    image: mariadb
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: appointmentManagement
+      MYSQL_USER: root
+      MYSQL_PASSWORD: admin   
+    volumes:
+      - data:/var/lib/mysql
+    ports:
+      - "3308:3306"
+
+
+
+
+
+
+
+
+
+   
+
+
