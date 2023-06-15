@@ -3,7 +3,7 @@
   <button mat-raised-button (click)="onDeleteClick()" color="warn" id="delete">Löschen</button>
 </div>
 <div mat-dialog-content>
-<table>
+<table role="presentation">
   <tr>
     <th>
       <div class="editor">
@@ -54,8 +54,8 @@
         <mat-form-field appearance="outline">
           <mat-label>Dauer</mat-label>
           <mat-select [formControl]="durationForm" required>
-            <mat-option *ngFor="let dur of duration" [value]="dur.value">
-              {{dur.viewValue}}
+            <mat-option *ngFor="let duration of durations" [value]="duration">
+              {{duration}} min
             </mat-option>
           </mat-select>
           <mat-error *ngIf="durationForm.hasError('required')">

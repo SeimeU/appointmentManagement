@@ -34,7 +34,6 @@ import { AppointmentCreatorComponent } from './components/appointment-creator/ap
 import { DailyEditorFormComponent } from './components/daily-editor-form/daily-editor-form.component';
 import { WeeklyEditorFormComponent } from './components/weekly-editor-form/weekly-editor-form.component';
 import { MonthlyEditorFormComponent } from './components/monthly-editor-form/monthly-editor-form.component';
-import { MayorChartComponent } from './components/mayor-chart/mayor-chart.component';
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import { AppointmentSeriesTableComponent } from './components/appointment-series-table/appointment-series-table.component';
 import { AppointmentSeriesEditorComponent } from './components/appointment-series-editor/appointment-series-editor.component';
@@ -50,7 +49,6 @@ import { AppointmentSeriesEditorComponent } from './components/appointment-serie
     DailyEditorFormComponent,
     WeeklyEditorFormComponent,
     MonthlyEditorFormComponent,
-    MayorChartComponent,
     AppointmentSeriesTableComponent,
     AppointmentSeriesEditorComponent,
   ],

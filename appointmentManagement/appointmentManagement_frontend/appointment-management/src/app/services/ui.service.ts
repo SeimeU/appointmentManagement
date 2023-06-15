@@ -6,6 +6,7 @@ import {Appointment} from "../entities/Appointment";
   providedIn: 'root'
 })
 export class UiService {
+  //region Fields
   private showDaily: boolean = false;
   private showWeekly: boolean = false;
   private showMonthly: boolean = false;
@@ -14,9 +15,12 @@ export class UiService {
   private subjectMonthly = new Subject<any>();
   private subjectRemoveAppointment = new Subject<number>();
   private subjectAddAppointment = new Subject<Appointment>();
+  //endregion
+
 
   constructor() { }
 
+  // Function to toggle the displayed form
   toggleForm(form:string) {
     switch (form) {
       case 'daily':
@@ -63,10 +67,12 @@ export class UiService {
     return this.subjectMonthly.asObservable();
   }
 
+  // Function to remove an appointment from the appointment table
   removeAppointment(id: number) {
     this.subjectRemoveAppointment.next(id);
   }
 
+  // Function to add an appointment to the appointment table
   addAppointment(appointment: Appointment) {
     this.subjectAddAppointment.next(appointment);
   }

@@ -75,6 +75,7 @@ export class MonthlyEditorFormComponent implements OnChanges{
     this.daySwitchChanged.emit(event);
   }
 
+  // Handler to react to changes - used in editor components
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['selectedMonth'] != undefined && changes['selectedMonth'].currentValue != undefined) {
       this.monthForm.setValue(changes['selectedMonth'].currentValue);

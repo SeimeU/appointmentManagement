@@ -5,11 +5,6 @@ import {FormControl} from "@angular/forms";
 import {LocationAndMedicineService} from "../../services/location-and-medicine.service";
 import {AppointmentService} from "../../services/appointment.service";
 
-interface Select {
-  value: number;
-  viewValue: string;
-}
-
 @Component({
   selector: 'app-appointment-editor',
   templateUrl: './appointment-editor.component.html',
@@ -26,15 +21,6 @@ export class AppointmentEditorComponent implements OnInit{
   @Input('formControl') bookedForm: FormControl;
   //endregion
 
-  //region Hard-coded selection arrays
-  duration: Select[] = [
-    {value: 5, viewValue: '5min'},
-    {value: 10, viewValue: '10min'},
-    {value: 15, viewValue: '15min'},
-    {value: 20, viewValue: '20min'}
-  ];
-  //endregion
-
   //region Variables for validation
   dateBeforeMin: boolean;
   timeBeforeMin: boolean;
@@ -42,14 +28,18 @@ export class AppointmentEditorComponent implements OnInit{
 
 
   //region Auxiliary variables
+  disableDuration: boolean = true;
   isBooked: any;
   minDate: Date;
 
+  // todo Delete initialization
   locations: string[] = [
     "Braunau",
     "Linz",
     "Eferding"
   ];
+
+  durations: number[] = [5];
 
   lines: number[] = [
     1, 2, 3, 4, 5
@@ -94,9 +84,14 @@ export class AppointmentEditorComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    // todo Auskommentieren
     // Get the selection possibilities for the current selection
     //this.locService.getLocationsWithCapacity().subscribe(loc => this.locations = loc);
     //this.locService.getLinesOfLocation(this.data.location).subscribe(li => this.lines = li);
+    /*this.locService.getDurationOfLocation(this.data.location).subscribe(dur => {
+      this.durations = [dur];
+      this.durationForm.setValue(dur);
+    });*/
     //this.locService.getSubstancesOfLine(this.data.location, this.data.line).subscribe(sub => this.substances = sub);
   }
 
@@ -105,10 +100,14 @@ export class AppointmentEditorComponent implements OnInit{
     // Reset the line and substance - adjust it to new location
     this.lineForm.setValue(null);
     this.substanceForm.setValue(null);
-    this.durationForm.setValue(null);
 
+    // todo Auskommentieren
+    // Make the http-requests to get the duration and the lines on the selected location
     //this.locService.getLinesOfLocation(event.value).subscribe(li => this.lines = li);
-    //this.locService.getDurationOfLocation(event.value).subscribe(dur => this.duration);
+    /*this.locService.getDurationOfLocation(event.value).subscribe(dur => {
+      this.durations = [dur];
+      this.durationForm.setValue(dur);
+    });*/
     //this.substances = [];
   }
 
@@ -116,12 +115,15 @@ export class AppointmentEditorComponent implements OnInit{
   onLineChanged(event: any) {
     if(event.value != null && this.locationForm.value != null) {
       this.substanceForm.setValue(null);
+      // todo Auskommentieren
+      // Make the http-request to get the substances for the selected line and location
       //this.locService.getSubstancesOfLine(this.locationForm.value, event.value).subscribe(sub => this.substances = sub);
     }
   }
 
   // Event handler for delete click
   onDeleteClick() {
+    // Create an appointment object with the deleted flag set to true
     let appointment: Appointment = {
       id: this.data.id,
       location: this.data.location,
@@ -132,6 +134,8 @@ export class AppointmentEditorComponent implements OnInit{
       booked: this.data.booked,
       deleted: true
     }
+
+    // Close the popup and return the appointment to delete
     this.dialogRef.close(appointment);
   }
 
@@ -207,7 +211,7 @@ export class AppointmentEditorComponent implements OnInit{
     }
 
     if (!validInput) {
-      // Some input is not valid - show error messages
+      // Date input is not valid - show error messages
       alert('Das Startdatum darf nicht in der Vergangenheit liegen!');
       return;
     }

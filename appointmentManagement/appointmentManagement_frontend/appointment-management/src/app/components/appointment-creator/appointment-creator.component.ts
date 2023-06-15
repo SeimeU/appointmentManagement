@@ -14,17 +14,12 @@ interface TimePeriod {
   viewValue: string;
 }
 
-interface Select {
-  value: number;
-  viewValue: string;
-}
-
 @Component({
   selector: 'app-appointment-creator',
   templateUrl: './appointment-creator.component.html',
   styleUrls: ['./appointment-creator.component.css']
 })
-export class AppointmentCreatorComponent implements OnInit{
+export class AppointmentCreatorComponent implements OnInit {
   //region Form Controls
   @Input('formControl') locationForm: FormControl;
   @Input('formControl') lineForm: FormControl;
@@ -39,13 +34,6 @@ export class AppointmentCreatorComponent implements OnInit{
   //endregion
 
   //region Hard-coded selection arrays
-  duration: Select[] = [
-    {value: 5, viewValue: '5min'},
-    {value: 10, viewValue: '10min'},
-    {value: 15, viewValue: '15min'},
-    {value: 20, viewValue: '20min'}
-  ];
-
   timePeriod: TimePeriod[] = [
     {value: 'daily', viewValue: 'täglich'},
     {value: 'weekly', viewValue: 'wöchentlich'},
@@ -75,11 +63,14 @@ export class AppointmentCreatorComponent implements OnInit{
   monthlyNumberRepeat: number;
   monthlyDayRepeat: number;
 
+  // todo Delete initialization
   locations: string[] = [
     "Braunau",
     "Linz Landstraße",
     "Eferding"
   ];
+
+  durations: number[] = [5];
 
   lines: number[] = [
     1, 2, 3, 4, 5
@@ -128,9 +119,10 @@ export class AppointmentCreatorComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    // todo Auskommentieren
     // Get the selection possibilities for the current selection
     //this.locService.getLocationsWithCapacity().subscribe(loc => this.locations = loc);
-    }
+  }
 
   //region Methods
 
@@ -138,6 +130,7 @@ export class AppointmentCreatorComponent implements OnInit{
   onSliderChanged($event: MatSlideToggleChange): void {
     this.sliderValue = $event.checked;
 
+    // Change the display text according to the slider
     if(this.sliderValue) {
       this.sliderLabel = 'Terminserie erstellen'
     } else {
@@ -150,10 +143,14 @@ export class AppointmentCreatorComponent implements OnInit{
     // Reset the line and substance - adjust it to new location
     this.lineForm.setValue(null);
     this.substanceForm.setValue(null);
-    this.durationForm.setValue(null);
 
+    // todo Auskommentieren
+    // Make the http-requests to get the duration and the lines on the selected location
     //this.locService.getLinesOfLocation(event.value).subscribe(li => this.lines = li);
-    //this.locService.getDurationOfLocation(event.value).subscribe(dur => this.duration);
+    /*this.locService.getDurationOfLocation(event.value).subscribe(dur => {
+      this.durations = [dur];
+      this.durationForm.setValue(dur);
+    });*/
     //this.substances = [];
   }
 
@@ -161,12 +158,15 @@ export class AppointmentCreatorComponent implements OnInit{
   onLineChanged(event: any) {
     if(event.value != null && this.locationForm.value != null) {
       this.substanceForm.setValue(null);
+      // todo Auskommentieren
+      // Make the http-request to get the substances for the selected line and location
       //this.locService.getSubstancesOfLine(this.locationForm.value, event.value).subscribe(sub => this.substances = sub);
     }
   }
 
   // Event handler for time interval select
   onChangeSelect(event: any) {
+    // Toggle the displayed form
     this.uiService.toggleForm(event.value);
 
     // Reset set variables
@@ -342,7 +342,7 @@ export class AppointmentCreatorComponent implements OnInit{
     }
 
     if(!validInput) {
-      // Some input is not valid - show error messages
+      // Date input is not valid - show error messages
       alert('Das Startdatum darf nicht in der Vergangenheit liegen!');
       return;
     }
@@ -375,13 +375,23 @@ export class AppointmentCreatorComponent implements OnInit{
           return;
         }
 
-        // Create the return value
-        result = {
-          appointmentSeries: appointmentSeries
-        };
+        // Make the http-requests to check if there is enough inventory for the specified appointment series
+        this.appointmentService.getNumberOfAppointmentsInAppointmentSeries(appointmentSeries).subscribe(count => {
+          this.locService.getNumberOfSubstancesOfLine(appointmentSeries.location, appointmentSeries.line, appointmentSeries.substance).subscribe(inventory => {
+            if(inventory < count) {
+              alert('Auf dieser Linie an diesem Standort gibt es nicht genügeng Kapazitäten für die spezifizierte Terminserie!');
+              return;
+            }
 
-        // Close popup and return the data
-        this.dialogRef.close(result);
+            // Create the return value
+            result = {
+              appointmentSeries: appointmentSeries
+            };
+
+            // Close popup and return the data
+            this.dialogRef.close(result);
+          });
+        });
       });
     } else {
       // Create appointment object with the data
@@ -394,8 +404,8 @@ export class AppointmentCreatorComponent implements OnInit{
         booked: this.bookedForm.value
       };
 
+      // Check if there is already an appointment on this location, line and time
       this.appointmentService.checkAppointmentPossible(appointment).subscribe(valid => {
-        // Check if there is already an appointment on this location, line and time
         if(!valid) {
           alert('Es is bereits ein Termin an diesem Standort auf dieser Linie zur gewünschten Zeit vorhanden!');
           return;

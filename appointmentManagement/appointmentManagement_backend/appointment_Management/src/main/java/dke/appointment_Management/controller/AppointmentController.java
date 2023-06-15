@@ -97,7 +97,7 @@ public class AppointmentController {
      *      - Otherwise returns "Ok"
      */
     @DeleteMapping("/appointment")
-    public ResponseEntity deleteAppointment(@RequestParam final Long id) {
+    public ResponseEntity<Void> deleteAppointment(@RequestParam final Long id) {
         if(id == null || id < 1)
             return ResponseEntity.badRequest().build();
 
@@ -168,7 +168,7 @@ public class AppointmentController {
      *      - Otherwise returns "Ok"
      */
     @DeleteMapping("/appointment-series")
-    public ResponseEntity deleteAppointmentSeries(@RequestParam final Long id) {
+    public ResponseEntity<Void> deleteAppointmentSeries(@RequestParam final Long id) {
         if(id == null || id < 1)
             return ResponseEntity.badRequest().build();
 
@@ -374,7 +374,7 @@ public class AppointmentController {
      * Function to check if the requested appointment series would be valid (has now no overlaps)
      * @param appointmentSeries Specifies the requested appointment
      * @return
-     *      - Returns "Bad request" if the appointment series parameter is null
+     *      - Returns "Bad request" if the appointment series parameter is null or the interval syntax is wrong
      *      - Returns false if there are any overlaps with existing appointments
      *      - Otherwise returns true
      */
@@ -388,5 +388,24 @@ public class AppointmentController {
             return ResponseEntity.badRequest().build();
 
         return ResponseEntity.ok(service.isValid(appointmentSeries));
+    }
+
+    /**
+     * Function to get the number of appointments which a specified appointment series would create
+     * @param appointmentSeries Specifies the appointment series
+     * @return
+     *      - Returns "Bad request if the appointment series parameter is null or the interval syntax is wrong
+     *      - Returns the number of appointments the series would create
+     */
+    @PutMapping("/appointment-series/number-of-appointments")
+    public ResponseEntity<Integer> getNumberOfAppointmentsOfAppointmentSeries(@RequestBody AppointmentSeries appointmentSeries) {
+        if(appointmentSeries == null)
+            return ResponseEntity.badRequest().build();
+
+        // Check the syntax of the interval string
+        if(!service.checkIntervalSyntax(appointmentSeries.getPeriodInterval()))
+            return ResponseEntity.badRequest().build();
+
+        return ResponseEntity.ok(service.getNumberOfAppointments(appointmentSeries));
     }
 }

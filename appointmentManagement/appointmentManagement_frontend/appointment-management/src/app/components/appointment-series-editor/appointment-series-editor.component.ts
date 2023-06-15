@@ -4,14 +4,10 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {UiService} from "../../services/ui.service";
 import {AppointmentSeries} from "../../entities/AppointmentSeries";
 import {AppointmentService} from "../../services/appointment.service";
+import {LocationAndMedicineService} from "../../services/location-and-medicine.service";
 
 interface TimePeriod {
   value: string;
-  viewValue: string;
-}
-
-interface Select {
-  value: number;
   viewValue: string;
 }
 
@@ -20,7 +16,7 @@ interface Select {
   templateUrl: './appointment-series-editor.component.html',
   styleUrls: ['./appointment-series-editor.component.css']
 })
-export class AppointmentSeriesEditorComponent implements OnInit{
+export class AppointmentSeriesEditorComponent implements OnInit {
   //region Form Controls
   @Input('formControl') locationForm: FormControl;
   @Input('formControl') lineForm: FormControl;
@@ -34,13 +30,6 @@ export class AppointmentSeriesEditorComponent implements OnInit{
   //endregion
 
   //region Hard-coded selection arrays
-  duration: Select[] = [
-    {value: 5, viewValue: '5min'},
-    {value: 10, viewValue: '10min'},
-    {value: 15, viewValue: '15min'},
-    {value: 20, viewValue: '20min'}
-  ];
-
   timePeriod: TimePeriod[] = [
     {value: 'daily', viewValue: 'täglich'},
     {value: 'weekly', viewValue: 'wöchentlich'},
@@ -73,12 +62,14 @@ export class AppointmentSeriesEditorComponent implements OnInit{
   selectedMonthlyNumber!: number;
   selectedMonthlyDay!: number;
 
-
+  // todo Delete initialization
   locations: string[] = [
     "Braunau",
     "Linz Landstraße",
     "Eferding"
   ];
+
+  durations: number[] = [5];
 
   lines: number[] = [
     1, 2, 3, 4, 5
@@ -91,7 +82,7 @@ export class AppointmentSeriesEditorComponent implements OnInit{
   ];
   //endregion
 
-  constructor(public dialogRef: MatDialogRef<AppointmentSeriesEditorComponent>, private uiService: UiService, private appointmentService: AppointmentService, @Inject(MAT_DIALOG_DATA) public data: AppointmentSeries) {
+  constructor(public dialogRef: MatDialogRef<AppointmentSeriesEditorComponent>, @Inject(MAT_DIALOG_DATA) public data: AppointmentSeries, private uiService: UiService, private appointmentService: AppointmentService, private locService: LocationAndMedicineService) {
     // Set min date of datepickers to current date
     this.minDate = new Date();
 
@@ -157,11 +148,17 @@ export class AppointmentSeriesEditorComponent implements OnInit{
       this.monthlyDayRepeat = this.selectedMonthlyDay;
     }
 
+    // Toggle the displayed form
     this.uiService.toggleForm(period_interval);
 
+    // todo Auskommentieren
     // Get the selection possibilities for the current selection
     //this.locService.getLocationsWithCapacity().subscribe(loc => this.locations = loc);
     //this.locService.getLinesOfLocation(this.data.location).subscribe(li => this.lines = li);
+    /*this.locService.getDurationOfLocation(this.data.location).subscribe(dur => {
+      this.durations = [dur];
+      this.durationForm.setValue(dur);
+    });*/
     //this.locService.getSubstancesOfLine(this.data.location, this.data.line).subscribe(sub => this.substances = sub);
   }
 
@@ -170,10 +167,15 @@ export class AppointmentSeriesEditorComponent implements OnInit{
     // Reset the line and substance - adjust it to new location
     this.lineForm.setValue(null);
     this.substanceForm.setValue(null);
-    this.durationForm.setValue(null);
 
+
+    // todo Auskommentieren
+    // Make the http-requests to get the duration and the lines on the selected location
     //this.locService.getLinesOfLocation(event.value).subscribe(li => this.lines = li);
-    //this.locService.getDurationOfLocation(event.value).subscribe(dur => this.duration);
+    /*this.locService.getDurationOfLocation(event.value).subscribe(dur => {
+      this.durations = [dur];
+      this.durationForm.setValue(dur);
+    });*/
     //this.substances = [];
   }
 
@@ -181,12 +183,15 @@ export class AppointmentSeriesEditorComponent implements OnInit{
   onLineChanged(event: any) {
     if(event.value != null && this.locationForm.value != null) {
       this.substanceForm.setValue(null);
+      // todo Auskommentieren
+      // Make the http-request to get the substances for the selected line and location
       //this.locService.getSubstancesOfLine(this.locationForm.value, event.value).subscribe(sub => this.substances = sub);
     }
   }
 
   // Event handler for delete click
   onDeleteClick() {
+    // Create the appointment series object with the deleted flag set
     let appointmentSeries: AppointmentSeries = {
       id: this.data.id,
       location: this.data.location,
@@ -200,11 +205,14 @@ export class AppointmentSeriesEditorComponent implements OnInit{
       appointments: this.data.appointments,
       deleted: true
     }
+
+    // Close the popup and return the created appointment series
     this.dialogRef.close(appointmentSeries);
   }
 
   // Event handler for time interval select
   onChangeSelect(event: any) {
+    // Toggle the displayed form
     this.uiService.toggleForm(event.value);
 
     // Reset set variables
@@ -376,7 +384,7 @@ export class AppointmentSeriesEditorComponent implements OnInit{
     }
 
     if(!validInput) {
-      // Some input is not valid - show error messages
+      // Date input is not valid - show error messages
       alert('Das Startdatum darf nicht in der Vergangenheit liegen!');
       return;
     }
@@ -395,17 +403,26 @@ export class AppointmentSeriesEditorComponent implements OnInit{
       appointments: this.data.appointments
     }
 
+    // Check if there is already an appointment on this location, line and time
     this.appointmentService.checkAppointmentsSeriesPossible(appointmentSeries).subscribe(valid => {
-      // Check if there is already an appointment on this location, line and time
       if(!valid) {
         alert('Es is bereits ein Termin an diesem Standort auf dieser Linie zur gewünschten Zeit vorhanden!');
         return;
       }
 
-      // Close popup and return the data
-      this.dialogRef.close(appointmentSeries);
+      // Check if there is enough capacity to create the specified appointment series
+      this.appointmentService.getNumberOfAppointmentsInAppointmentSeries(appointmentSeries).subscribe(count => {
+        this.locService.getNumberOfSubstancesOfLine(appointmentSeries.location, appointmentSeries.line, appointmentSeries.substance).subscribe(inventory => {
+          if(inventory < count) {
+            alert('Auf dieser Linie an diesem Standort gibt es nicht genügeng Kapazitäten für die spezifizierte Terminserie!');
+            return;
+          }
+
+          // Close popup and return the data
+          this.dialogRef.close(appointmentSeries);
+        });
+      });
     });
   }
-
   //endregion
 }

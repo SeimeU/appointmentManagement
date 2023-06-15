@@ -15,16 +15,19 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class AppointmentService {
+  //region Fields
   private apiUrl: string = 'http://localhost:9193/';
   private _district: string = "";
   private _locations: string[] = [];
+  //endregion
 
   constructor(private http:HttpClient, private locService: LocationAndMedicineService) { }
 
   set district(value: string) {
     this._district = value;
     this.locService.district = value;
-    //this.locService.getLocationsOfDistrict().subscribe(loc => this._locations = loc);
+    // todo Auskommentieren
+    //this.locService.getLocationsWithCapacity().subscribe(loc => this._locations = loc);
   }
 
   get locations(): string[] {
@@ -35,9 +38,11 @@ export class AppointmentService {
     this._locations = value;
   }
 
+  // Function to make the http-request to get all appointments for the locations in the selected district
   getAppointments(): Observable<Appointment[]> {
     return this.http.get<Appointment[]>(this.apiUrl + 'appointments-loc?location=' + this._district);
 
+    // todo Auskommentieren
     /*
     let url: string = this.apiUrl + 'appointments-loc?';
 
@@ -49,9 +54,11 @@ export class AppointmentService {
     return this.http.get<Appointment[]>(url);*/
   }
 
+  // Function to make the http-request to get the number of free appointments for the locations in the selected district
   getNumberOfFreeAppointments(): Observable<number> {
     return this.http.get<number>(this.apiUrl + 'number-of-free-appointments-loc?location=' + this._district);
 
+    // todo Auskommentieren
     /*
     let url: string = this.apiUrl + 'number-of-free-appointments-loc?';
 
@@ -63,9 +70,11 @@ export class AppointmentService {
     return this.http.get<number>(url);*/
   }
 
+  // Function to make the http-request to get the number of appointments for the locations in the selected district
   getNumberOfAppointments(): Observable<number> {
     return this.http.get<number>(this.apiUrl + 'number-of-appointments-loc?location=' + this._district);
 
+    // todo Auskommentieren
     /*
     let url: string = this.apiUrl + 'number-of-appointments-loc?';
 
@@ -77,9 +86,12 @@ export class AppointmentService {
     return this.http.get<number>(url);*/
   }
 
+
+  // Function to make the http-request to get the appointment series for the locations in the selected district
   getAppointmentSeries(): Observable<AppointmentSeries[]> {
     return this.http.get<AppointmentSeries[]>(this.apiUrl + 'appointments-series-loc?location=' + this._district);
 
+    // todo Auskommentieren
     /*
     let url: string = this.apiUrl + 'appointments-series-loc?';
 
@@ -91,29 +103,43 @@ export class AppointmentService {
     return this.http.get<AppointmentSeries[]>(url);*/
   }
 
+
+  // Function to make the http-request to delete an appointment
   deleteAppointment(appointment: Appointment): void {
     const url = this.apiUrl + 'appointment?id=' + appointment.id;
     this.http.delete(url).subscribe();
   }
 
+  // Function to make the http-request to delete an appointment series
   deleteAppointmentSeries(appointmentSeries: AppointmentSeries): void {
     const url = this.apiUrl + 'appointment-series?id=' + appointmentSeries.id;
     this.http.delete(url).subscribe();
   }
 
+
+  // Function to make the http-request to save the appointment
   saveAppointment(appointment: Appointment): Observable<Appointment> {
     return this.http.post<Appointment>(this.apiUrl + 'appointment', appointment, httpOptions);
   }
 
+  // Function to make the http-request to save the appointment series
   saveAppointmentSeries(appointmentSeries: AppointmentSeries): Observable<AppointmentSeries> {
     return this.http.post<AppointmentSeries>(this.apiUrl + 'appointment-series', appointmentSeries, httpOptions);
   }
 
+
+  // Function to make the http-request to check if the appointment is valid - there is no other appointment on this location, line and date/time
   checkAppointmentPossible(appointment: Appointment): Observable<boolean> {
     return this.http.post<boolean>(this.apiUrl + 'is-appointment-valid', appointment, httpOptions);
   }
 
+  // Function to make the http-request to check if the appointment series is valid - there are no other appointments on this location, line and date/time
   checkAppointmentsSeriesPossible(appointmentSeries: AppointmentSeries): Observable<boolean> {
     return this.http.post<boolean>(this.apiUrl + 'is-appointment-series-valid', appointmentSeries, httpOptions);
+  }
+
+  // Function to make the http-request to get the number of appointments the specified appointment series would create
+  getNumberOfAppointmentsInAppointmentSeries(appointmentSeries: AppointmentSeries): Observable<number> {
+    return this.http.put<number>(this.apiUrl + 'appointment-series/number-of-appointments', appointmentSeries);
   }
 }

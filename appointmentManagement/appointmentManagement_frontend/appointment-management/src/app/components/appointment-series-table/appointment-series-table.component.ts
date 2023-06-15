@@ -34,6 +34,7 @@ export class AppointmentSeriesTableComponent implements OnChanges{
   //endregion
 
   constructor(private appointmentService: AppointmentService,private locationService: LocationAndMedicineService, private uiService: UiService, public dialog: MatDialog) {
+    // Make the http-request to get all appointment series for the selected district
     this.appointmentService.getAppointmentSeries().subscribe((appointmentSeries) => {
       this.appointmentSeries = appointmentSeries;
       this.dataSource = new MatTableDataSource<AppointmentSeries>(this.appointmentSeries);
@@ -43,16 +44,18 @@ export class AppointmentSeriesTableComponent implements OnChanges{
     this.dataSource = new MatTableDataSource<AppointmentSeries>(this.appointmentSeries);
   }
 
+  // Event handler to react if an appointment series gets created
   ngOnChanges(changes: SimpleChanges) {
     if(changes['createdAppointmentSeries'].currentValue != undefined) {
       // Check if the current value is the same as the previous value
       if(changes['createdAppointmentSeries'].previousValue == undefined || changes['createdAppointmentSeries'].currentValue.id != changes['createdAppointmentSeries'].previousValue.id) {
+        // Add the created appointment series to the table data source
         this.appointmentSeries.push(changes['createdAppointmentSeries'].currentValue);
 
         // Sort the array ascending based on their id
-        this.appointmentSeries = this.appointmentSeries.sort((a,b) => this.compare(a, b));
+        this.appointmentSeries.sort((a,b) => this.compare(a, b));
 
-        // Need this to update the table object - can not be outside (therefore duplicate like in the delete)
+        // Need this to update the table object
         this.dataSource = new MatTableDataSource<AppointmentSeries>(this.appointmentSeries);
         this.dataSource.sort = this.sort;
         this.dataSource.paginator = this.paginator;
@@ -94,6 +97,7 @@ export class AppointmentSeriesTableComponent implements OnChanges{
             let appointment: Appointment = result.appointments[i];
             // @ts-ignore - ignore error because id is in this case never undefined
             let id: number = appointment.id;
+            // todo Auskommentieren
             //this.locationService.setAppointmentDeleted(id, appointment.location, appointment.line, appointment.substance);
 
             // Remove the appointment from the appointment table
@@ -103,7 +107,7 @@ export class AppointmentSeriesTableComponent implements OnChanges{
           // Filter out the old appointment object
           this.appointmentSeries = this.appointmentSeries.filter(a => a.id != result.id);
           // Sort the array ascending based on their id
-          this.appointmentSeries = this.appointmentSeries.sort((a,b) => this.compare(a, b));
+          this.appointmentSeries.sort((a,b) => this.compare(a, b));
 
           // Update the table
           this.dataSource = new MatTableDataSource<AppointmentSeries>(this.appointmentSeries);
@@ -116,6 +120,7 @@ export class AppointmentSeriesTableComponent implements OnChanges{
             // @ts-ignore - ignore error because id is in this case never undefined
             let id: number = appointment.id;
             this.uiService.removeAppointment(id);
+            // todo Auskommentieren
             //this.locationService.setAppointmentDeleted(id, appointment.location, appointment.line, appointment.substance);
           }
 
@@ -125,7 +130,7 @@ export class AppointmentSeriesTableComponent implements OnChanges{
             this.appointmentSeries.push(s);
 
             // Sort the array ascending based on their id
-            this.appointmentSeries = this.appointmentSeries.sort((a,b) => this.compare(a, b));
+            this.appointmentSeries.sort((a,b) => this.compare(a, b));
 
             // Need this to update the table object - can not be outside (therefore duplicate like in the delete)
             this.dataSource = new MatTableDataSource<AppointmentSeries>(this.appointmentSeries);

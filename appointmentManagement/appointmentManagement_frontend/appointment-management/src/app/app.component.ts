@@ -68,6 +68,7 @@ export class AppComponent{
         if (res.appointment) {
           this.appointmentService.saveAppointment(res.appointment).subscribe(s => {
             this.appointment = s;
+            // todo Auskommentieren
             // Set the substance as booked in location application
             //this.locationService.setSubstanceAppointment(s.location, s.line, s.substance);
           });
@@ -77,6 +78,7 @@ export class AppComponent{
             // Set the substances as booked for all appointments in the series in location application
             // @ts-ignore to suppress the appointments = undefined warning
             for(let i = 0; i<s.appointments.length; i++){
+              // todo Auskommentieren
               //this.locationService.setSubstanceAppointment(s.location, s.line, s.substance);
             }
           });

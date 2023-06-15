@@ -63,6 +63,7 @@ export class WeeklyEditorFormComponent implements OnChanges{
     this.dayCheckedChanged.emit(event);
   }
 
+  // Handler to react to changes - used in editor components
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['selectedWeek'] != undefined && changes['selectedWeek'].currentValue != undefined) {
       this.weekForm.setValue(changes['selectedWeek'].currentValue);

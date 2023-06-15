@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {UiService} from "../../services/ui.service";
 import {Subscription} from "rxjs";
 import {FormControl} from "@angular/forms";
@@ -34,6 +34,7 @@ export class DailyEditorFormComponent implements OnChanges{
     this.switchChanged.emit(event);
   }
 
+  // Handler to react to changes - used in editor components
   ngOnChanges(changes: SimpleChanges): void {
     if(changes['selectedDay'] != undefined && changes['selectedDay'].currentValue != undefined) {
       this.dayForm.setValue(changes['selectedDay'].currentValue);

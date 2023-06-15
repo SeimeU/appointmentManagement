@@ -171,7 +171,7 @@ public class AppointmentService {
     public List<Appointment> getAppointmentsByDate(LocalDate date) {
         List<Appointment> appointments = getAppointments();
 
-        return appointments.stream().filter(a -> a.getDate().toLocalDate().equals(date)).collect(Collectors.toList());
+        return appointments.stream().filter(a -> a.getDate().toLocalDate().equals(date)).toList();
     }
 
     /**
@@ -181,7 +181,7 @@ public class AppointmentService {
      *      - Returns a list with all appointments on the specified location
      */
     public List<Appointment> getAppointmentsByLocation(String location) {
-        return repository.findAllByLocation(location).stream().filter(a -> !a.isDeleted()).collect(Collectors.toList());
+        return repository.findAllByLocation(location).stream().filter(a -> !a.isDeleted()).toList();
     }
 
     /**
@@ -191,7 +191,7 @@ public class AppointmentService {
      *      - Returns a list with all appointment series on the specified location
      */
     public List<AppointmentSeries> getAppointmentSeriesByLocation(String location) {
-        return repositoryAS.findAllByLocation(location).stream().filter(a -> !a.isDeleted()).collect(Collectors.toList());
+        return repositoryAS.findAllByLocation(location).stream().filter(a -> !a.isDeleted()).toList();
     }
 
     /**
@@ -201,7 +201,7 @@ public class AppointmentService {
      *      - Returns a list with all free appointments on the specified location
      */
     public List<Appointment> getFreeAppointmentsByLocation(String location) {
-        return repository.findAllByLocation(location).stream().filter(a -> !a.isBooked() && !a.isDeleted()).collect(Collectors.toList());
+        return repository.findAllByLocation(location).stream().filter(a -> !a.isBooked() && !a.isDeleted()).toList();
     }
 
     /**
@@ -300,6 +300,15 @@ public class AppointmentService {
         }
         appointmentSeries.setDeleted(true);
         repositoryAS.save(appointmentSeries);
+    }
+
+    /**
+     * Function to get the number of appointments for an appointment series
+     * @param appointmentSeries Specifies the appointment series
+     * @return The number of appointments
+     */
+    public int getNumberOfAppointments(AppointmentSeries appointmentSeries) {
+        return createAppointmentsForSeries(appointmentSeries).size();
     }
 
     //endregion
