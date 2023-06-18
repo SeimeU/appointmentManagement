@@ -97,8 +97,8 @@ export class AppointmentSeriesTableComponent implements OnChanges{
             let appointment: Appointment = result.appointments[i];
             // @ts-ignore - ignore error because id is in this case never undefined
             let id: number = appointment.id;
-            // todo Auskommentieren
-            //this.locationService.setAppointmentDeleted(id, appointment.location, appointment.line, appointment.substance);
+
+            this.locationService.setAppointmentDeleted(id, appointment.location, appointment.line, appointment.substance);
 
             // Remove the appointment from the appointment table
             this.uiService.removeAppointment(id);
@@ -120,8 +120,8 @@ export class AppointmentSeriesTableComponent implements OnChanges{
             // @ts-ignore - ignore error because id is in this case never undefined
             let id: number = appointment.id;
             this.uiService.removeAppointment(id);
-            // todo Auskommentieren
-            //this.locationService.setAppointmentDeleted(id, appointment.location, appointment.line, appointment.substance);
+
+            this.locationService.setAppointmentDeleted(id, appointment.location, appointment.line, appointment.substance);
           }
 
           this.appointmentService.saveAppointmentSeries(result).subscribe(s => {

@@ -32,24 +32,13 @@ export class AppointmentEditorComponent implements OnInit{
   isBooked: any;
   minDate: Date;
 
-  // todo Delete initialization
-  locations: string[] = [
-    "Braunau",
-    "Linz",
-    "Eferding"
-  ];
+  locations: string[] = [];
 
-  durations: number[] = [5];
+  durations: number[] = [];
 
-  lines: number[] = [
-    1, 2, 3, 4, 5
-  ];
+  lines: number[] = [];
 
-  substances: string[] = [
-    "Pfizer",
-    "Moderna",
-    "Medikament"
-  ];
+  substances: string[] = [];
 
   //endregion
 
@@ -84,15 +73,14 @@ export class AppointmentEditorComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    // todo Auskommentieren
     // Get the selection possibilities for the current selection
-    //this.locService.getLocationsWithCapacity().subscribe(loc => this.locations = loc);
-    //this.locService.getLinesOfLocation(this.data.location).subscribe(li => this.lines = li);
-    /*this.locService.getDurationOfLocation(this.data.location).subscribe(dur => {
+    this.locService.getLocationsWithCapacity().subscribe(loc => this.locations = loc);
+    this.locService.getLinesOfLocation(this.data.location).subscribe(li => this.lines = li);
+    this.locService.getDurationOfLocation(this.data.location).subscribe(dur => {
       this.durations = [dur];
       this.durationForm.setValue(dur);
-    });*/
-    //this.locService.getSubstancesOfLine(this.data.location, this.data.line).subscribe(sub => this.substances = sub);
+    });
+    this.locService.getSubstancesOfLine(this.data.location, this.data.line).subscribe(sub => this.substances = sub);
   }
 
   // Event handler for location selection
@@ -101,23 +89,22 @@ export class AppointmentEditorComponent implements OnInit{
     this.lineForm.setValue(null);
     this.substanceForm.setValue(null);
 
-    // todo Auskommentieren
     // Make the http-requests to get the duration and the lines on the selected location
-    //this.locService.getLinesOfLocation(event.value).subscribe(li => this.lines = li);
-    /*this.locService.getDurationOfLocation(event.value).subscribe(dur => {
+    this.locService.getLinesOfLocation(event.value).subscribe(li => this.lines = li);
+    this.locService.getDurationOfLocation(event.value).subscribe(dur => {
       this.durations = [dur];
       this.durationForm.setValue(dur);
-    });*/
-    //this.substances = [];
+    });
+    this.substances = [];
   }
 
   // Event handler for line selection
   onLineChanged(event: any) {
     if(event.value != null && this.locationForm.value != null) {
       this.substanceForm.setValue(null);
-      // todo Auskommentieren
+
       // Make the http-request to get the substances for the selected line and location
-      //this.locService.getSubstancesOfLine(this.locationForm.value, event.value).subscribe(sub => this.substances = sub);
+      this.locService.getSubstancesOfLine(this.locationForm.value, event.value).subscribe(sub => this.substances = sub);
     }
   }
 

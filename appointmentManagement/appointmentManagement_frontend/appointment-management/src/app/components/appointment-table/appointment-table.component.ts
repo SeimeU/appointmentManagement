@@ -144,9 +144,8 @@ export class AppointmentTableComponent implements OnChanges{
         if(result.deleted != undefined) {
           this.appointmentService.deleteAppointment(result);
 
-          // todo Auskommentieren
           // Set the delete flag for the appointment in the other applications
-          //this.locationService.setAppointmentDeleted(result.id, result.location, result.line, result.substance);
+          this.locationService.setAppointmentDeleted(result.id, result.location, result.line, result.substance);
 
           // Filter out the old appointment object
           this.appointments = this.appointments.filter(a => a.id != result.id);

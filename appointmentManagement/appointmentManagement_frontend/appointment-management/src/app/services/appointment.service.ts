@@ -26,8 +26,7 @@ export class AppointmentService {
   set district(value: string) {
     this._district = value;
     this.locService.district = value;
-    // todo Auskommentieren
-    //this.locService.getLocationsWithCapacity().subscribe(loc => this._locations = loc);
+    this.locService.getLocationsWithCapacity().subscribe(loc => this._locations = loc);
   }
 
   get locations(): string[] {
@@ -40,10 +39,6 @@ export class AppointmentService {
 
   // Function to make the http-request to get all appointments for the locations in the selected district
   getAppointments(): Observable<Appointment[]> {
-    return this.http.get<Appointment[]>(this.apiUrl + 'appointments-loc?location=' + this._district);
-
-    // todo Auskommentieren
-    /*
     let url: string = this.apiUrl + 'appointments-loc?';
 
     // Create url with all locations as get parameters
@@ -51,15 +46,11 @@ export class AppointmentService {
 
     // Delete the ending &
     url.slice(0, -1);
-    return this.http.get<Appointment[]>(url);*/
+    return this.http.get<Appointment[]>(url);
   }
 
   // Function to make the http-request to get the number of free appointments for the locations in the selected district
   getNumberOfFreeAppointments(): Observable<number> {
-    return this.http.get<number>(this.apiUrl + 'number-of-free-appointments-loc?location=' + this._district);
-
-    // todo Auskommentieren
-    /*
     let url: string = this.apiUrl + 'number-of-free-appointments-loc?';
 
     // Create url with all locations as get parameters
@@ -67,15 +58,11 @@ export class AppointmentService {
 
     // Delete the ending &
     url.slice(0, -1);
-    return this.http.get<number>(url);*/
+    return this.http.get<number>(url);
   }
 
   // Function to make the http-request to get the number of appointments for the locations in the selected district
   getNumberOfAppointments(): Observable<number> {
-    return this.http.get<number>(this.apiUrl + 'number-of-appointments-loc?location=' + this._district);
-
-    // todo Auskommentieren
-    /*
     let url: string = this.apiUrl + 'number-of-appointments-loc?';
 
     // Create url with all locations as get parameters
@@ -83,16 +70,12 @@ export class AppointmentService {
 
     // Delete the ending &
     url.slice(0, -1);
-    return this.http.get<number>(url);*/
+    return this.http.get<number>(url);
   }
 
 
   // Function to make the http-request to get the appointment series for the locations in the selected district
   getAppointmentSeries(): Observable<AppointmentSeries[]> {
-    return this.http.get<AppointmentSeries[]>(this.apiUrl + 'appointments-series-loc?location=' + this._district);
-
-    // todo Auskommentieren
-    /*
     let url: string = this.apiUrl + 'appointments-series-loc?';
 
     // Create url with all locations as get parameters
@@ -100,7 +83,7 @@ export class AppointmentService {
 
     // Delete the ending &
     url.slice(0, -1);
-    return this.http.get<AppointmentSeries[]>(url);*/
+    return this.http.get<AppointmentSeries[]>(url);
   }
 
 
