@@ -50,12 +50,12 @@ export class LocationAndMedicineService {
 
   // Function to make the http-request to subtract the capacity if an appointment gets created
   setSubstanceAppointment(location: string, line: number, substance: string): void {
-    this.http.post(this.apiUrl + 'lines/create-appointment/' + location + '/line/' + line, substance);
+    this.http.post(this.apiUrl + 'lines/create-appointment/' + location + '/line/' + line, substance).subscribe();
   }
 
   // Function to make the http-request to set free the capacity and set the delete flag for this appointment in the booking application
   setAppointmentDeleted(id: number, location: string, line: number, substance: string): void {
-    this.http.put(this.appointmentBookingUrl + 'booked-appointments/' + id, id);
-    this.http.post(this.apiUrl + 'lines/set-free/' + location + '/line/' + line, substance);
+    this.http.put(this.appointmentBookingUrl + 'booked-appointments/' + id, id).subscribe();
+    this.http.post(this.apiUrl + 'lines/set-free/' + location + '/line/' + line, substance).subscribe();
   }
 }
