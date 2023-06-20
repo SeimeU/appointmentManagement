@@ -87,8 +87,7 @@ sind um die Applikation lokal aufzusetzen.
 Zuerst muss das Git Repository ge-cloned werden: \
 https://github.com/
 
-git clone \
-```git@github.com:.git```
+git clone https://github.com/SeimeU/appointmentManagement.git
 
 ### Angular Development server
 
@@ -98,15 +97,10 @@ Navigiere zu `http://localhost:4200/`. \
 Die Anwendung lädt automatisch neu, wenn Änderungen im Angular Projekt durchgeführt werden.
 
 ### Datenbank
-Einloggen in MariaDB mit dem zuvor festgelegten Username und Passwort. \
-Anschließend die Datenbank erstellen, um diese anschließend im Backend verwenden zu können. \
-``create database appointmentManagement;`` \
-``use appointmentManagement;``
-
 Stelle sicher, dass der Port 3308 lokal nicht verwendet wird, sonst kann der Docker Container
 nicht gestartet werden. \
 Führe anschließend den Befehl ``docker-compose up`` im Root Level des Projekverzeichnisses aus
-um den docker Container für die MariaDB Datenbank zu starten.
+um den docker Container für die MariaDB Datenbank zu starten. Die Tables werden beim Start des Backends automatisch erzeugt.
 
 ### Backend
-Öffne das Backend Projekt in IntelliJ und führe die Standard Konfiguration im Main File aus. 
+Öffne das Backend Projekt in IntelliJ, lade alle notwendigen Dependencies mittels Gradle und führe die Standard Konfiguration im Main File aus. 
