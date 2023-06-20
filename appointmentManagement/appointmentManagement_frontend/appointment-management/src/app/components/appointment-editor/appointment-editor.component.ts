@@ -189,8 +189,9 @@ export class AppointmentEditorComponent implements OnInit{
     const [hours, minutes] = this.timeForm.value.split(':').map(Number);
     let inputDate: Date = new Date(this.dateForm.value);
 
-    // Add two hours because of time offset
-    inputDate.setHours(hours+2, minutes);
+    // Add the timezone offset
+    let timeZoneOffset: number = (inputDate.getTimezoneOffset() / 60) * -1;
+    inputDate.setHours(hours + timeZoneOffset, minutes);
 
     if (inputDate < new Date()) {
       this.timeBeforeMin = true;

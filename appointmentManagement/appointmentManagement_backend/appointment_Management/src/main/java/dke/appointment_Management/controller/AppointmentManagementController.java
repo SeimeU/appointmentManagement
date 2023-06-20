@@ -2,7 +2,8 @@ package dke.appointment_Management.controller;
 
 import dke.appointment_Management.entity.Appointment;
 import dke.appointment_Management.entity.AppointmentSeries;
-import dke.appointment_Management.service.AppointmentService;
+import dke.appointment_Management.service.AppointmentManagementService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,15 +15,16 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Tag(name = "AppointmentManagement API", description = "API for appointments and appointment series")
 @RestController
 @CrossOrigin(origins = "*")
-public class AppointmentController {
+public class AppointmentManagementController {
     // Auxiliary variables to convert the incoming string of the getAppointmentsByDate() function into a Date object
     private static final String DATE_FORMAT = "yyyy-MM-dd";
     private static final DateTimeFormatter df = DateTimeFormatter.ofPattern(DATE_FORMAT);
 
     @Autowired
-    private AppointmentService service;
+    private AppointmentManagementService service;
 
     //region /appointment
 

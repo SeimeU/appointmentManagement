@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.regex.Pattern;
 
 @Service
-public class AppointmentService {
+public class AppointmentManagementService {
 
     //region Constants
     private final String DAILY_REGEX = "daily;\\d";
@@ -215,8 +215,22 @@ public class AppointmentService {
         List<Appointment> appointments = getAppointmentsByLocation(appointment.getLocation()).stream().filter(a -> a.getLine() == appointment.getLine()).toList();
 
         for(Appointment a : appointments) {
-            // If an appointment is found with the same date which is not the requested appointment return false
-            if(a.getDate().isEqual(appointment.getDate()) && a.getId() != appointment.getId()) {
+            // If it is the requested appointment - continue
+            if(a.getId() == appointment.getId())
+                continue;
+
+            // Get the end date of the current appointment
+            LocalDateTime endDate = a.getDate().plusMinutes(a.getDuration());
+
+            // If the new appointment is between the start and the endDate of an existing appointment - return false (= it is not valid)
+            if(a.getDate().isEqual(appointment.getDate()) || (appointment.getDate().isAfter(a.getDate()) && appointment.getDate().isBefore(endDate))) {
+                return false;
+            }
+
+            endDate = appointment.getDate().plusMinutes(appointment.getDuration());
+
+            // If an appointment is found that is in the date between the start and the endDate of the new appointment - return false (= it is not valid)
+            if(a.getDate().isAfter(appointment.getDate()) && a.getDate().isBefore(endDate)) {
                 return false;
             }
         }
@@ -242,8 +256,18 @@ public class AppointmentService {
         for(Appointment a : appointments) {
             assert tempAppointments != null;
             for(Appointment ta : tempAppointments) {
+                // If the new appointment is between the start and the endDate of an existing appointment - return false (= it is not valid)
+                LocalDateTime endDate = a.getDate().plusMinutes(a.getDuration());
+
                 // If an appointment is found with the same date return false
-                if(a.getDate().isEqual(ta.getDate())) {
+                if(a.getDate().isEqual(ta.getDate()) || (ta.getDate().isAfter(a.getDate()) && ta.getDate().isBefore(endDate))) {
+                    return false;
+                }
+
+                endDate = ta.getDate().plusMinutes(ta.getDuration());
+
+                // If an appointment is found that is in the date between the start and the endDate of the new appointment - return false (= it is not valid)
+                if(a.getDate().isAfter(ta.getDate()) && a.getDate().isBefore(endDate)) {
                     return false;
                 }
             }
