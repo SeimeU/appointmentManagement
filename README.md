@@ -1,45 +1,11 @@
 # Documentation
 
-## Agenda
-Überblick über die Software und die Funktionern, welche diese erfüllt. 
-- Funktionen, welche das System erfüllt
-- Komponenten
-
 Überblick über die benötigte Software sowie die Installation der Anwendung um diese auf dem eigenen Laptop lauffähig zu bekommen. 
 - Software
 - Installation
 
-Verfügbare Schnittstellen
-- REST Schnittstellen
-
-
-## Funktionen 
-
-### Appointment Management
-Als Gemeindemitarbeiter (GEM) ist es meine Aufgabe, Termine, an den durch die Impfstoff/Medikament- und Standortverwaltung erfassten Standorten, zu erfassen. Dazu wird pro Termin der Standort + die Linie, die Dauer, das Datum + Uhrzeit, die zu verabreichende Substanz sowie der Status, ob ein Termin gebucht wurde, gespeichert.
-
-- **Als GEM lege ich Terminserien bzw. einzelne Termine für Linien an meinen Standorten an.**
-
-
-### Bürgermeister (BGM) 
-
-
-- **Als BGM habe ich die aktuellen Zahlen visuell aufbereitet zur Verfügung. Wie viele Termine gibt es, wie viele davon sind gebucht.**
-Diese User Story befasst sich damit, dass der Bezirkshauptmann/Bezirkshauptfrau (BH) 
-- Zugriff auf die aktuellen Zahlen der Gesundheitssituation im Bezirk hat. 
-- Die Zahlen werden visuell aufbereitet präsentiert und umfassen Informationen 
-- wie die Anzahl der erkrankten Personen, Verdachtsfälle, Personen in Quarantäne sowie 
-- die Anzahl und Herkunft der Cluster. Durch diese visuelle Darstellung erhält 
-- der BH einen schnellen Überblick über die aktuelle Lage.
-
-
-## Komponenten
-Die Anwendung besteht aus einigen Komponenten, welche im Folgenden aufgelistet werden. 
-
-
 ## Software
-Die nachfolgende Software wird benötigt, um das Projekt lokal auf dem eigenen Rechner aufzusetzen
-und lauffähig zu machen. 
+Die Anwendung besteht aus verschiedene Komponenten, die für die Lauffähigkeit des Projektes auf dem lokalen Rechner notwendig sind. Im folgenden Abschnitt werden diese aufgelistet. 
 
 ### Git
 GIT ist ein verteiltes Versionskontrollsystem, das entwickelt wurde, 
@@ -58,7 +24,7 @@ um skalierbare und effiziente Netzwerkanwendungen zu erstellen.
 Link zur Installation:
 https://nodejs.org/en
 
-### Java
+### Java + Gradle
 Java ist eine objektorientierte Programmiersprache, die entwickelt 
 wurde, um plattformunabhängige Anwendungen zu erstellen. Sie 
 ermöglicht die Entwicklung von robusten und sicheren Softwarelösungen 
@@ -66,6 +32,7 @@ für eine Vielzahl von Anwendungsdomänen.
 
 Link zur Installation:
 https://www.java.com/de/download/manual.jsp
+https://gradle.org
 
 ### IntelliJ
 IntelliJ IDEA ist eine integrierte Entwicklungsumgebung (IDE) für 
@@ -83,7 +50,6 @@ API-Szenarien simuliert werden.
 
 Link zur Installation:
 https://www.postman.com/
-
 
 ### MariaDB
 MariaDB ist ein relationales Datenbankverwaltungssystem (RDBMS), 
@@ -121,8 +87,7 @@ sind um die Applikation lokal aufzusetzen.
 Zuerst muss das Git Repository ge-cloned werden: \
 https://github.com/
 
-git clone \
-```git@github.com:.git```
+git clone https://github.com/SeimeU/appointmentManagement.git
 
 ### Angular Development server
 
@@ -132,19 +97,10 @@ Navigiere zu `http://localhost:4200/`. \
 Die Anwendung lädt automatisch neu, wenn Änderungen im Angular Projekt durchgeführt werden.
 
 ### Datenbank
-Einloggen in MariaDB mit dem zuvor festgelegten Username und Passwort. \
-Anschließend die Datenbank erstellen, um diese anschließend im Backend verwenden zu können. \
-``create database appointmentManagement;`` \
-``use appointmentManagement;``
-
 Stelle sicher, dass der Port 3308 lokal nicht verwendet wird, sonst kann der Docker Container
 nicht gestartet werden. \
 Führe anschließend den Befehl ``docker-compose up`` im Root Level des Projekverzeichnisses aus
-um den docker Container für die MariaDB Datenbank zu starten.
+um den docker Container für die MariaDB Datenbank zu starten. Die Tables werden beim Start des Backends automatisch erzeugt.
 
 ### Backend
-Öffne das Backend Projekt in IntelliJ und führe die Standard Konfiguration im Main File aus. 
-
-
-## REST Schnittstellen
-Hier sind alle verfügbaren REST Schnittstellen aufgeführt:
+Öffne das Backend Projekt in IntelliJ, lade alle notwendigen Dependencies mittels Gradle und führe die Standard Konfiguration im Main File aus. 
