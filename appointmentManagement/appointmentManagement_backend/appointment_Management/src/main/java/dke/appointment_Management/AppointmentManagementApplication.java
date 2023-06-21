@@ -38,7 +38,7 @@ public class AppointmentManagementApplication implements CommandLineRunner {
 			appointment21_vacc.setLine(1);
 			appointment21_vacc.setBooked(false);
 			appointment21_vacc.setDuration(10);
-			appointment21_vacc.setSubstance("Comirnaty (BioNTech/Pfizer)");
+			appointment21_vacc.setSubstance("Comirnaty(BioNTech/Pfizer)");
 			appointmentRepository.save(appointment21_vacc);
 
 			Appointment appointment22_drug = new Appointment();
@@ -56,7 +56,7 @@ public class AppointmentManagementApplication implements CommandLineRunner {
 			appointment22_vacc.setLine(2);
 			appointment22_vacc.setBooked(false);
 			appointment22_vacc.setDuration(10);
-			appointment22_vacc.setSubstance("Spikevax (Moderna)");
+			appointment22_vacc.setSubstance("Spikevax(Moderna)");
 			appointmentRepository.save(appointment22_vacc);
 
 			Appointment appointment23_drug = new Appointment();
@@ -74,7 +74,7 @@ public class AppointmentManagementApplication implements CommandLineRunner {
 			appointment23_vacc.setLine(1);
 			appointment23_vacc.setBooked(true);
 			appointment23_vacc.setDuration(10);
-			appointment23_vacc.setSubstance("Vaxzevria (AstraZeneca)");
+			appointment23_vacc.setSubstance("Vaxzevria(AstraZeneca)");
 			appointmentRepository.save(appointment23_vacc);
 		}
 	}
