@@ -25,7 +25,7 @@ public class AppointmentManagementApplication implements CommandLineRunner {
 			// Create dummy data
 			Appointment appointment21_drug = new Appointment();
 			appointment21_drug.setDate(LocalDateTime.of(2023, 6, 21, 10, 0));
-			appointment21_drug.setLocation("Rathaus Marchtrenk");
+			appointment21_drug.setLocation("Rathaus-Marchtrenk");
 			appointment21_drug.setLine(1);
 			appointment21_drug.setBooked(false);
 			appointment21_drug.setDuration(10);
@@ -34,16 +34,16 @@ public class AppointmentManagementApplication implements CommandLineRunner {
 
 			Appointment appointment21_vacc = new Appointment();
 			appointment21_vacc.setDate(LocalDateTime.of(2023, 6, 21, 10, 0));
-			appointment21_vacc.setLocation("Wels Landhof");
+			appointment21_vacc.setLocation("Wels-Landhof");
 			appointment21_vacc.setLine(1);
 			appointment21_vacc.setBooked(false);
 			appointment21_vacc.setDuration(10);
-			appointment21_vacc.setSubstance("Comirnaty(BioNTech/Pfizer)");
+			appointment21_vacc.setSubstance("Comirnaty-(BioNTech/Pfizer)");
 			appointmentRepository.save(appointment21_vacc);
 
 			Appointment appointment22_drug = new Appointment();
 			appointment22_drug.setDate(LocalDateTime.of(2023, 6, 22, 15, 0));
-			appointment22_drug.setLocation("Rathaus Marchtrenk");
+			appointment22_drug.setLocation("Rathaus-Marchtrenk");
 			appointment22_drug.setLine(2);
 			appointment22_drug.setBooked(true);
 			appointment22_drug.setDuration(10);
@@ -52,16 +52,16 @@ public class AppointmentManagementApplication implements CommandLineRunner {
 
 			Appointment appointment22_vacc = new Appointment();
 			appointment22_vacc.setDate(LocalDateTime.of(2023, 6, 22, 17, 0));
-			appointment22_vacc.setLocation("Wels Landhof");
+			appointment22_vacc.setLocation("Wels-Landhof");
 			appointment22_vacc.setLine(2);
 			appointment22_vacc.setBooked(false);
 			appointment22_vacc.setDuration(10);
-			appointment22_vacc.setSubstance("Spikevax(Moderna)");
+			appointment22_vacc.setSubstance("Spikevax-(Moderna)");
 			appointmentRepository.save(appointment22_vacc);
 
 			Appointment appointment23_drug = new Appointment();
 			appointment23_drug.setDate(LocalDateTime.of(2023, 6, 23, 9, 0));
-			appointment23_drug.setLocation("Rathaus Linz");
+			appointment23_drug.setLocation("Rathaus-Linz");
 			appointment23_drug.setLine(2);
 			appointment23_drug.setBooked(false);
 			appointment23_drug.setDuration(10);
@@ -70,11 +70,11 @@ public class AppointmentManagementApplication implements CommandLineRunner {
 
 			Appointment appointment23_vacc = new Appointment();
 			appointment23_vacc.setDate(LocalDateTime.of(2023, 6, 23, 19, 0));
-			appointment23_vacc.setLocation("Linzer Markt");
+			appointment23_vacc.setLocation("Linzer-Markt");
 			appointment23_vacc.setLine(1);
 			appointment23_vacc.setBooked(true);
 			appointment23_vacc.setDuration(10);
-			appointment23_vacc.setSubstance("Vaxzevria(AstraZeneca)");
+			appointment23_vacc.setSubstance("Vaxzevria-(AstraZeneca)");
 			appointmentRepository.save(appointment23_vacc);
 		}
 	}

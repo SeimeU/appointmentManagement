@@ -41,36 +41,48 @@ export class AppointmentService {
   getAppointments(): Observable<Appointment[]> {
     let url: string = this.apiUrl + 'appointments-loc?';
 
-    // Create url with all locations as get parameters
-    this._locations.forEach(loc => url += 'location=' + loc + '&');
+    if(this._locations.length != 0) {
+      // Create url with all locations as get parameters
+      this._locations.forEach(loc => url += 'location=' + loc + '&');
 
-    // Delete the ending &
-    url.slice(0, -1);
-    return this.http.get<Appointment[]>(url);
+      // Delete the ending &
+      url.slice(0, -1);
+      return this.http.get<Appointment[]>(url);
+    }
+
+    return new Observable<Appointment[]>();
   }
 
   // Function to make the http-request to get the number of free appointments for the locations in the selected district
   getNumberOfFreeAppointments(): Observable<number> {
     let url: string = this.apiUrl + 'number-of-free-appointments-loc?';
 
-    // Create url with all locations as get parameters
-    this._locations.forEach(loc => url += 'location=' + loc + '&');
+    if(this._locations.length != 0) {
+      // Create url with all locations as get parameters
+      this._locations.forEach(loc => url += 'location=' + loc + '&');
 
-    // Delete the ending &
-    url.slice(0, -1);
-    return this.http.get<number>(url);
+      // Delete the ending &
+      url.slice(0, -1);
+      return this.http.get<number>(url);
+    }
+
+    return new Observable<number>();
   }
 
   // Function to make the http-request to get the number of appointments for the locations in the selected district
   getNumberOfAppointments(): Observable<number> {
     let url: string = this.apiUrl + 'number-of-appointments-loc?';
 
-    // Create url with all locations as get parameters
-    this._locations.forEach(loc => url += 'location=' + loc + '&');
+    if(this._locations.length != 0) {
+      // Create url with all locations as get parameters
+      this._locations.forEach(loc => url += 'location=' + loc + '&');
 
-    // Delete the ending &
-    url.slice(0, -1);
-    return this.http.get<number>(url);
+      // Delete the ending &
+      url.slice(0, -1);
+      return this.http.get<number>(url);
+    }
+
+    return new Observable<number>();
   }
 
 
@@ -78,12 +90,16 @@ export class AppointmentService {
   getAppointmentSeries(): Observable<AppointmentSeries[]> {
     let url: string = this.apiUrl + 'appointments-series-loc?';
 
-    // Create url with all locations as get parameters
-    this._locations.forEach(loc => url += 'location=' + loc + '&');
+    if(this._locations.length != 0) {
+      // Create url with all locations as get parameters
+      this._locations.forEach(loc => url += 'location=' + loc + '&');
 
-    // Delete the ending &
-    url.slice(0, -1);
-    return this.http.get<AppointmentSeries[]>(url);
+      // Delete the ending &
+      url.slice(0, -1);
+      return this.http.get<AppointmentSeries[]>(url);
+    }
+
+    return new Observable<AppointmentSeries[]>();
   }
 
 
